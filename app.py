@@ -104,5 +104,6 @@ async def ocr(ID:int,Type: Optional[str] = None,File: UploadFile=File(...)):
 
 
 if __name__=='__main__':
+    # dev channel
     uvicorn.run(app='app:app',host='0.0.0.0',port=8005,reload=True)
 
