@@ -1,0 +1,10 @@
+aiofiles==22.1.0
+fastapi==0.89.1
+fitz==0.0.1.dev2
+LAC==2.1.2
+numpy==1.23.0
+opencv_contrib_python==4.7.0.68
+paddleocr==2.6.1.2
+paddleocr.egg==info
+PyMuPDF==1.21.1
+uvicorn==0.20.0
