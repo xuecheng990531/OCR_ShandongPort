@@ -5,6 +5,8 @@ sys.path.append('../')
 from component_modules import autils
 
 def ReRec2(path,ymin,ymax,xmin,xmax,value):
+    print(path)
+    print(ymin,ymax,xmin,xmax)
     image = cv2.imread(path)
     cropImg=image[int(ymin):int(ymax),int(xmin):int(xmax)]
     cv2.imwrite('save_files/crop/'+str(value)+'.png',cropImg)
@@ -23,8 +25,7 @@ def match_fahuoren(pos,value,save_path):
                     for i in range(len(pos)):
                         if shr_pos[1][0]<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[0][1]+int(height/2):
                             return value[i]
-    else:
-        return '0'
+
 
 def match_shouhuoren(pos,value,save_path):
     for i in range(len(pos)):
@@ -38,8 +39,7 @@ def match_shouhuoren(pos,value,save_path):
                     for i in range(len(pos)):
                         if shr_pos[1][0]<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[0][1]+int(height/2):
                             return value[i]
-    else:
-        return '0'
+
                     
 
 def match_chengyunren(pos,value,save_path):
@@ -54,8 +54,7 @@ def match_chengyunren(pos,value,save_path):
                     for i in range(len(pos)):
                         if shr_pos[1][0]<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[0][1]+int(height/2):
                             return value[i]
-    else:
-        return '0'
+
 
 
 def match_hangminghangci(pos,value,save_path):
@@ -176,14 +175,17 @@ def match_baozhuanglei(pos,value,save_path):
 
 def match_shandian(pos,value,save_path):
     for i in range(len(pos)):
-        if '闪点' in value[i]:
+        if '℃' in value[i] and value[i].split('℃')[0][-1].isdigit():
+            number = re.findall("\d+",value[i])[0]
+            return str(number)+'℃'
+        elif '闪点' in value[i]:
             shr_pos=pos[i]
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
                 if shr_pos[0][0]-int(width/5)<pos[i][0][0]<shr_pos[0][0]+int(width/5) and shr_pos[3][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+height:
                     if '应急' in value[i]:
-                        return 'no need'
+                        return 'None'
                     else:
                         return value[i]
     else:
@@ -191,35 +193,11 @@ def match_shandian(pos,value,save_path):
 
 def match_yingjicuoshi(pos,value,save_path):
     for i in range(len(pos)):
-        # if 'No.' in value[i]:
-        #     if len(value[i].split('.')[-1])>2:
-        #         return value[i].split('.')[-1]
-        #     else:
-        #         shr_pos=pos[i]
-        #         height=pos[i][3][1]-pos[i][0][1]
-        #         width=pos[i][1][0]-pos[i][0][0]
-        #         for i in range(len(pos)):
-        #             if shr_pos[1][0]-int(width/5)<pos[i][0][0]<shr_pos[0][0]+int(width/4) and shr_pos[1][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+int(height/2):
-        #                 return value[i]
+        
         if '应急措施编号' in value[i]:
             if 'No' in value[i] and len(value[i].split('No')[-1])>2:
                 return value[i].split('No')[-1]
-            else:
-                ymin=pos[i][0][1]
-                ymax=pos[i][2][1]
-                xmin=pos[i][0][0]
-                xmax=pos[i][2][0]
-                img_height=pos[i][3][1]-pos[i][0][1]
-                img_width=pos[i][1][0]-pos[i][0][0]
-                pos,result=ReRec2(save_path,ymin-img_height,ymax+img_height,xmin,xmax+img_width,value='id1_yingjicuoshi')
-                result=''.join(result)
-                if 'No' in result:
-                    return result.split('No')[-1]
-                else:
-                    return result
 
-    else:
-        return 'F-E,S-C'
 
 
 def match_baojianzhonglei(pos,value,save_path):
@@ -242,42 +220,58 @@ def match_baojianzhonglei(pos,value,save_path):
 def match_kongzhiwendu(pos,value,save_path):
     for i in range(len(pos)):
             if 'emergency' in value[i]:
-                #[311.0, 812.0, 406.0, 816.0, 405.0, 839.0, 310.0, 835.0]
                 if 85<pos[i][1][0]-pos[i][0][0]<100 and 6<pos[i][2][1]-pos[i][0][1]< 35 and 290 < pos[i][0][0]< 340 and 790 < pos[i][0][1] < 830:
                     if len(value[i].split(':')[-1])==0:
                         return '无'
                     else:
-                        return value[i].split(':')[-1]
-    else:
-        return '0'
+                        return value[i].split('y')[-1]
 
+# def match_haiyangwuranwu(pos,value,save_path):
+    # for i in range(len(pos)):
+    #     if 'POLLUT' in value[i]:
+    #         # shr_pos=pos[i]
+    #         # height=pos[i][3][1]-pos[i][0][1]
+    #         # width=pos[i][1][0]-pos[i][0][0]
+    #         # for i in range(len(pos)):
+    #         #     if shr_pos[0][0]-int(width/5)<pos[i][0][0]<shr_pos[0][0]+int(width/5) and shr_pos[3][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+int(2*height):
+    #         #             return value[i]
+    #         ymin=pos[i][0][1]
+    #         ymax=pos[i][2][1]
+    #         xmin=pos[i][0][0]
+    #         xmax=pos[i][2][0]
+    #         img_height=pos[i][3][1]-pos[i][0][1]
+    #         img_width=pos[i][1][0]-pos[i][0][0]
+    #         pos,result=ReRec2(save_path,ymin,ymax+img_height*3,xmin-img_width/2,xmax,value='id1_wuranwu')
+    #         result=''.join(result)
+    #         if '是' in result:
+    #             return '是'
+    #         elif '否' in result:
+    #             return '否'
+    #         else:
+    #             return result
+
+# 新的检测方式
 def match_haiyangwuranwu(pos,value,save_path):
+    result=[]
     for i in range(len(pos)):
         if 'POLLUT' in value[i]:
-            # shr_pos=pos[i]
-            # height=pos[i][3][1]-pos[i][0][1]
-            # width=pos[i][1][0]-pos[i][0][0]
-            # for i in range(len(pos)):
-            #     if shr_pos[0][0]-int(width/5)<pos[i][0][0]<shr_pos[0][0]+int(width/5) and shr_pos[3][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+int(2*height):
-            #             return value[i]
-            ymin=pos[i][0][1]
-            ymax=pos[i][2][1]
-            xmin=pos[i][0][0]
-            xmax=pos[i][2][0]
-            img_height=pos[i][3][1]-pos[i][0][1]
-            img_width=pos[i][1][0]-pos[i][0][0]
-            height=img_height*2 #默认不加高度
-            width=img_width*10 #默认不加宽度
-            pos,result=ReRec2(save_path,ymin,ymax+img_height*3,xmin-img_width/2,xmax,value='id1_wuranwu')
-            result=''.join(result)
-            if '是' in result:
+
+            if '是' in value[i].split('POLLUT')[-1]:
                 return '是'
-            elif '否' in result:
+            elif '否' in value[i].split('POLLUT')[-1]:
                 return '否'
             else:
-                return result
-    else:
-        return '0'
+                shr_pos=pos[i]
+                height=pos[i][3][1]-pos[i][0][1]
+                width=pos[i][1][0]-pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[0][0]-int(width/3)<pos[i][0][0]<shr_pos[0][0]+int(width/2) and shr_pos[3][1]-height*1.2<pos[i][0][1]<shr_pos[3][1]+height:
+                        if '是' in value[i]:
+                            return '是'
+                        else:
+                            return '否'
+
+
 
 def match_zongzhong(pos,value,save_path):
     for i in range(len(pos)):

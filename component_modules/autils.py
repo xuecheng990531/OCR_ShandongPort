@@ -2,7 +2,6 @@ from paddleocr import PaddleOCR
 from component_modules.paper_id_2_name import *
 from component_modules.all_in_one import *
 import os
-import time
 import fitz
 import cv2
 import aiofiles
@@ -24,7 +23,6 @@ async def save_img(File, filename):
 
 #-------------------------------------------------倾斜检测并返回结果-----------------------------------
 def detect_value(pos,ID,value,Type,save_path,filename):
-    start = time.time()
     y_left_top=pos[0][0][1]
     y_right_top=pos[0][1][1]
     y_left_bottom=pos[0][3][1]
@@ -42,8 +40,7 @@ def detect_value(pos,ID,value,Type,save_path,filename):
     else:
         result=detect_paper(ID,pos,value,Type,save_path)
         removed_result=remove(result)
-        time_used=str(time.time() - start)+'s'
-        return {"响应时间":time_used,"上传类型":get_paper_name(ID),"文件名":filename,"检测结果":removed_result,"算法检测的所有结果":value}
+        return {"上传类型":get_paper_name(ID),"文件名":filename,"检测结果":removed_result,"算法检测的所有结果":value}
 #-------------------------------------------------倾斜检测并返回结果-----------------------------------
 
 
@@ -95,7 +92,6 @@ def detect_img(img_path):
     pos=[]
     value=[]
     version=paddleocr.VERSION
-    print(version)
     if '2.6' in version:
         result=result[0]
         for i in range(len(result)):
