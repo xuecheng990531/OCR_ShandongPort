@@ -30,7 +30,6 @@ def detect_value(pos,ID,value,Type,save_path,filename):
     y=abs(y_left_bottom-y_left_top)
 
     height=(x**2 + y**2)**(1/2)
-    print(height)
 
     # 如果超过检测框高度的一半，判定为
     if abs(y_left_top-y_right_top)>height/2:
