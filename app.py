@@ -91,7 +91,6 @@ async def ocr(ID: int, Type: Optional[str] = None, File: UploadFile = File(...))
                 check(img_path=save_path)
             elif ID == 12:
                 save_path = process_ID12(save_path)
-                cv2.imwrite('new.png', save_path)
             pos, value = detect_img(save_path)
 
             return detect_value(pos, ID, value, Type, save_path, filename)
