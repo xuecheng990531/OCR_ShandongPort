@@ -4,6 +4,7 @@ from component_modules.all_in_one import *
 import os
 import fitz
 import cv2
+from pathlib import Path
 import aiofiles
 import numpy as np
 import cv2
@@ -53,7 +54,8 @@ def detect_value(pos,ID,value,Type,save_path,filename,Envir):
     else:
         result=detect_paper(ID,pos,value,Type,save_path)
         removed_result=remove(result)
-        os.remove(save_path)
+        if Path(save_path).is_file():
+            os.remove(save_path)
         if Envir=='main':
             # return {"上传类型":get_paper_name(ID),"文件名":filename,"检测结果":removed_result}
             return {"检测结果":removed_result}

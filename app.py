@@ -1,7 +1,7 @@
 import os
 import uvicorn
 from fastapi.openapi.docs import get_swagger_ui_html
-from fastapi import FastAPI, UploadFile, File, applications
+from fastapi import FastAPI, UploadFile, File, applications,Query
 from typing import Optional
 from component_modules.autils import *
 
@@ -20,7 +20,11 @@ app = FastAPI(title='光学字符识别项目', description='根据每个单据�
 
 
 @app.post('/ocr', tags=["识别接口（POST方法）"])
-async def ocr(ID: int, Type: Optional[str] = None,Envir:Optional[str] = 'main', File: UploadFile = File(...)):
+async def ocr(
+    ID: int= Query(description="单据ID号码"),
+    Type: Optional[str] = Query(None,description='海运提单，日照的单据在这里填写为rizhao,如果不是不填写'),
+    Envir:Optional[str] = Query('main',description='运行环境'), 
+    File: UploadFile = File(description='上传文件')):
     '''    
     OCR识别    
     - 参数 ID: 上传哪类单据    
@@ -86,7 +90,6 @@ async def ocr(ID: int, Type: Optional[str] = None,Envir:Optional[str] = 'main', 
             elif ID == 12 or ID ==11:
                 save_path = process_ID12(save_path)
             pos, value = detect_img(save_path)
-
             return detect_value(pos, ID, value, Type, save_path, filename, Envir)
 
         else:
@@ -101,4 +104,4 @@ async def ocr(ID: int, Type: Optional[str] = None,Envir:Optional[str] = 'main', 
     
 
 if __name__ == '__main__':
-    uvicorn.run(app='app:app', host='0.0.0.0', port=8006, reload=True)
+    uvicorn.run(app='app:app', host='127.0.0.1', port=8005, reload=True)
