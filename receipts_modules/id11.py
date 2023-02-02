@@ -9,7 +9,7 @@ id_zhengze=r'^([1-9]\d{5}[12]\d{3}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])\d{3}[0
 def match_name(pos,value,save_path):
     for i in range(len(pos)):
         if '姓名' in value[i]:
-            if len(value[i].split('名')[-1])>2:
+            if len(value[i].split('名')[-1])!=0:
                 return value[i].split('名')[-1]
             else:
                 shr_pos=pos[i]
@@ -104,6 +104,10 @@ def match_validate_date(pos,value,save_path):
             if len(value[i].split('有效')[-1])>5:
                 if '年' in value[i]:
                     return value[i].split('年')[0][-4:-1]+'年'+value[i].split('年')[-1]
+                elif '限' in value[i]:
+                    return value[i].split('限')[-1]
+                else:
+                    return value[i]
             else:
                 shr_pos=pos[i]
                 height=pos[i][3][1]-pos[i][0][1]

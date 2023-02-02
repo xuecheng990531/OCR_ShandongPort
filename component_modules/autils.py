@@ -11,7 +11,7 @@ import paddleocr
 
 imgType_list = {'.jpg', '.bmp', '.png', '.jpeg', '.jfif', '.webp'}
 #实例化paddleocr
-ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=24,use_gpu=True ,det_limit_side_len=1280,cpu_threads=40)
+ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=24,use_gpu=True ,det_limit_side_len=1280,cpu_threads=40,gpu_mem=2000)
 
 #-------------------------------------------------保存上传图片-----------------------------------
 async def save_img(File, filename):
@@ -21,8 +21,22 @@ async def save_img(File, filename):
     print("文件：----> "+filename+" 保存成功")
 #-------------------------------------------------保存上传图片-----------------------------------
 
+#-------------------------------------------------删除保存的图片-----------------------------------
+def autodel(rootdir):
+    imgType_list = {'.jpg', '.bmp', '.png', '.jpeg', '.jfif', '.webp'}
+    filelist=os.listdir(rootdir)
+    length=len(filelist)
+
+    for i in range(length):
+        extension = os.path.splitext(filelist[i])[-1]
+        abs_path=os.path.join(os.path.abspath('../save_files'),filelist[i])
+        if extension in imgType_list:
+            os.remove(abs_path)
+#-------------------------------------------------删除保存的图片-----------------------------------
+
+
 #-------------------------------------------------倾斜检测并返回结果-----------------------------------
-def detect_value(pos,ID,value,Type,save_path,filename):
+def detect_value(pos,ID,value,Type,save_path,filename,Envir):
     y_left_top=pos[0][0][1]
     y_right_top=pos[0][1][1]
     y_left_bottom=pos[0][3][1]
@@ -39,7 +53,13 @@ def detect_value(pos,ID,value,Type,save_path,filename):
     else:
         result=detect_paper(ID,pos,value,Type,save_path)
         removed_result=remove(result)
-        return {"上传类型":get_paper_name(ID),"文件名":filename,"检测结果":removed_result,"算法检测的所有结果":value}
+        os.remove(save_path)
+        if Envir=='main':
+            # return {"上传类型":get_paper_name(ID),"文件名":filename,"检测结果":removed_result}
+            return {"检测结果":removed_result}
+        else:
+            # return {"上传类型":get_paper_name(ID),"文件名":filename,"检测结果":removed_result,"算法检测的所有结果":value}
+            return {"检测结果":removed_result,"算法检测的所有结果":value}
 #-------------------------------------------------倾斜检测并返回结果-----------------------------------
 
 
@@ -100,7 +120,7 @@ def detect_img(img_path):
         for i in range(len(result)):
             pos.append(result[i][0])
             value.append(result[i][1][0])
-
+    # os.remove(img_path)
     return pos,value
 #-------------------------------------------------detect_pic-----------------------------------
 
@@ -147,6 +167,8 @@ def remove(dict):
                 dict[i]=dict[i].replace('：','')
             elif '*' in dict[i]:
                 dict[i]=dict[i].replace('*','')
+            elif ':' in dict[i]:
+                dict[i]=dict[i].replace(':','')
             elif '，' in dict[i]:
                 dict[i]=dict[i].replace('，','')
     return dict

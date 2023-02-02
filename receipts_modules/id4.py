@@ -1,7 +1,4 @@
-from curses import resetty
-from pickletools import read_uint1
 import re
-from socket import AddressFamily
 from LAC import LAC
 import cv2
 import sys
@@ -11,8 +8,7 @@ from component_modules import autils
 def ReRec2(path,ymin,ymax,xmin,xmax,value):
     image = cv2.imread(path)
     cropImg=image[int(ymin):int(ymax),int(xmin):int(xmax)]
-    cv2.imwrite('save_files/crop/'+str(value)+'.png',cropImg)
-    pos,value=autils.detect_img('save_files/crop/'+str(value)+'.png')
+    pos,value=autils.detect_img(cropImg)
     return pos,value
 
 lac = LAC(mode="lac")
@@ -45,10 +41,9 @@ def match_minzu(pos,value,save_path):
     for i in range(len(minzu)):
         for j in range(len(pos)):
             if minzu[i] in value[j]:
-                # print(minzu[i])
                 return minzu[i]
     else:
-        return '0'            
+        return '汉'            
 
 def match_address(pos,value,save_path):
     for i in range(len(pos)):
@@ -59,7 +54,7 @@ def match_address(pos,value,save_path):
             xmax=pos[i][2][0]
             img_height=pos[i][3][1]-pos[i][0][1]
             img_width=pos[i][1][0]-pos[i][0][0]
-            pos,result=ReRec2(save_path,ymin-img_height,ymax+img_height*3,xmin,xmax+img_width*50,value='id4_address')
+            pos,result=ReRec2(save_path,ymin-img_height,ymax+img_height*3,xmin,xmax+img_width*20,value='id4_address')
             result=''.join(result)
             
             if '住址' in result or '住' in result or '址' or '佳' in result:
@@ -76,7 +71,7 @@ def match_address(pos,value,save_path):
                     address.append(value[i])
             if len(address)>0:
                 a=''.join(address)
-                if '住址' in result or '住' in result or '址' or '佳' in a:
+                if '住址' in a or '住' in a or '址' or '佳' in a:
                     return re.sub(r'[住址佳]*', '', a)
                 else:
                     return a
@@ -158,10 +153,15 @@ def match_sex(pos,value,save_path):
                     return '男'
             else:
                 return '女'
-    if '男' in value:
-        return '男'
-    else:
-        return '女'
+
+        else:
+            id=match_idnumber(pos,value,save_path)
+            if len(id[0])==18:
+                if int(id[0][-2])%2==0:
+                    return '女'
+                elif int(id[0][-2])%2!=0:
+                    return '男'
+
 
 
 def match_idnumber(pos,value,save_path):
@@ -174,6 +174,7 @@ def match_idnumber(pos,value,save_path):
                 month=value[i].split('码')[-1][10:12] 
                 date=value[i].split('码')[-1][12:14] 
                 date="%s年%s月%s日"%(year,month,date)
+                locate=''
                 for i in range(len(pos)):
                     if str(are) in value[i] and '公安局' not in value[i]:
                         if '村' or '巷' in value[i+1]:
@@ -187,13 +188,14 @@ def match_idnumber(pos,value,save_path):
                 month=value[i][10:12] 
                 date=value[i][12:14] 
                 date="%s年%s月%s日"%(year,month,date)
+                locate=''
                 for i in range(len(pos)):
                     if str(are) in value[i] and '公安局' not in value[i]:
                         if '村' or '巷' in value[i+1]:
                             locate=value[i]+value[i+1]
                 return id,locate,date
     else:
-        return '0','0','0'
+        return 'None','None','None'
 
 
 def match_validdate(pos,value,save_path):

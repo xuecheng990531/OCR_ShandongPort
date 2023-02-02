@@ -3,7 +3,6 @@ import uvicorn
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi import FastAPI, UploadFile, File, applications
 from typing import Optional
-from component_modules.autodel import autodel
 from component_modules.autils import *
 
 
@@ -21,7 +20,7 @@ app = FastAPI(title='光学字符识别项目', description='根据每个单据�
 
 
 @app.post('/ocr', tags=["识别接口（POST方法）"])
-async def ocr(ID: int, Type: Optional[str] = None, File: UploadFile = File(...)):
+async def ocr(ID: int, Type: Optional[str] = None,Envir:Optional[str] = 'main', File: UploadFile = File(...)):
     '''    
     OCR识别    
     - 参数 ID: 上传哪类单据    
@@ -78,33 +77,28 @@ async def ocr(ID: int, Type: Optional[str] = None, File: UploadFile = File(...))
     if extension not in imgType_list and extension != '.pdf':
         return {"上传错误": '上传的文件不在可上传范围内'}
     else:
-        # 如果图片保存文件夹中的数量太多，进行删除
-        if len(os.listdir('save_files')) > 20:
-            autodel('save_files')
-
         # 写入图片
         await save_img(File, filename)
-
         # 检查上传的文件扩展名
         if extension in imgType_list:
-            if ID == 7:
+            if ID == 7 or ID==3 or ID==11:
                 check(img_path=save_path)
-            elif ID == 12:
+            elif ID == 12 or ID ==11:
                 save_path = process_ID12(save_path)
             pos, value = detect_img(save_path)
 
-            return detect_value(pos, ID, value, Type, save_path, filename)
+            return detect_value(pos, ID, value, Type, save_path, filename, Envir)
 
         else:
             count, img_list = pdf_img(save_path, name)
 
-            if ID == 7:
+            if ID == 7 or ID==3 or ID==11:
                 check(img_path=img_list[0])
 
             pos, value = detect_pdf(img_list, count)
 
-            return detect_value(pos, ID, value, Type, save_path, filename)
-
+            return detect_value(pos, ID, value, Type, save_path, filename, Envir)
+    
 
 if __name__ == '__main__':
-    uvicorn.run(app='app:app', host='0.0.0.0', port=8005, reload=True)
+    uvicorn.run(app='app:app', host='0.0.0.0', port=8006, reload=True)

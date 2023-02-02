@@ -1,7 +1,7 @@
 
 def get_paper_name(id):
     if id==1:
-        return "危险货物"
+        return "危险品货物安全适运书"
     elif id==2:
         return "入境货物检验检疫证明"
     elif id==3:
@@ -25,12 +25,10 @@ def get_paper_name(id):
     elif id==12:
         return "道路运输证"
     elif id==13:
-        return "订舱下货纸->(MKL订单)"
+        return "订舱下货纸(MKL公司)"
     elif id==14:
-        return "过磅单"
+        return "纸质榜单识别"
     elif id==15:
-        return "集装箱"
-    elif id==000:
-        return "测试"
+        return "集装箱箱号"
     else:
         return "ID 不存在！"
