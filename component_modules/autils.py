@@ -12,7 +12,7 @@ import paddleocr
 
 imgType_list = {'.jpg', '.bmp', '.png', '.jpeg', '.jfif', '.webp'}
 #实例化paddleocr
-ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=24,use_gpu=True ,det_limit_side_len=1280,cpu_threads=40,gpu_mem=2000)
+ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=1,use_gpu=False ,det_limit_side_len=1280)
 
 #-------------------------------------------------保存上传图片-----------------------------------
 async def save_img(File, filename):
@@ -57,10 +57,8 @@ def detect_value(pos,ID,value,Type,save_path,filename,Envir):
         if Path(save_path).is_file():
             os.remove(save_path)
         if Envir=='main':
-            # return {"上传类型":get_paper_name(ID),"文件名":filename,"检测结果":removed_result}
             return {"检测结果":removed_result}
         else:
-            # return {"上传类型":get_paper_name(ID),"文件名":filename,"检测结果":removed_result,"算法检测的所有结果":value}
             return {"检测结果":removed_result,"算法检测的所有结果":value}
 #-------------------------------------------------倾斜检测并返回结果-----------------------------------
 
@@ -175,6 +173,8 @@ def remove(dict):
                 dict[i]=dict[i].replace('，','')
     return dict
 #-------------------------------------------------detect :-------------------------------------
+
+
 
 #-------------------------------------------------which paper-------------------------------------
 def detect_paper(ID,pos,value,Type,save_path):

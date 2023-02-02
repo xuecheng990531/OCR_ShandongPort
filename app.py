@@ -21,10 +21,10 @@ app = FastAPI(title='光学字符识别项目', description='根据每个单据�
 
 @app.post('/ocr', tags=["识别接口（POST方法）"])
 async def ocr(
-    ID: int= Query(description="单据ID号码"),
-    Type: Optional[str] = Query(None,description='海运提单，日照的单据在这里填写为rizhao,如果不是不填写'),
-    Envir:Optional[str] = Query('main',description='运行环境'), 
-    File: UploadFile = File(description='上传文件')):
+    ID: int,
+    Type: Optional[str] = None,
+    Envir:Optional[str] = 'main', 
+    File: UploadFile = File(...)):
     '''    
     OCR识别    
     - 参数 ID: 上传哪类单据    
