@@ -11,8 +11,7 @@ date="\d{4}[-]?\d{2}"
 def ReRec2(path,ymin,ymax,xmin,xmax,value):
     image = cv2.imread(path)
     cropImg=image[int(ymin):int(ymax),int(xmin):int(xmax)]
-    cv2.imwrite('save_files/crop/'+str(value)+'.png',cropImg)
-    pos,value=autils.detect_img('save_files/crop/'+str(value)+'.png')
+    pos,value=autils.detect_img(cropImg)
     return pos,value
 
 def match_bianhao(pos,value,save_path):

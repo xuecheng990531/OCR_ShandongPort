@@ -13,8 +13,7 @@ jiagedanwei=["仟","佰","拾","万","仟","佰","拾","元","角","分","整"]
 def ReRec2(path,ymin,ymax,xmin,xmax,value):
     image = cv2.imread(path)
     cropImg=image[int(ymin):int(ymax),int(xmin):int(xmax)]
-    cv2.imwrite('save_files/crop/'+str(value)+'.png',cropImg)
-    pos,value=autils.detect_img('save_files/crop/'+str(value)+'.png')
+    pos,value=autils.detect_img(cropImg)
     return pos,value
 
 def match_mingcheng(pos,value,save_path):
