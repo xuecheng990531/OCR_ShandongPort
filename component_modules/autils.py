@@ -4,35 +4,32 @@ from component_modules.all_in_one import *
 import os
 import fitz
 import cv2
-from pathlib import Path
 import aiofiles
+from pathlib import Path
 import numpy as np
 import cv2
 import paddleocr
 
 imgType_list = {'.jpg', '.bmp', '.png', '.jpeg', '.jfif', '.webp'}
 #实例化paddleocr
-ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=1,use_gpu=False ,det_limit_side_len=1280)
+ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=24,use_gpu=True ,det_limit_side_len=1280,cpu_threads=40,gpu_mem=2000)
 
 #-------------------------------------------------保存上传图片-----------------------------------
 async def save_img(File, filename):
     async with aiofiles.open(os.path.join('save_files',filename), 'wb') as out_file:
         content = await File.read()
         await out_file.write(content)
-    print("文件：----> "+filename+" 保存成功")
+    print("文件：----> "+filename+" 上传成功!")
 #-------------------------------------------------保存上传图片-----------------------------------
 
 #-------------------------------------------------删除保存的图片-----------------------------------
-def autodel(rootdir):
-    imgType_list = {'.jpg', '.bmp', '.png', '.jpeg', '.jfif', '.webp'}
-    filelist=os.listdir(rootdir)
-    length=len(filelist)
-
-    for i in range(length):
-        extension = os.path.splitext(filelist[i])[-1]
-        abs_path=os.path.join(os.path.abspath('../save_files'),filelist[i])
-        if extension in imgType_list:
-            os.remove(abs_path)
+def del_upload_file():
+    dir='save_files'
+    for root, dirs, files in os.walk(dir):
+        for name in files:
+            if name.endswith(".png") or name.endswith(".jpg") or name.endswith(".pdf") or name.endswith(".jpeg"):
+                os.remove(os.path.join(root, name))
+                print("文件：----> " + os.path.join(root, name)+" 删除成功!")
 #-------------------------------------------------删除保存的图片-----------------------------------
 
 
@@ -54,11 +51,14 @@ def detect_value(pos,ID,value,Type,save_path,filename,Envir):
     else:
         result=detect_paper(ID,pos,value,Type,save_path)
         removed_result=remove(result)
-        if Path(save_path).is_file():
-            os.remove(save_path)
+
+        del_upload_file()
+
         if Envir=='main':
+            # return {"上传类型":get_paper_name(ID),"文件名":filename,"检测结果":removed_result}
             return {"检测结果":removed_result}
         else:
+            # return {"上传类型":get_paper_name(ID),"文件名":filename,"检测结果":removed_result,"算法检测的所有结果":value}
             return {"检测结果":removed_result,"算法检测的所有结果":value}
 #-------------------------------------------------倾斜检测并返回结果-----------------------------------
 
@@ -120,7 +120,6 @@ def detect_img(img_path):
         for i in range(len(result)):
             pos.append(result[i][0])
             value.append(result[i][1][0])
-    # os.remove(img_path)
     return pos,value
 #-------------------------------------------------detect_pic-----------------------------------
 
@@ -173,8 +172,6 @@ def remove(dict):
                 dict[i]=dict[i].replace('，','')
     return dict
 #-------------------------------------------------detect :-------------------------------------
-
-
 
 #-------------------------------------------------which paper-------------------------------------
 def detect_paper(ID,pos,value,Type,save_path):

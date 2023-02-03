@@ -72,7 +72,6 @@ def match_weixian(pos,value,save_path):
         }
 
 def match_id_card(pos,value,save_path):
-    born_date=id4.match_born(pos,value,save_path)
     minzu=id4.match_minzu(pos,value,save_path)
     sex=id4.match_sex(pos,value,save_path)
     name=id4.match_name(pos,value,save_path)

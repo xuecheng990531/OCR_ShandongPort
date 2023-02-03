@@ -34,8 +34,6 @@ def match_born(pos,value,save_path):
     for i in range(len(pos)):
         if '年' in value[i]:
            return value[i][value[i].index('年')-4:]
-    else:
-        return '0'
             
 def match_minzu(pos,value,save_path):
     for i in range(len(minzu)):
@@ -90,8 +88,6 @@ def match_name_LAC(pos,value,save_path):
 
     if len(user_name_list)!=0:
         return user_name_list[0]
-    else:
-        return '0'
 
 def match_name_single(pos,value,save_path):
     for i in range(len(pos)):
@@ -105,13 +101,12 @@ def match_name_single(pos,value,save_path):
             pos,result=ReRec2(save_path,ymin-img_height*1.4,ymax+img_height,xmin,xmax+img_width*10,value='id4_name')
             result=''.join(result)
             return re.sub(r'[姓名]*', '', result)
-    else:
-        return '0'
+
 def match_name(pos,value,save_path):
     for i in range(len(pos)):
         if '姓名' in value[i] or '姓' in value[i] or '名' in value[i]:
-            if len(value[i].split('名')[-1])>1:
-                return re.sub(r'[姓名]*', '', value[i])
+            if len(value[i].split('名')[-1])>1 and value[i].split('名')[0]=='姓' or value[i].split('名')[0]=='理':
+                return value[i].split('名')[-1]
             else:
                 result=match_name_single(pos,value,save_path)
                 return result
@@ -122,8 +117,10 @@ def match_name(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(2*width) and shr_pos[1][1]-int(2*height)<pos[i][0][1]<shr_pos[1][1]+height:
                     return value[i]
-    else:
-        return '0'
+        else:
+            name=match_name_LAC(pos,value,save_path)
+            return name
+
 
 
 def id_loc(number):#地区切片
@@ -212,8 +209,6 @@ def match_validdate(pos,value,save_path):
                         return value[i]
         if '.' in value[i] and value[i].split('.')[0][-1].isdigit() and '-' in value[i]:
             return value[i]
-    else:
-        return '0'
             
 
             
@@ -230,6 +225,4 @@ def match_qianfa(pos,value,save_path):
                 for i in range(len(pos)):
                     if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(2*width) and shr_pos[1][1]-int(2*height)<pos[i][0][1]<shr_pos[1][1]+height:
                         return value[i]
-    else:
-        return '0'
 
