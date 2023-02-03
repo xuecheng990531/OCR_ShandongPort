@@ -76,12 +76,16 @@ def search(pos,value,save_path):
             return value[i]
         elif '股份有限责任' in value[i]:
             return value[i]
+        elif '股份有限' in value[i] and '（' in value[i]:
+            return value[i]
         elif '个人' in value[i]:
             return value[i]
         elif '合伙' in value[i]:
             return value[i]
         elif '个体工商户' in value[i]:
             return value[i]
+        elif '有限责任公司' in value[i] and '(' not in value[i]:
+            return '有限责任公司'
     else:
         return '0'
 def match_leixing(pos,value,save_path):
@@ -111,7 +115,8 @@ def match_daibiaoren(pos,value,save_path):
                 for _index, _label in enumerate(_result[1]):
                     if _label == "PER":
                         user_name_lis.append(_result[0][_index])
-                return user_name_lis[0]
+                if len(user_name_lis)!=0:
+                    return user_name_lis[0]
             else:
                 shr_pos=pos[i]
                 height=pos[i][3][1]-pos[i][0][1]
@@ -158,7 +163,7 @@ def match_chengliriqi(pos,value,save_path):
 def match_yingyeqixian(pos,value,save_path):
     for i in range(len(pos)):
         if '月' in value [i] and '日' in value[i] and '至' in value[i] and '主体' not in value[i]:
-            if value[i].split('至')[-1] is not None:
+            if len(value[i].split('至')[-1])>4:
                 return value[i].split('至')[-1]
             else:
                 return '长期'
