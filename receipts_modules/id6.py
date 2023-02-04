@@ -67,7 +67,6 @@ def match_jiashizhenghao(pos,value,save_path):
     for i in range(len(pos)):
         if '证号' in value[i]:
             if len(value[i].split('号')[-1])>2:
-                print(value[i].split('号')[1])
                 id=value[i].split('号')[-1]
                 return id
             else:

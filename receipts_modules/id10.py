@@ -8,7 +8,7 @@ from LAC import LAC
 lac=LAC(mode='lac')
 
 
-jiagedanwei=["仟","佰","拾","万","仟","佰","拾","元","角","分","整"]
+jiagedanwei=["仟","佰","拾","万","仟","佰","拾"]
 
 def ReRec2(path,ymin,ymax,xmin,xmax,value):
     image = cv2.imread(path)
@@ -53,8 +53,7 @@ def match_daima(pos,value,save_path):
                 for i in range(len(pos)):
                     if shr_pos[0][0]-int(width/2)<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height*2:
                         return value[i]
-    else:
-        return '0'
+
 
 def match_daima2(pos,value,save_path):
     result=match_daima(pos,value,save_path)
@@ -103,8 +102,7 @@ def match_leixing(pos,value,save_path):
         else:
             result=search(pos,value,save_path)
             return result
-    else:
-        return '0'
+
 
 def match_daibiaoren(pos,value,save_path):
     for i in range(len(pos)):
@@ -124,18 +122,15 @@ def match_daibiaoren(pos,value,save_path):
                 for i in range(len(pos)):
                     if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+width and shr_pos[1][1]-height<pos[i][0][1]<shr_pos[1][1]+height:
                         return value[i]
-    else:
-        return '0'
+
 def match_zhucechengben(pos,value,save_path):
     for i in range(len(pos)):
-            for j in range(len(jiagedanwei)):
-                if jiagedanwei[j] in value[i]:
-                    if '本' in value[i]:
-                        return value[i].split('本')[-1]
-                    else:
-                        return value[i]
-    else:
-        return '0'
+        for j in range(len(jiagedanwei)):
+            if jiagedanwei[j] in value[i]:
+                if '本' in value[i] and '元' in value[i]:
+                    return value[i].split('本')[-1]
+                else:
+                    return value[i]
 
 def match_chengliriqi(pos,value,save_path):
     data=[]
@@ -157,8 +152,6 @@ def match_chengliriqi(pos,value,save_path):
                 return value[i].split('期')[-1]
             else:
                 return value[i]
-    else:
-        return '0'
 
 def match_yingyeqixian(pos,value,save_path):
     for i in range(len(pos)):
@@ -190,6 +183,4 @@ def match_jingyingfanwei(pos,value,save_path):
                 pos,result=ReRec2(save_path,ymin-img_height,ymax+img_height*5,xmin,xmax+img_width*4.5,value='id10_jingyingfanwei')
             result=''.join(result)
             return result
-    else:
-        return '无'
 

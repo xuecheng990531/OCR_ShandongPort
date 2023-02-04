@@ -4,6 +4,7 @@ from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi import FastAPI, UploadFile, File, applications
 from typing import Optional
 from component_modules.autils import *
+import time
 
 
 def swagger_monkey_patch(*args, **kwargs):
@@ -77,15 +78,20 @@ async def ocr(ID: int, Type: Optional[str] = None,Envir:Optional[str] = 'main', 
     if extension not in imgType_list and extension != '.pdf':
         return {"上传错误": '上传的文件不在可上传范围内'}
     else:
+        
         # 写入图片
         await save_img(File, filename)
+        
         # 检查上传的文件扩展名
         if extension in imgType_list:
             if ID == 7 or ID==3 or ID==11:
                 check(img_path=save_path)
             elif ID == 12 or ID ==11:
                 save_path = process_ID12(save_path)
+            start=time.time()
             pos, value = detect_img(save_path)
+            end=time.time()
+            print('time:',str(end-start)+'S')
             return detect_value(pos, ID, value, Type, save_path, filename, Envir)
 
         else:
@@ -100,4 +106,4 @@ async def ocr(ID: int, Type: Optional[str] = None,Envir:Optional[str] = 'main', 
     
 
 if __name__ == '__main__':
-    uvicorn.run(app='app:app', host='0.0.0.0', port=8881, reload=True)
+    uvicorn.run(app='app:app', host='0.0.0.0', port=8005, reload=True)

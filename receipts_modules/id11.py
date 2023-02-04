@@ -70,11 +70,28 @@ def match_congyezigeleibie(pos,value,save_path):
                 return 'J-货运'
         elif '经营性'in value[i] or '道路' in value[i] or '驾驶' in value[i] and '运输管理' not in value:
             return '经营性道路货物运输驾驶员'
-        elif 'J-货运' in value[i]:
-            return 'J-货运'
+        elif 'J-货运' in value[i] or 'J-' in value[i]:
+            result=[]
+            shr_pos=pos[i]
+            height=pos[i][3][1]-pos[i][0][1]
+            width=pos[i][1][0]-pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width*6 and shr_pos[0][1]-height/2<pos[i][0][1]<shr_pos[2][1]+height*2:
+                    result.append(value[i])
+            if len(result)!=0:
+                result=''.join(result)
+                if '从业资格' in result:
+                    if '类别' in result:
+                        return result.replace('从业资格','').replace('类别','')
+                    else:
+                        return result.replace('从业资格','')
+                else:
+                    return result
+        elif '道路货物' in value[i] and '经营' not in value[i]:
+            return '道路货物运输驾驶员'
     else:
         return '经营性道路货物运输驾驶员'
-
+            
 
 def match_riqi(pos,value,save_path):
     for i in range(len(pos)):
@@ -102,6 +119,8 @@ def match_validate_date(pos,value,save_path):
                 return value[i].split('至')[-1]
         elif '有效' in value[i] and '起' not in value[i] or '有效期限' in value[i]:
             if len(value[i].split('有效')[-1])>5:
+                if '考核' in value[i]:
+                    value[i]=value[i].split('考核')[0]
                 if '年' in value[i]:
                     return value[i].split('年')[0][-4:-1]+'年'+value[i].split('年')[-1]
                 elif '限' in value[i]:
@@ -114,6 +133,8 @@ def match_validate_date(pos,value,save_path):
                 width=pos[i][1][0]-pos[i][0][0]
                 for i in range(len(pos)):
                     if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(width/2) and shr_pos[1][1]-height<pos[i][0][1]<shr_pos[2][1]+height/2:
+                        if '考核' in value[i]:
+                            value[i]=value[i].split('考核')[0]
                         if '年' in value[i]:
                             return value[i].split('年')[0][-4:-1]+'年'+value[i].split('年')[-1]
                         else:
@@ -143,6 +164,7 @@ def match_dangan(pos,value,save_path):
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width<pos[i][0][0]<shr_pos[1][0]+width and shr_pos[2][1]+height*2.5<pos[i][0][1]<shr_pos[2][1]+height*6:
-                    if '：' in value[i]:
-                        return value[i].split('：')[-1]
+                if shr_pos[0][0]-width<pos[i][0][0]<shr_pos[1][0]+width and shr_pos[2][1]+height*2.5<pos[i][0][1]<shr_pos[2][1]+height*6 and '网' not in value[i]:
+                    result="".join(list(filter(str.isdigit, value[i])))
+                    if len(result)>4:
+                        return result

@@ -9,8 +9,7 @@ from component_modules import autils
 def ReRec2(path,ymin,ymax,xmin,xmax,value):
     image = cv2.imread(path)
     cropImg=image[int(ymin):int(ymax),int(xmin):int(xmax)]
-    cv2.imwrite('save_files/crop/'+str(value)+'.png',cropImg)
-    pos,value=autils.detect_img('save_files/crop/'+str(value)+'.png')
+    pos,value=autils.detect_img(cropImg)
     return pos,value
 
 lac=LAC(mode='lac')
@@ -30,7 +29,6 @@ def match_haoma(pos,value,save_path):
                 #print(value[i])
                 return value[i].split('码')[1]
             elif value[i+1][0] in province or value[i+1][1] in province:
-                print(value[i+1])
                 return value[i+1]
     else:
         return '0'
@@ -145,7 +143,7 @@ def match_shiyongxingzhi(pos,value,save_path):
         elif '货运' in value[i]:
             return '货运'
     else:
-        return '0'
+        return '货运'
 
 
 def match_pinpaixinghao(pos,value,save_path):
@@ -195,17 +193,17 @@ def match_zhucedate(pos,value,save_path):
             if len(value[i].split('册')[-1])>7:
                 return value[i].split('-')[0][-4:]
             else:
-                ymin=pos[i][1][1]
-                ymax=pos[i][2][1]
-                xmin=pos[i][1][0]
-                xmax=pos[i][2][0]
-                img_height=pos[i][3][1]-pos[i][0][1]
-                img_width=pos[i][1][0]-pos[i][0][0]
-                pos,result=ReRec2(save_path,ymin-img_height,ymax+img_height*2,xmin,xmax+img_width*2.5,value='id5_zhucedate')
-                result=''.join(result)
-                return result
-    else:
-        return '0'
+                result=[]
+                shr_pos=pos[i]
+                height=pos[i][3][1]-pos[i][0][1]
+                width=pos[i][1][0]-pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+width and shr_pos[1][1]-int(height/2)<pos[i][0][1]<shr_pos[2][1]+height and '-' in value[i]:
+                        result.append(value[i])
+                if len(result)!=0:
+                    for i in range(len(result)):
+                        if '-' in result[i] and result[i].split('-')[0][-1].isdigit():
+                            return result[i]
 
 def match_zairenshu(pos,value,save_path):
     for i in range(len(value)):
@@ -275,22 +273,28 @@ def match_weight_zhengbei(pos,value,save_path):
 
 def match_weight_heding(pos,value,save_path):
     for i in range(len(value)):
-        if '核定' in value[i] and '数' not in value[i] and '人' not in value[i] and '入' not in value[i] or '核定载质量' in value[i]:
-            if value[i].split('量')[1]!="":
-                return value[i].split('量')[1]
+        if '核定' in value[i] and '人' not in value[i] and '入' not in value[i] and '量' in value[i]:
+            if len(value[i].split('量')[-1])!=0:
+                return value[i].split('量')[-1]
             else:
                 shr_pos=pos[i]
                 height=pos[i][3][1]-pos[i][0][1]
                 width=pos[i][1][0]-pos[i][0][0]
                 for i in range(len(pos)):
                     if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(3*width) and shr_pos[1][1]-int(2*height)<pos[i][0][1]<shr_pos[2][1]:
-                        if value[i]!='':
-                            return '0kg'
-                        else:
-                            result="".join(list(filter(str.isdigit, value[i])))
-                            return result+'kg'
-    else:
-        return '0'
+                        result="".join(list(filter(str.isdigit, value[i])))
+                        return result+'kg'
+        elif  '核定载质量' in value[i]:
+            if len(value[i].split('量')[-1])!=0:
+                return value[i].split('量')[-1]
+            else:
+                shr_pos=pos[i]
+                height=pos[i][3][1]-pos[i][0][1]
+                width=pos[i][1][0]-pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(3*width) and shr_pos[1][1]-int(2*height)<pos[i][0][1]<shr_pos[2][1]:
+                        result="".join(list(filter(str.isdigit, value[i])))
+                        return result+'kg'
 
 def match_weight_qianyin(pos,value,save_path):
     for i in range(len(value)):
