@@ -170,6 +170,9 @@ def remove(dict):
                 dict[i]=dict[i].replace(':','')
             elif '，' in dict[i]:
                 dict[i]=dict[i].replace('，','')
+            elif '-' in dict[i]:
+                dict[i]=dict[i].replace('-','')
+                
     return dict
 #-------------------------------------------------detect :-------------------------------------
 

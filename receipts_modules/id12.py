@@ -80,7 +80,7 @@ def match_zhenghao(pos,value,save_path):
 
 def match_yehumingcheng(pos,value,save_path):
     for i in range(len(pos)):
-        if '户名称' in value[i] or '名称' in value[i]:
+        if '户名称' in value[i] or '名称' in value[i] or '称' in value[i] or ' 称' in value[i]:
             if len(value[i].split('称')[-1])>1:
                 return value[i].split('称')[-1]
             else:
@@ -90,8 +90,21 @@ def match_yehumingcheng(pos,value,save_path):
                 for i in range(len(pos)):
                     if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(width/2) and shr_pos[1][1]-height*1.4<pos[i][0][1]<shr_pos[2][1]+height/2:
                         return value[i]
-    else:
-        return '无'
+        elif '业户名' in value[i]:
+            result=[]
+            shr_pos=pos[i]
+            height=pos[i][3][1]-pos[i][0][1]
+            width=pos[i][1][0]-pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[0][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+100 and shr_pos[1][1]-height*0.6<pos[i][0][1]<shr_pos[2][1]+height/2 and '类' not in value[i] and '车架' not in value[i]:
+                    result.append(value[i])
+            if len(result)!=0:
+                if '名称' in result:
+                    return ''.join(result).split('名称')[-1]
+                else:
+                    return ''.join(result).split('名')[-1]
+                    
+
 
 def match_dizhi(pos,value,save_path):
     address=[]
@@ -104,7 +117,7 @@ def match_dizhi(pos,value,save_path):
                 height=pos[i][3][1]-pos[i][0][1]
                 width=pos[i][1][0]-pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width*3 and shr_pos[1][1]-height*2.4<pos[i][0][1]<shr_pos[2][1]+height:
+                    if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width*5 and shr_pos[1][1]-height*2.4<pos[i][0][1]<shr_pos[2][1]+height:
                         address.append(value[i])
                 if len(address)>0:
                     return ''.join(address)
@@ -114,20 +127,28 @@ def match_dizhi(pos,value,save_path):
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+30 and shr_pos[2][1]<pos[i][0][1]<shr_pos[2][1]+height*4:
-                    address.append(value[i])
+                if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[2][1]+height<pos[i][0][1]<shr_pos[2][1]+height*3.5:
+                    if '色' not in value[i] or '黄' not in value[i]:
+                        address.append(value[i])
             if len(address)!=0:
-                for i in range(len(address)):
-                    if '色' in address[i]:
-                        del address[i]
-                if len(address)!=0:
-                    return ''.join(address)
+                return ''.join(address)
+        if '号牌' in value[i]:
+            shr_pos=pos[i]
+            height=pos[i][3][1]-pos[i][0][1]
+            width=pos[i][1][0]-pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[1][1]-height*5<pos[i][1][1]<shr_pos[1][1]-height*1.3 and len(value[i])>4:
+                    if '黄' not in value[i] or '色' not in value[i]:
+                        address.append(value[i])
+            if len(address)!=0:
+                return ''.join(address)
+
 
 
 
 def match_chepaihaoma(pos,value,save_path):
     for i in range(len(pos)):
-        if '黄色' in value[i]:
+        if '黄色' in value[i] and value[i].split("黄")[0][-1].isdigit():
             if '牌' in value[i]:
                 if '：' in value[i]:
                     return value[i].split('：')[-1]
@@ -163,30 +184,32 @@ def match_chepaihaoma(pos,value,save_path):
 
 def match_jingyingxukezheng(pos,value,save_path):
     rot=[]
+    number=[]
     for i in range(len(pos)):
         if '许可证号' in value[i]:
-            if len(value[i].split('号')[1])>3:
-                if '：' in value[i]:
-                    return value[i].split('：')[-1]
-                elif ':' in value[i]:
-                    return value[i].split(':')[-1]
-                else:
+            if len(value[i].split('号')[-1])>3 and value[i].split('号')[-1][2:4].isdigit():
                     return value[i].split('号')[-1]
             else:
                 shr_pos=pos[i]
                 height=pos[i][3][1]-pos[i][0][1]
                 width=pos[i][1][0]-pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+int(width/2+width) and shr_pos[1][1]-height*2<pos[i][0][1]<shr_pos[2][1]+int(height/2):
-                        #  and value[i][2:3].isdigit()
+                    if shr_pos[0][0]-width/2<pos[i][1][0]<shr_pos[0][0]+int(width/2+width) and shr_pos[1][1]-height*2.5<pos[i][0][1]<shr_pos[2][1]+int(height/2) and '-' not in value[i]:
                         rot.append(value[i])
                 if len(rot)!=0:
+                    rot=''.join(rot)
+                    number=re.findall("\d+",rot)
+                    if len(number)!=0:
+                        for i in range(len(number)):
+                            if len(number[i])>6:
+                                return number[i]
+        elif '号' in value[i] and value[i].split('号')[-1][:4].isdigit() and '发动' not in value[i]:
+            return value[i].split('号')[-1]
+        elif '盘字' in value[i]:
+            return value[i].split('盘字')[-1]
+        elif '字' in value[i] and value[i].split('字')[-1][-1].isdigit():
+            return value[i].split('字')[-1]
 
-                    for i in range(len(rot)):
-                        if rot[i].isalnum():
-                            n = check_length(rot[i])
-                            if n>6:
-                                return rot[i]
 
 def match_jingyingleixing(pos,value,save_path):
     for i in range(len(pos)):
@@ -229,6 +252,8 @@ def match_jingyingleixing_single(pos,value,save_path):
             return '个体'
         elif '普通' in value[i]:
             return '普通货运'
+        elif '普' in value[i] and '货运' in value[i]:
+            return '普通货运'    
         elif '道路货物' in value[i]:
             return '道路' + str(value[i].split('道路')[-1])
         elif '有限责任' in value[i] and '公司' in value[i]:
@@ -308,12 +333,12 @@ def match_dunwei(pos,value,save_path):
 
 def match_chicun(pos,value,save_path):
     for i in range(len(pos)):
-        if 'mm' in value[i] and value[i].split('mm')[0][-1].isdigit():
+        if 'mm' in value[i] and value[i].split('mm')[0][-2:-1].isdigit():
             if '尺寸' in value[i]:
                 return value[i].split('尺寸')[-1]
             else:
                 return value[i]
-        elif 'mmx' in value[i] and value[i].split('mmx')[0][-1].isdigit():
+        elif 'mmx' in value[i] and value[i].split('mmx')[0][-2:-1].isdigit():
             if '尺寸' in value[i]:
                 return value[i].split('尺寸')[-1]
             else:
@@ -351,18 +376,29 @@ def match_chicun(pos,value,save_path):
 
 def match_chicun_buchong(pos,value,save_path):
     chicun=[]
+    final=[]
+    list2=[]
     for i in range(len(pos)):
-        if '车辆尺寸' in value[i] or '尺寸' in value[i]:
+        if '车辆尺寸' in value[i] or '尺寸' in value[i] or '车辆（毫米' in value[i]:
             shr_pos=pos[i]
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0]+int(width*2.3) and shr_pos[1][1]-height*1.4<pos[i][0][1]<shr_pos[2][1]+height*5:
-                    if '_' not in value[i] and '毫米' not in value[i] and value[i].isdigit():
+                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0]+int(width*1.5) and shr_pos[1][1]-height*1.4<pos[i][0][1]<shr_pos[2][1]+height*5:
                         chicun.append(value[i])
-            if len(chicun)==3:
-                return {"长":chicun[0],"宽":chicun[1],"高":chicun[2]}
-            elif len(chicun)!=0:
-                return chicun
+            if len(chicun)!=0:
+                for i in range(len(chicun)):
+                    number=re.findall("\d+",chicun[i])
+                    if len(number)!=0:
+                        final.extend(number)
+            
+            if len(final)!=0:
+                list2 = [i for i in final if len(i) >2 and len(i)<5 and i[0]!=0]
+
+            if len(list2)==3:
+                return {"长":list2[0],"宽":list2[1],"高":list2[2]}
+            else:
+                return list2
+                    
 
                         
