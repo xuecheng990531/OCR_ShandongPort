@@ -4,7 +4,6 @@ from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi import FastAPI, UploadFile, File, applications
 from typing import Optional
 from component_modules.autils import *
-import time
 
 
 def swagger_monkey_patch(*args, **kwargs):
@@ -26,49 +25,48 @@ async def ocr(ID: int, Type: Optional[str] = None,Envir:Optional[str] = 'main', 
     OCR识别    
     - 参数 ID: 上传哪类单据    
 
-    - 参数 Type: 某一单据下对应的其他单据    
+    - 参数 Type: 某一单据下对应的其他单据 (不用管)
 
-    - 返回:返回没个单据要求的特定字段
+    - 参数 Envir: 是否展示全部结果(dev 显示全部结果, main 只显示需要检测的结果）
     
     上传文件要求:
-    - jpg、bmp、png、jpeg、jfif
+    - jpg、png、jpeg、pdf
 
-    - 1.除了ID=7的单据之外，上传的图片需要摆正，不能存在未经过旋转的图片。
+    - 1.上传的图片需要摆正，不能存在未经过旋转的图片。
 
     - 2.上传的PDF尽量不要超过一页,上传的身份证等证件正反面都需要放在一个照片之内。
 
-    - 3.上传单据的同时需要确定其ID值。
 
     ID类别:
-    - ID=1---------------------------->危险货物安全适运说明书*
+    - ID=1------------>危险货物安全适运说明书
 
-    - ID=2---------------------------->入境货物检验检疫证明*
+    - ID=2------------>入境货物检验检疫证明
 
-    - ID=3---------------------------->进口报关单*
+    - ID=3------------>进口报关单
 
-    - ID=4---------------------------->身份证*
+    - ID=4------------>身份证
 
-    - ID=5---------------------------->行驶证
+    - ID=5------------>行驶证
 
-    - ID=6---------------------------->驾驶证
+    - ID=6------------>驾驶证
 
-    - ID=7---------------------------->铁路货运单
+    - ID=7------------>铁路货运单
 
-    - ID=8---------------------------->海运提单*
+    - ID=8------------>海运提单
 
-    - ID=9---------------------------->道路运输经营许可证
+    - ID=9------------>道路运输经营许可证
 
-    - ID=10--------------------------->营业执照*
+    - ID=10----------->营业执照
 
-    - ID=11--------------------------->从业资格证*
+    - ID=11----------->从业资格证
 
-    - ID=12--------------------------->道路运输证
+    - ID=12----------->道路运输证
 
-    - ID=13--------------------------->订舱下货纸（MKL）
+    - ID=13----------->MKL订舱下货纸
 
-    - ID=14--------------------------->过磅单（特定公司）
+    - ID=14----------->过磅单
 
-    - ID=15--------------------------->集装箱信息
+    - ID=15----------->集装箱信息
     '''
     filename = File.filename
     extension = os.path.splitext(File.filename)[-1]
@@ -88,10 +86,7 @@ async def ocr(ID: int, Type: Optional[str] = None,Envir:Optional[str] = 'main', 
                 check(img_path=save_path)
             elif ID == 12 or ID ==11:
                 save_path = process_ID12(save_path)
-            start=time.time()
             pos, value = detect_img(save_path)
-            end=time.time()
-            print('time:',str(end-start)+'S')
             return detect_value(pos, ID, value, Type, save_path, filename, Envir)
 
         else:
@@ -106,4 +101,4 @@ async def ocr(ID: int, Type: Optional[str] = None,Envir:Optional[str] = 'main', 
     
 
 if __name__ == '__main__':
-    uvicorn.run(app='app:app', host='0.0.0.0', port=8005, reload=True)
+    uvicorn.run(app='app:app', host='0.0.0.0', port=8008, reload=True)
