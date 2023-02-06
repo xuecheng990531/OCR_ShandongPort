@@ -10,7 +10,7 @@ import cv2
 import paddleocr
 
 imgType_list = {'.jpg', '.bmp', '.png', '.jpeg', '.jfif', '.webp'}
-ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=24,use_gpu=True ,det_limit_side_len=1280)
+ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=24,use_gpu=True ,det_limit_side_len=1216)
 
 #-------------------------------------------------图片上传和删除-----------------------------------
 async def save_img(File, filename):
@@ -30,30 +30,16 @@ def del_upload_file():
 
 
 #-------------------------------------------------倾斜检测并返回结果-----------------------------------
-def detect_value(pos,ID,value,Type,save_path,filename,Envir):
-    y_left_top=pos[0][0][1]
-    y_right_top=pos[0][1][1]
-    y_left_bottom=pos[0][3][1]
-    x=abs(pos[3][3][0]-pos[3][0][0])
-    y=abs(y_left_bottom-y_left_top)
+def detect_value(pos,ID,value,Type,save_path,Envir):
+    result=detect_paper(ID,pos,value,Type,save_path)
+    removed_result=remove(result)
 
-    height=(x**2 + y**2)**(1/2)
+    del_upload_file()
 
-    # 如果超过检测框高度的一半，判定为
-    if abs(y_left_top-y_right_top)>height/2:
-        return {
-            "错误":"倾斜角度过大，重新上传"
-        }
+    if Envir=='main':
+        return {"检测结果":removed_result}
     else:
-        result=detect_paper(ID,pos,value,Type,save_path)
-        removed_result=remove(result)
-
-        del_upload_file()
-
-        if Envir=='main':
-            return {"检测结果":removed_result}
-        else:
-            return {"检测结果":removed_result,"算法检测的所有结果":value}
+        return {"检测结果":removed_result,"算法检测的所有结果":value}
 #-------------------------------------------------倾斜检测并返回结果-----------------------------------
 
 
@@ -161,7 +147,8 @@ def remove(dict):
                 dict[i]=dict[i].replace(':','')
             elif '，' in dict[i]:
                 dict[i]=dict[i].replace('，','')
-                
+            elif '\\"' in dict[i]:
+                dict[i]=dict[i].replace('\\"','  ')
     return dict
 #-------------------------------------------------detect :-------------------------------------
 
@@ -211,6 +198,9 @@ def detect_paper(ID,pos,value,Type,save_path):
         return result
     elif ID==15:
         result=match_jizhuangxiang(pos,value,save_path)
+        return result
+    elif ID==16:
+        result=match_jianyi_shuban(pos,value,save_path)
         return result
 
 

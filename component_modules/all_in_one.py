@@ -1,4 +1,4 @@
-from receipts_modules import id1, id10, id11, id12, id13, id14, id15, id2, id3, id4, id5, id6, id7, id8, id9
+from receipts_modules import id1, id10, id11, id12, id13, id14, id15, id2, id3, id4, id5, id6, id7, id8, id9,id2_vertical
 
 def match_jinkou(pos,value,save_path):
     bianhao=id3.match_bianhao(pos, value,save_path)
@@ -13,6 +13,35 @@ def match_jinkou(pos,value,save_path):
         "编号":bianhao,"收货人":shouhuoren,"申报日期":shenbaoriqi,
         "进境关别":jinjingguanbie,"运输方式":yunshufangshi,
         "运单号":yundanhao,"申报单位":shenbaodanwei
+        }
+
+def match_jianyi_shuban(pos,value,save_path):
+    bianhao=id2_vertical.match_bianhao(pos, value,save_path)
+    shouhuoren=id2_vertical.match_shouhuoren(pos,value,save_path)
+    fahuoren=id2_vertical.match_fahuoren(pos, value,save_path)
+    pinming=id2_vertical.match_pinming(pos, value,save_path)
+    zhongliang=id2_vertical.match_zhongliang(pos, value,save_path)
+    shuchuguojia=id2_vertical.match_shuchuguojia(pos, value,save_path)
+    jizhuangxiang=id2_vertical.match_jizhuangxiang(pos, value,save_path)
+    shengchanriqi=id2_vertical.match_shengchanriqi(pos, value,save_path)
+    shengchanchangjia=id2_vertical.match_shengchanchangjia(pos, value,save_path)
+    pinpai=id2_vertical.match_pinpai(pos, value,save_path)
+    guige=id2_vertical.match_guige(pos, value,save_path)
+    hetonghao=id2_vertical.match_hetonghao(pos, value,save_path)
+    yundanhao=id2_vertical.match_tiyundanhao(pos, value,save_path)
+    rujingkouan=id2_vertical.match_rujingkouan(pos, value,save_path)
+    rujingriqi=id2_vertical.match_rujingriqi(pos, value,save_path)
+    biaoji=id2_vertical.match_biaoji(pos, value,save_path)
+    baozhuangzhonglei=id2_vertical.match_baozhuangzhonglei(pos, value,save_path)
+    beizhu=id2_vertical.match_beizhu(pos, value,save_path)
+
+    return {
+        "编号":bianhao,"收货人":shouhuoren,"发货人":fahuoren,
+        "品名":pinming,"报检数/重量":zhongliang,"输出国家":shuchuguojia,
+        "集装箱号":jizhuangxiang,"生产日期":shengchanriqi,"生产厂家":shengchanchangjia,
+        "品牌":pinpai,"规格":guige,"合同号":hetonghao,"运单号":yundanhao,
+        "入境口岸":rujingkouan,"入境日期":rujingriqi,
+        "标记":biaoji,"包装种类":baozhuangzhonglei,"备注":beizhu
         }
 
 def match_jianyi(pos,value,save_path):

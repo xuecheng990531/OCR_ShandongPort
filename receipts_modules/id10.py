@@ -13,8 +13,7 @@ jiagedanwei=["仟","佰","拾","万","仟","佰","拾"]
 def ReRec2(path,ymin,ymax,xmin,xmax,value):
     image = cv2.imread(path)
     cropImg=image[int(ymin):int(ymax),int(xmin):int(xmax)]
-    cv2.imwrite('save_files/crop/'+str(value)+'.png',cropImg)
-    pos,value=autils.detect_img('save_files/crop/'+str(value)+'.png')
+    pos,value=autils.detect_img(cropImg)
     return pos,value
 
 def match_mingcheng(pos,value,save_path):
@@ -36,8 +35,7 @@ def match_mingcheng(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[0][0]-width*2.5<pos[i][1][0]<shr_pos[0][0]-width and shr_pos[0][1]-height<pos[i][0][1]<shr_pos[3][1]+height/2:
                     return value[i]
-    else:
-        return '无'
+
 
 def match_daima(pos,value,save_path):
     for i in range(len(pos)):
@@ -85,8 +83,7 @@ def search(pos,value,save_path):
             return value[i]
         elif '有限责任公司' in value[i] and '(' not in value[i]:
             return '有限责任公司'
-    else:
-        return '0'
+
 def match_leixing(pos,value,save_path):
     for i in range(len(pos)):
         if '类型' in value[i] or '型' in value[i]:
@@ -115,6 +112,11 @@ def match_daibiaoren(pos,value,save_path):
                         user_name_lis.append(_result[0][_index])
                 if len(user_name_lis)!=0:
                     return user_name_lis[0]
+                else:
+                    if len(value[i].split('人')[-1])!=0 :
+                        return value[i].split('人')[-1]
+                    elif len(value[i].split('入')[-1])!=0:
+                        return value[i].split('入')[-1]
             else:
                 shr_pos=pos[i]
                 height=pos[i][3][1]-pos[i][0][1]
@@ -169,18 +171,14 @@ def match_yingyeqixian(pos,value,save_path):
             
 
 def match_jingyingfanwei(pos,value,save_path):
+    result=[]
     for i in range(len(pos)):
-        if '范' in value[i] or '经营' in value[i]:
-            ymin=pos[i][0][1]
-            ymax=pos[i][2][1]
-            xmin=pos[i][0][0]
-            xmax=pos[i][2][0]
-            img_height=pos[i][3][1]-pos[i][0][1]
-            img_width=pos[i][1][0]-pos[i][0][0]
-            if len(value[i])>10:
-                pos,result=ReRec2(save_path,ymin-img_height,ymax+img_height*5,xmin,xmax+10,value='id10_jingyingfanwie')
-            else:
-                pos,result=ReRec2(save_path,ymin-img_height,ymax+img_height*5,xmin,xmax+img_width*4.5,value='id10_jingyingfanwei')
-            result=''.join(result)
-            return result
-
+        if '范' in value[i] or '经营' in value[i] or '范围' in value[i]:
+            shr_pos=pos[i]
+            height=pos[i][3][1]-pos[i][0][1]
+            width=pos[i][1][0]-pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[0][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+10*width and shr_pos[0][1]-height*1.5<pos[i][0][1]<shr_pos[3][1]+5*height:
+                    result.append(value[i])
+        
+        return ''.join(result)

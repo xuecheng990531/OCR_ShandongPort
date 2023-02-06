@@ -4,7 +4,7 @@ import sys
 sys.path.append('../')
 from component_modules import autils
 
-jizhuangxiang_match=r'\b[0-0A-Z\']{4}[0-9\']{7}\b'
+jizhuangxiang_match=r'\b[A-Z\']{4}[0-9\']{7}\b'
 date="\d{4}[-]?\d{2}"
 
 
@@ -39,7 +39,6 @@ def match_bianhao(pos,value,save_path):
             result=''.join(result)
             if '编号' in result:
                 return result.replace('编号','')
-
 
 def match_shouhuoren(pos,value,save_path):
     for i in range(len(pos)):
@@ -103,8 +102,6 @@ def match_shuchuguojia(pos,value,save_path):
                     if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+int(5*width) and shr_pos[0][1]-height<pos[i][0][1]<shr_pos[2][1]+height:
                         return value[i]
 
-
-
 def match_jizhuangxiang(pos,value,save_path):
     result=[]
     for i in range(len(pos)):
@@ -125,28 +122,21 @@ def match_jizhuangxiang(pos,value,save_path):
 
 
 def match_shengchanriqi(pos,value,save_path):
-    result=[]
     for i in range(len(pos)):
         if '生产日期' in value[i]:
-            if len(value[i].split('期')[-1])>6:
-                m = re.search(r"\d", value[i])
-                first=value[i][int(m.start()):]
-                shr_pos=pos[i]
-                height=pos[i][3][1]-pos[i][0][1]
-                width=pos[i][1][0]-pos[i][0][0]
-                for i in range(len(pos)):
-                    if shr_pos[0][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+width*5 and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+height and '生产' not in value[i] and '.' in value[i] and value[i].split('.')[0][-1].isdigit():
-                        result.append(value[i])
-                    return ''.join(result)+' '+first
-            else:
-                shr_pos=pos[i]
-                height=pos[i][3][1]-pos[i][0][1]
-                width=pos[i][1][0]-pos[i][0][0]
-
-                for i in range(len(pos)):
-                    if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+width*5 and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[2][1]+height and '生产' not in value[i] and '.' in value[i] and value[i].split('.')[0][-1].isdigit():
-                        result.append(value[i])
-                return ''.join(result)
+            shr_pos=pos[i]
+            height=pos[i][3][1]-pos[i][0][1]
+            width=pos[i][1][0]-pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[0][0]-int(width/5)<pos[i][0][0]<shr_pos[1][0] and shr_pos[3][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+height and '-' in value[i]:
+                    return value[i]
+        else:
+            if '-' in value[i] and value[i].split('-')[0][-1].isdigit() and value[i].split('-')[-1][0].isdigit():
+                if '克' in value[i]:
+                    return value[i].split('克')[-1]
+                else:
+                    return value[i]
+          
 
 def match_shengchanchangjia(pos,value,save_path):
     for i in range(len(pos)):
@@ -164,45 +154,56 @@ def match_shengchanchangjia(pos,value,save_path):
                 elif '名称' not in value[i]:
                     return value[i].split('家')[-1]
             else:
-                shr_pos=pos[i]
-                height=pos[i][3][1]-pos[i][0][1]
-                width=pos[i][1][0]-pos[i][0][0]
-                for i in range(len(pos)):
-                    if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[0][1]+height:
-                        return  value[i]
+                return value[i]
+        elif '生产厂家' in value[i]:
+            shr_pos=pos[i]
+            height=pos[i][3][1]-pos[i][0][1]
+            width=pos[i][1][0]-pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[0][1]+height:
+                    return  value[i]
+
 
 
 def match_pinpai(pos,value,save_path):
-    for i in range(len(pos)):
-        if '品牌' in value[i] and len(value[i].split('牌')[-1])>2:
-            if '原产' not in value[i]:
-                return value[i].split('牌')[-1]
-            elif '原产' in value[i]:
-                return value[i].split('牌')[-1].split('原产')[0]
-            else:
+    if '无品牌' in value:
+        return '无品牌'
+    else:
+        for i in range(len(pos)):
+            if '品牌' in value[i]:
                 shr_pos=pos[i]
                 height=pos[i][3][1]-pos[i][0][1]
                 width=pos[i][1][0]-pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[0][0]-width/4<pos[i][0][0]<shr_pos[0][0]+width/5 and shr_pos[3][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+height:
-                        if '原产' not in value[i]:
-                            return value[i].split('牌')[-1]
-                        elif '原产' in value[i]:
-                            return value[i].split('牌')[-1].split('原产')[0]
+                    if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0] and shr_pos[3][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+height:
+                        if '*' in value[i]:
+                            return 'None'
+                        else:
+                            return value[i]
 
 def match_guige(pos,value,save_path):
-    for i in range(len(pos)):
-        if '规格' in value[i]:
-            if len(value[i].split('格')[-1])>1 and '原产' not in value[i] and '数' not in value[i]:
-                if '千克' in value[i]:
-                    return value[i][3:].split('千克')[0]+'千克'
-                elif '7' in value[i]:
-                    return '/'
-                else:
-                    return value[i][3:]
-        else:
-            return '/'
+    if '无规格' in value:
+        return '无规格'
 
+    for i in range(len(pos)):
+        if '规格' in value[i] and len(value[i])==2:
+            shr_pos=pos[i]
+            height=pos[i][3][1]-pos[i][0][1]
+            width=pos[i][1][0]-pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0] and shr_pos[3][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+height:
+                    return value[i]
+        else:
+            if '生产日期' in value[i]:
+                shr_pos=pos[i]
+                height=pos[i][3][1]-pos[i][0][1]
+                width=pos[i][1][0]-pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[0][0]-width*2.5<pos[i][0][0]<shr_pos[0][0] and shr_pos[3][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+height*1.4:
+                        if '*' in value[i]:
+                            return value[i].split('*')[0]
+                        else:
+                            return value[i]
 
 def match_hetonghao(pos,value,save_path):
     for i in range(len(pos)):
@@ -252,7 +253,7 @@ def match_rujingriqi(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(width) and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+height and '提/运单号' not in value[i]:
                     return value[i]
-   
+  
 def match_biaoji(pos,value,save_path):
     for i in range(len(pos)):
         if '标记及号码' in value[i]:

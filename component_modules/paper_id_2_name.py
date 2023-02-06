@@ -4,6 +4,8 @@ def get_paper_name(id):
         return "危险品货物安全适运书"
     elif id==2:
         return "入境货物检验检疫证明"
+    elif id==16:
+        return "入境货物检验检疫证明-竖版"
     elif id==3:
         return "中华人民共和国海关进口货物报关单"
     elif id==4:

@@ -5,9 +5,10 @@ import sys
 sys.path.append('../')
 from component_modules import autils
 
-def ReRec2(path,ymin,ymax,xmin,xmax,value):
+def ReRec2(path,ymin,ymax,xmin,xmax):
     image = cv2.imread(path)
     cropImg=image[int(ymin):int(ymax),int(xmin):int(xmax)]
+    cv2.imwrite('new.png',cropImg)
     pos,value=autils.detect_img(cropImg)
     return pos,value
 
@@ -52,7 +53,7 @@ def match_address(pos,value,save_path):
             xmax=pos[i][2][0]
             img_height=pos[i][3][1]-pos[i][0][1]
             img_width=pos[i][1][0]-pos[i][0][0]
-            pos,result=ReRec2(save_path,ymin-img_height,ymax+img_height*3,xmin,xmax+img_width*20,value='id4_address')
+            pos,result=ReRec2(save_path,ymin-img_height,ymax+img_height*3,xmin,xmax+img_width*7)
             result=''.join(result)
             
             if '住址' in result or '住' in result or '址' or '佳' in result:
@@ -98,7 +99,7 @@ def match_name_single(pos,value,save_path):
             xmax=pos[i][2][0]
             img_height=pos[i][3][1]-pos[i][0][1]
             img_width=pos[i][1][0]-pos[i][0][0]
-            pos,result=ReRec2(save_path,ymin-img_height*1.4,ymax+img_height,xmin,xmax+img_width*10,value='id4_name')
+            pos,result=ReRec2(save_path,ymin-img_height*1.4,ymax+img_height,xmin,xmax+img_width*10)
             result=''.join(result)
             return re.sub(r'[姓名]*', '', result)
 

@@ -87,7 +87,7 @@ async def ocr(ID: int, Type: Optional[str] = None,Envir:Optional[str] = 'main', 
             elif ID == 12 or ID ==11:
                 save_path = process_ID12(save_path)
             pos, value = detect_img(save_path)
-            return detect_value(pos, ID, value, Type, save_path, filename, Envir)
+            return detect_value(pos, ID, value, Type, save_path, Envir)
 
         else:
             count, img_list = pdf_img(save_path, name)
@@ -97,7 +97,7 @@ async def ocr(ID: int, Type: Optional[str] = None,Envir:Optional[str] = 'main', 
 
             pos, value = detect_pdf(img_list, count)
 
-            return detect_value(pos, ID, value, Type, save_path, filename, Envir)
+            return detect_value(pos, ID, value, Type, img_list[0], Envir)
     
 
 if __name__ == '__main__':
