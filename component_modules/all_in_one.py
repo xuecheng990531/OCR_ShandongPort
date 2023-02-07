@@ -157,36 +157,36 @@ def match_jiashizheng(pos,value,save_path):
         "准驾车型":chexing,"证号":zhenghao,"有效期":youxiaoqi
     }
 
-def match_tielu(pos,value,save_path):
-    huowu=id7.match_huowumingcheng(pos,value,save_path)
-    xuqiuhao=id7.match_xuqiuhao(pos,value,save_path)
-    fazhan=id7.match_fazhan(pos,value,save_path)
-    # mingcheng=tielu.match_mingcheng(pos,value)
-    daozhan=id7.match_daozhan(pos,value,save_path)
-    tuoyunmingcheng=id7.match_tuoyunmingcheng(pos,value,save_path)
-    shouhuomingcheng=id7.match_shouhuomingcheng(pos,value,save_path)
-    jianshu_all=id7.match_jianshu_all(pos,value,save_path)
-    zhongliang=id7.match_zhongliang(pos,value,save_path)
-    xianghao=id7.match_xianghao(pos,value,save_path)
-    shifenghao=id7.match_shifenghao(pos,value,save_path)
-    # quedingzhongliang=tielu.match_quedingzhongliang(pos,value)
-    feimu=id7.match_feimu(pos,value,save_path)
-    feiyongheji=id7.match_feiyongheji(pos,value,save_path)
-    shuie=id7.match_shuie(pos,value,save_path)
-    # jine=tielu.match_jine(pos,value)
-    tuoyunshoujihaoma=id7.match_phone_tuoyun(pos,value,save_path)
-    shouhuoshoujihaoma=id7.match_phone_shouhuo(pos,value,save_path)
-    tuoyunren=id7.match_tuoyunren(pos,value,save_path)
-    daozhanren=id7.match_daozhanren(pos,value,save_path)
+# def match_tielu(pos,value,save_path):
+#     huowu=id7.match_huowumingcheng(pos,value,save_path)
+#     xuqiuhao=id7.match_xuqiuhao(pos,value,save_path)
+#     fazhan=id7.match_fazhan(pos,value,save_path)
+#     # mingcheng=tielu.match_mingcheng(pos,value)
+#     daozhan=id7.match_daozhan(pos,value,save_path)
+#     tuoyunmingcheng=id7.match_tuoyunmingcheng(pos,value,save_path)
+#     shouhuomingcheng=id7.match_shouhuomingcheng(pos,value,save_path)
+#     jianshu_all=id7.match_jianshu_all(pos,value,save_path)
+#     zhongliang=id7.match_zhongliang(pos,value,save_path)
+#     xianghao=id7.match_xianghao(pos,value,save_path)
+#     shifenghao=id7.match_shifenghao(pos,value,save_path)
+#     # quedingzhongliang=tielu.match_quedingzhongliang(pos,value)
+#     feimu=id7.match_feimu(pos,value,save_path)
+#     feiyongheji=id7.match_feiyongheji(pos,value,save_path)
+#     shuie=id7.match_shuie(pos,value,save_path)
+#     # jine=tielu.match_jine(pos,value)
+#     tuoyunshoujihaoma=id7.match_phone_tuoyun(pos,value,save_path)
+#     shouhuoshoujihaoma=id7.match_phone_shouhuo(pos,value,save_path)
+#     tuoyunren=id7.match_tuoyunren(pos,value,save_path)
+#     daozhanren=id7.match_daozhanren(pos,value,save_path)
 
-    return {
-        "需求号":xuqiuhao,
-        "托运名称":tuoyunmingcheng,"发站":fazhan,"托运经办人":tuoyunren,"托运经办人联系电话":tuoyunshoujihaoma,
-        "收货名称":shouhuomingcheng,"到站":daozhan,"到站经办人":daozhanren,"到站经办人联系电话":shouhuoshoujihaoma,
-        "件数":jianshu_all,"总重量":zhongliang,"厢号":xianghao,
-        "集装箱施封号":shifenghao,"确定重量":zhongliang,"费目":feimu,
-        "税额":shuie,"费用合计":feiyongheji,"货物详情":'0'
-    }
+#     return {
+#         "需求号":xuqiuhao,
+#         "托运名称":tuoyunmingcheng,"发站":fazhan,"托运经办人":tuoyunren,"托运经办人联系电话":tuoyunshoujihaoma,
+#         "收货名称":shouhuomingcheng,"到站":daozhan,"到站经办人":daozhanren,"到站经办人联系电话":shouhuoshoujihaoma,
+#         "件数":jianshu_all,"总重量":zhongliang,"厢号":xianghao,
+#         "集装箱施封号":shifenghao,"确定重量":zhongliang,"费目":feimu,
+#         "税额":shuie,"费用合计":feiyongheji,"货物详情":'0'
+#     }
 
 
 def match_tielu2(pos,value,save_path):
@@ -204,10 +204,10 @@ def match_tielu2(pos,value,save_path):
     xianghao=id7.match_xianghao(pos,value,save_path)
     shifenghao=id7.match_shifenghao(pos,value,save_path)
     # quedingzhongliang=tielu.match_quedingzhongliang(pos,value)
-    # feimu=id7.match_feimu(pos,value,save_path)
+    feimu=id7.match_feimu(pos,value,save_path)
     # feiyongheji=id7.match_feiyongheji(pos,value,save_path)
-    # shuie=id7.match_shuie(pos,value,save_path)
-    # jine=tielu.match_jine(pos,value)
+    shuie=id7.match_shuie(pos,value,save_path)
+    jine=id7.match_jine(pos,value,save_path)
     # tuoyunshoujihaoma=id7.match_phone_tuoyun(pos,value,save_path)
     # shouhuoshoujihaoma=id7.match_phone_shouhuo(pos,value,save_path)
     # tuoyunren=id7.match_tuoyunren(pos,value,save_path)
@@ -236,73 +236,65 @@ def match_tielu2(pos,value,save_path):
     for i in range(len(huowu)):
         d[i]['货物名称']=huowu[i]
         if len(jianshu_split)!=len(huowu):
-            d[i]['件数']=''
+            d[i]['件数']='None'
         else:
             d[i]['件数']=jianshu_split[i]
         if len(baozhuang_split)!=len(huowu):
-            d[i]['包装']=''
+            d[i]['包装']='None'
         else:
             d[i]['包装']=baozhuang_split[i]
         
         if len(huowujg_split)!=len(huowu):
-            d[i]['货物价格']=''
+            d[i]['货物价格']='None'
         else:
             d[i]['货物价格']=huowujg_split[i]
 
         if len(zhongliang_split)!=len(huowu):
-            d[i]['重量']=''
+            d[i]['重量']='None'
         else:
             d[i]['重量']=zhongliang_split[i]
 
         if len(xianglei_split)!=len(huowu):
-            d[i]['箱型箱类']=''
+            d[i]['箱型箱类']='None'
         else:
             d[i]['箱型箱类']=xianglei_split[i]
 
         if len(xianghao)!=len(huowu):
-            d[i]['箱号']=''
+            d[i]['箱号']='None'
         else:
             d[i]['箱号']=xianghao[i]
         
         if len(shifenghao)!=len(huowu):
-            d[i]['施封号']=''
+            d[i]['施封号']='None'
         else:
             d[i]['施封号']=shifenghao[i]
         
         if len(quedingzhongliang_split)!=len(huowu):
-            d[i]['确定重量']=''
+            d[i]['确定重量']='None'
         else:
             d[i]['确定重量']=quedingzhongliang_split[i]
         
         if len(tiji_split)!=len(huowu):
-            d[i]['体积']=''
+            d[i]['体积']='None'
         else:
             d[i]['体积']=tiji_split[i]
 
         if len(yunjia_split)!=len(huowu):
-            d[i]['运价号']=''
+            d[i]['运价号']='None'
         else:
             d[i]['运价号']=yunjia_split[i]
 
         if len(jifeizhongliang_split)!=len(huowu):
-            d[i]['计费重量']=''
+            d[i]['计费重量']='None'
         else:
             d[i]['计费重量']=jifeizhongliang_split[i]
     
-    hejixinxi={
+    hejixinxi=[{
         '件数':jianshu_all,'包装':baozhuang_all,
         '货物价格':huowujg_all,'重量':zl_all,'箱型箱类':xl_all,
         '箱号':xh_all,'集装箱施封号':sfh_all,'承运人确定重量':qdzl_all,
         '体积':tj_all,'运价号':yunjia_all,'计费重量':jifei_all
-        }
-    # return {
-    #     "需求号":xuqiuhao,
-    #     "托运名称":tuoyunmingcheng,"发站":fazhan,"托运经办人":tuoyunren,"托运经办人联系电话":tuoyunshoujihaoma,
-    #     "收货名称":shouhuomingcheng,"到站":daozhan,"到站经办人":daozhanren,"到站经办人联系电话":shouhuoshoujihaoma,
-    #     "件数":jianshu_all,"总重量":zhongliang,"厢号":xianghao,
-    #     "集装箱施封号":shifenghao,"确定重量":zhongliang,"费目":feimu,
-    #     "税额":shuie,"费用合计":feiyongheji,'货物明细信息':d,'货物合计信息':hejixinxi
-    # }
+    }]
 
     return {
         "需求号":xuqiuhao,
@@ -310,7 +302,7 @@ def match_tielu2(pos,value,save_path):
         '运单号':yundan,
         "托运名称":tuoyunmingcheng,"发站":fazhan,
         "收货名称":shouhuomingcheng,"到站":daozhan,
-        '货物明细信息':d,'货物合计信息':hejixinxi
+        '货物明细信息':d,'货物合计信息':hejixinxi,'详细信息':feimu
     }
 
 def match_daoluyunshujingyingzigezheg(pos,value,save_path):

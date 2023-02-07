@@ -22,8 +22,7 @@ def yundanhao(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]+width/2<pos[i][0][0]<shr_pos[1][0]+width*3 and shr_pos[0][1]-height<pos[i][0][1]<shr_pos[2][1]+height/2:
                     return value[i]
-    else:
-        return ''
+
 
 def chezhong_chehao(pos,value,save_path):
     for i in range(len(pos)):
@@ -41,8 +40,7 @@ def chezhong_chehao(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+width*7 and shr_pos[2][1]<pos[i][0][1]<shr_pos[2][1]+height:
                     return value[i]
-    else:
-        return ''
+
 
 def match_tiaoxingmabianhao(pos,value,save_path):
     for i in range(len(pos)):
@@ -55,8 +53,7 @@ def match_tiaoxingmabianhao(pos,value,save_path):
                     return value[i]
         elif re.match(tiaoxingma,value[i]):
             return value[i]
-    else:
-        return ''
+
 def match_tuoyunren(pos,value,save_path):
     for i in range(len(pos)):
         if '货位' in value[i]:
@@ -96,8 +93,7 @@ def match_xuqiuhao(pos,value,save_path):
                 for i in range(len(pos)):
                     if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[1][1]-int(height/2)<pos[i][0][1]<shr_pos[1][1]+int(height/2) and len(value[i])>11:
                         return value[i]
-    else:
-        return ''            
+           
 
 def match_fazhan(pos,value,save_path):
     for i in range(len(pos)):
@@ -113,15 +109,13 @@ def match_fazhan(pos,value,save_path):
 
 def match_tuoyunmingcheng(pos,value,save_path):
     for i in range(len(pos)):
-        if '取货地址' in value[i]:
+        if '取货地址' in value[i] or '联货地址' in value[i] or '联货' in value[i]:
             shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]# 收货人的宽度
+            height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-int(width/2)<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[0][1]-height*2.1<pos[i][3][1]<shr_pos[0][1]:
+                if shr_pos[0][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0] and shr_pos[0][1]-height*3.1<pos[i][3][1]<shr_pos[0][1]-height/2:
                     return value[i]
-    else:
-        return ''
 
 
 def match_shouhuomingcheng(pos,value,save_path):
@@ -131,10 +125,8 @@ def match_shouhuomingcheng(pos,value,save_path):
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-int(width/3)<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[0][1]-(height+int(height/2))<pos[i][3][1]<shr_pos[0][1]:
+                if shr_pos[0][0]-int(width/3)<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[0][1]-height*3.1<pos[i][3][1]<shr_pos[0][1]+height/2:
                     return value[i]
-    else:
-        return ''
 
 
 def match_daozhan(pos,value,save_path):
@@ -146,8 +138,7 @@ def match_daozhan(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+width and shr_pos[1][1]-int(height/2)<pos[i][0][1]<shr_pos[1][1]+int(height/2) and '发站' not in value[i] and '取货地址' not in value[i]:
                     return value[i]
-    else:
-        return ''
+
     
 def match_phone_tuoyun(pos,value,save_path):
     for i in range(len(pos)):
@@ -158,8 +149,7 @@ def match_phone_tuoyun(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[0][0]-width<pos[i][1][0]<shr_pos[0][0] and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height and '车号' not in value[i]:
                     return value[i]
-    else:
-        return ''
+
 def match_phone_shouhuo(pos,value,save_path):
     for i in range(len(pos)):
         if '布号' in value[i]:
@@ -203,8 +193,7 @@ def match_jianshu_all(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[3][1]+height*4.5<pos[i][0][1]<shr_pos[3][1]+(height*5.5):
                     return value[i]
-    else:
-        return ''
+
 
 
 def match_jianshu_split(pos,value,save_path):
@@ -239,8 +228,7 @@ def match_baozhuang_all(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]+width*4<pos[i][0][0]<shr_pos[1][0]+int(width*5) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
                     return value[i]
-    else:
-        return ''
+
 
 def match_huowujiage_all(pos,value,save_path):
     for i in range(len(pos)):
@@ -259,8 +247,7 @@ def match_huowujiage_all(pos,value,save_path):
                 if shr_pos[1][0]+width*5<pos[i][0][0]<shr_pos[1][0]+int(width*8) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
                     return value[i]
 
-    else:
-        return ''
+
 
 def match_zhongliang_all(pos,value,save_path):
     for i in range(len(pos)):
@@ -278,8 +265,7 @@ def match_zhongliang_all(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]+width*8<pos[i][0][0]<shr_pos[1][0]+int(width*11) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
                     return value[i]
-    else:
-        return ''
+
 
 def match_xinaglei_all(pos,value,save_path):
     for i in range(len(pos)):
@@ -297,8 +283,7 @@ def match_xinaglei_all(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]+width*11<pos[i][0][0]<shr_pos[1][0]+int(width*14) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
                     return value[i]
-    else:
-        return ''
+
 
 def match_xinaghap_all(pos,value,save_path):
     for i in range(len(pos)):
@@ -316,8 +301,7 @@ def match_xinaghap_all(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]+width*14<pos[i][0][0]<shr_pos[1][0]+int(width*17) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
                     return value[i]
-    else:
-        return ''
+
 
 def match_shifeng_all(pos,value,save_path):
     for i in range(len(pos)):
@@ -335,8 +319,7 @@ def match_shifeng_all(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]+width*17<pos[i][0][0]<shr_pos[1][0]+int(width*20) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
                     return value[i]
-    else:
-        return ''
+
 
 
 def match_quedingzl_all(pos,value,save_path):
@@ -355,8 +338,7 @@ def match_quedingzl_all(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]+width*20<pos[i][0][0]<shr_pos[1][0]+int(width*23) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
                     return value[i]
-    else:
-        return ''
+
 
 def match_tiji_all(pos,value,save_path):
     for i in range(len(pos)):
@@ -374,8 +356,7 @@ def match_tiji_all(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]+width*24<pos[i][0][0]<shr_pos[1][0]+int(width*25) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
                     return value[i]
-    else:
-        return ''
+
 
 def match_yunjia_all(pos,value,save_path):
     for i in range(len(pos)):
@@ -384,10 +365,8 @@ def match_yunjia_all(pos,value,save_path):
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0] and shr_pos[3][1]+height*3<pos[i][0][1]<shr_pos[3][1]+(height*6):
+                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0] and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+(height*6):
                     return value[i]
-    else:
-        return ''
 
 def match_jifeizl_all(pos,value,save_path):
     for i in range(len(pos)):
@@ -405,8 +384,7 @@ def match_jifeizl_all(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]+width*29<pos[i][0][0]<shr_pos[1][0]+int(width*31) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
                     return value[i]
-    else:
-        return ''
+
 
 
 def match_huowujiage_split(pos,value,save_path):
@@ -434,8 +412,7 @@ def match_zhongliang(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]+int(5*width)<pos[i][0][0]<shr_pos[1][0]+int(width*15) and shr_pos[0][1]-height/2<pos[i][1][1]<shr_pos[0][1]+height/2 and '合计' not in value[i]:
                     return value[i]+'KG'
-    else:
-        return ''
+
 
 def match_xianghao(pos,value,save_path):
     xianghao=[]
@@ -448,8 +425,7 @@ def match_xianghao(pos,value,save_path):
                 if shr_pos[0][0]<pos[i][1][0]<shr_pos[1][0]+width and shr_pos[3][1]<pos[i][0][1]<shr_pos[3][1]+(height*3) and '箱号' not in value[i]:
                     xianghao.append(value[i])
             return xianghao
-    else:
-        return ''                
+            
                     
 def match_shifenghao(pos,value,save_path):
     sf=[]
@@ -475,7 +451,8 @@ def match_feimu(pos,value,save_path):
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
                 if shr_pos[0][0]-int(width+width/2)<pos[i][0][0]<shr_pos[0][0] and shr_pos[3][1]<pos[i][0][1]<shr_pos[3][1]+int(height*3):
-                    feimu.append(value[i])
+                    if len(value[i])!=0:
+                        feimu.append(value[i])
         elif '税额' in value[i]:
             shr_pos=pos[i]
             height=pos[i][3][1]-pos[i][0][1]
@@ -484,11 +461,34 @@ def match_feimu(pos,value,save_path):
                 if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width and shr_pos[3][1]<pos[i][0][1]<shr_pos[3][1]+int(height*5):
                     pattern = re.compile("[\u4e00-\u9fa5]")
                     s="".join(pattern.findall(value[i]))
-                    feimu.append(s)
+                    if len(s)!=0:
+                        feimu.append(s)
     if len(feimu)==0:
-        return ''
+        return 'None'
     else:
-        return feimu
+        temp=[]
+        all_info=[]
+        for each in feimu:
+            if each not in temp:
+                temp.append(each)
+        for i in range(len(pos)):
+            for j in range(len(temp)):
+                if temp[j] in value[i]:
+                    shr_pos=pos[i]
+                    height=pos[i][3][1]-pos[i][0][1]
+                    width=pos[i][1][0]-pos[i][0][0]
+                    for i in range(len(pos)):
+                        if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width*20 and shr_pos[0][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height/2:
+                            all_info.append(value[i])
+        
+        temp2=[]
+        for each in all_info:
+            if each not in temp2:
+                temp2.append(each)
+        return temp2
+                    
+
+
 
                     
 
@@ -511,8 +511,7 @@ def match_feiyongheji(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[1][1]-height<pos[i][0][1]<shr_pos[1][1]+height:
                     return value[i]
-    else:
-        return ''
+
 
 
 def match_shuie(pos,value,save_path):
@@ -527,14 +526,35 @@ def match_shuie(pos,value,save_path):
                     s="".join(filter(lambda s:s in'0123456789.', value[i]))
                     shiue.append(s)
     if len(shiue)==0:
-        return ''
+        return 'None'
     else:
         return shiue
 
                 
 
 def match_jine(pos,value,save_path):
-    return ''
+    jine=[]
+    for i in range(len(pos)):
+        if '费目' in value[i]:
+            shr_pos=pos[i]
+            height=pos[i][3][1]-pos[i][0][1]
+            width=pos[i][1][0]-pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[1][0]+width*2.5 <pos[i][0][0]<shr_pos[1][0]+width*4 and shr_pos[3][1]<pos[i][0][1]<shr_pos[3][1]+int(height*4):
+                    if len(value[i])!=0 and value[i][0].isdigit():
+                        jine.append(value[i])
+        # elif '税额' in value[i]:
+        #     shr_pos=pos[i]
+        #     height=pos[i][3][1]-pos[i][0][1]
+        #     width=pos[i][1][0]-pos[i][0][0]
+        #     for i in range(len(pos)):
+        #         if shr_pos[0][0]-width<pos[i][1][0]<shr_pos[0][0]-width/2 and shr_pos[3][1]<pos[i][0][1]<shr_pos[3][1]+int(height*5):
+        #             if value[i][0].isdigit():
+        #                 jine.append(value[i])
+    if len(jine)==0:
+        return 'None'
+    else:
+        return jine
 
 def baozhuang_split(pos,value,save_path):
     huowu=[]
@@ -560,7 +580,6 @@ def huowujiage_split(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0]and shr_pos[3][1]+height<pos[i][0][1]<shr_pos[3][1]+(height*4.5):
                     huowu.append(value[i])
-            print(huowu)
             return huowu
     else:
         return huowu
@@ -590,7 +609,6 @@ def xianglei_split(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[0][0]<pos[i][1][0]<shr_pos[1][0]+width/2 and shr_pos[3][1]<pos[i][0][1]<shr_pos[3][1]+(height*3.5):
                     huowu.append(value[i])
-            print(huowu)
             return huowu
     else:
         return huowu
@@ -635,10 +653,8 @@ def yunjia_split(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0]+width/4 and shr_pos[0][1]<pos[i][0][1]<shr_pos[3][1]+(height*4) and '号' not in value[i]:
                     huowu.append(value[i])
-            print('运价号',huowu)
             return huowu
     else:
-        print(huowu)
         return huowu
 
 
@@ -652,7 +668,6 @@ def jifeizhongliang_split(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0] and shr_pos[3][1]+height<pos[i][0][1]<shr_pos[3][1]+(height*4.5):
                     huowu.append(value[i])
-            print(huowu)
             return huowu
     else:
         return huowu

@@ -22,7 +22,7 @@ app = FastAPI(title='光学字符识别项目', description='根据每个单据�
 @app.post('/ocr', tags=["识别接口（POST方法）"])
 async def ocr(ID: int, Type: Optional[str] = None,Envir:Optional[str] = 'main', File: UploadFile = File(...)):
     '''    
-    OCR识别    
+    OCR单据识别识别
     - 参数 ID: 上传哪类单据    
 
     - 参数 Type: 某一单据下对应的其他单据 (不用管)
