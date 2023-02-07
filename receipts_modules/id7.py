@@ -2,546 +2,662 @@ import re
 from LAC import LAC
 
 lac = LAC(mode="lac")
-tiaoxingma='^[A-Z0-9]*$'
+tiaoxingma = '^[A-Z0-9]*$'
 
 PATTERN = r'([\u4e00-\u9fa5]{2,5}?(?:省|自治区|市)){0,1}([\u4e00-\u9fa5]{2,7}?(?:区|县|州)){0,1}([\u4e00-\u9fa5]{2,7}?(?:村|镇|街道)){1}'
 
-def yundanhao(pos,value,save_path):
+def to_dict(test_array):
+    feimu=[]
+    jine=[]
+    shuie=[]
+    if len(test_array)%3==0:
+        for i in range(len(test_array)):
+            if i%3==0:
+                feimu.append(test_array[i])
+            elif i%3==1:
+                jine.append(test_array[i])
+            elif i%3==2:
+                shuie.append(test_array[i])
+        d = [{} for i in range(len(feimu))]
+        for i in range(len(d)):
+            d[i]['费目']=str(feimu[i])
+            d[i]['金额']=str(jine[i])
+            d[i]['税额']=str(shuie[i])
+        return d
+    else:
+        return test_array
+# 用来删除数组中存在的空字符串
+def not_empty(s):
+    return s and s.strip()
+def is_number(s):
+    try:  # 如果能运行float(s)语句，返回True（字符串s是浮点数）
+        float(s)
+        return True
+    except ValueError:  # ValueError为Python的一种标准异常，表示"传入无效的参数"
+        pass  # 如果引发了ValueError这种异常，不做任何事情（pass：不做任何事情，一般用做占位语句）
+    try:
+        import unicodedata  # 处理ASCii码的包
+        unicodedata.numeric(s)  # 把一个表示数字的字符串转换为浮点数返回的函数
+        return True
+    except (TypeError, ValueError):
+        pass
+    return False
+def split_number_and_chinese(testarray):
+    num=0
+    new=[]
+    new_index=[]
+    time=0
+    for i in range(len(testarray)):
+        if not is_number(testarray[i]):
+            for j in range(len(testarray[i])):
+                if testarray[i][j].isalpha():
+                    num=j
+                    new_index.append(i)
+                    number=testarray[i][:j]
+                    alpha=testarray[i][j:]
+                    new.append(alpha)
+                    testarray[i]=number
+                    break
+    for i in range(len(new_index)):
+        testarray.insert((new_index[i]+1+time),new[i])
+        time+=1
+    result = filter(not_empty, testarray)
+    return list(result)
+
+def yundanhao(pos, value, save_path):
     for i in range(len(pos)):
         if '整车' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width*5<pos[i][0][0]<shr_pos[0][0] and shr_pos[0][1]-height*1.4<pos[i][3][1]<shr_pos[0][1]+height/2:
+                if shr_pos[0][0] - width * 5 < pos[i][0][0] < shr_pos[0][0] and shr_pos[0][1] - height * 1.4 < \
+                        pos[i][3][1] < shr_pos[0][1] + height / 2:
                     return value[i]
         if '货物运单' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+width/2<pos[i][0][0]<shr_pos[1][0]+width*3 and shr_pos[0][1]-height<pos[i][0][1]<shr_pos[2][1]+height/2:
+                if shr_pos[1][0] + width / 2 < pos[i][0][0] < shr_pos[1][0] + width * 3 and shr_pos[0][1] - height < \
+                        pos[i][0][1] < shr_pos[2][1] + height / 2:
                     return value[i]
 
 
-def chezhong_chehao(pos,value,save_path):
+def chezhong_chehao(pos, value, save_path):
     for i in range(len(pos)):
         if '车种车号' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+width*3 and shr_pos[1][1]-height/2<pos[i][0][1]<shr_pos[1][1]+height:
+                if shr_pos[1][0] < pos[i][0][0] < shr_pos[1][0] + width * 3 and shr_pos[1][1] - height / 2 < pos[i][0][
+                    1] < shr_pos[1][1] + height:
                     return value[i]
         elif '货位' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+width*7 and shr_pos[2][1]<pos[i][0][1]<shr_pos[2][1]+height:
+                if shr_pos[1][0] < pos[i][0][0] < shr_pos[1][0] + width * 7 and shr_pos[2][1] < pos[i][0][1] < \
+                        shr_pos[2][1] + height:
                     return value[i]
 
 
-def match_tiaoxingmabianhao(pos,value,save_path):
+def match_tiaoxingmabianhao(pos, value, save_path):
     for i in range(len(pos)):
         if '货物运单' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+width<pos[i][0][0]<shr_pos[1][0]+width*10 and shr_pos[1][1]-height<pos[i][0][1]<shr_pos[1][1]+height:
+                if shr_pos[1][0] + width < pos[i][0][0] < shr_pos[1][0] + width * 10 and shr_pos[1][1] - height < \
+                        pos[i][0][1] < shr_pos[1][1] + height:
                     return value[i]
-        elif re.match(tiaoxingma,value[i]):
+        elif re.match(tiaoxingma, value[i]):
             return value[i]
 
-def match_tuoyunren(pos,value,save_path):
+
+def match_tuoyunren(pos, value, save_path):
     for i in range(len(pos)):
         if '货位' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-int(4*width)<pos[i][1][0]<shr_pos[0][0] and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height and '货位' not in value[i] and '经办人' not in value[i]:
+                if shr_pos[0][0] - int(4 * width) < pos[i][1][0] < shr_pos[0][0] and shr_pos[0][1] - height < pos[i][1][
+                    1] < shr_pos[0][1] + height and '货位' not in value[i] and '经办人' not in value[i]:
                     return value[i]
 
-def match_daozhanren(pos,value,save_path):
+
+def match_daozhanren(pos, value, save_path):
     for i in range(len(pos)):
-        if '施' in value[i] and '号' in value[i] and len(value[i])==3:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+        if '施' in value[i] and '号' in value[i] and len(value[i]) == 3:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-int(4*width)<pos[i][1][0]<shr_pos[0][0] and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height and '号' not in value[i] and '经办人' not in value[i]:
+                if shr_pos[0][0] - int(4 * width) < pos[i][1][0] < shr_pos[0][0] and shr_pos[0][1] - height < pos[i][1][
+                    1] < shr_pos[0][1] + height and '号' not in value[i] and '经办人' not in value[i]:
                     return value[i]
 
 
-def match_dizhi(pos,value,save_path):
+def match_dizhi(pos, value, save_path):
     for i in range(len(pos)):
         pattern = re.compile(PATTERN)
         m = pattern.search(value[i])
     return m
 
-def match_xuqiuhao(pos,value,save_path):
+
+def match_xuqiuhao(pos, value, save_path):
     for i in range(len(pos)):
         if '需求号' in value[i] or '求号' in value[i]:
-            if len(value[i].split('号')[-1])>5:
+            if len(value[i].split('号')[-1]) > 5:
                 return value[i].split('号')[-1]
             else:
-                shr_pos=pos[i]
-                height=pos[i][3][1]-pos[i][0][1]# 收货人的宽度
-                width=pos[i][1][0]-pos[i][0][0]
+                shr_pos = pos[i]
+                height = pos[i][3][1] - pos[i][0][1]  # 收货人的宽度
+                width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[1][1]-int(height/2)<pos[i][0][1]<shr_pos[1][1]+int(height/2) and len(value[i])>11:
+                    if shr_pos[1][0] - width / 2 < pos[i][0][0] < shr_pos[1][0] + width * 2 and shr_pos[1][1] - int(
+                            height / 2) < pos[i][0][1] < shr_pos[1][1] + int(height / 2) and len(value[i]) > 11:
                         return value[i]
-           
 
-def match_fazhan(pos,value,save_path):
+
+def match_fazhan(pos, value, save_path):
     for i in range(len(pos)):
         if '发站' in value[i] and '公司' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]# 收货人的宽度
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]  # 收货人的宽度
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]-width<pos[i][0][0]<shr_pos[1][0]+width and shr_pos[1][1]-int(height/2)<pos[i][0][1]<shr_pos[1][1]+int(height/2) and '发站' not in value[i]:
+                if shr_pos[1][0] - width < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[1][1] - int(height / 2) < \
+                        pos[i][0][1] < shr_pos[1][1] + int(height / 2) and '发站' not in value[i]:
                     return value[i]
 
 
-
-def match_tuoyunmingcheng(pos,value,save_path):
+def match_tuoyunmingcheng(pos, value, save_path):
     for i in range(len(pos)):
         if '取货地址' in value[i] or '联货地址' in value[i] or '联货' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0] and shr_pos[0][1]-height*3.1<pos[i][3][1]<shr_pos[0][1]-height/2:
+                if shr_pos[0][0] - int(width / 2) < pos[i][0][0] < shr_pos[1][0] and shr_pos[0][1] - height * 3.1 < \
+                        pos[i][3][1] < shr_pos[0][1] - height / 2:
                     return value[i]
 
 
-def match_shouhuomingcheng(pos,value,save_path):
+def match_shouhuomingcheng(pos, value, save_path):
     for i in range(len(pos)):
         if '送货地址' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-int(width/3)<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[0][1]-height*3.1<pos[i][3][1]<shr_pos[0][1]+height/2:
+                if shr_pos[0][0] - int(width / 3) < pos[i][0][0] < shr_pos[0][0] + width and shr_pos[0][
+                    1] - height * 3.1 < pos[i][3][1] < shr_pos[0][1] + height / 2:
                     return value[i]
 
 
-def match_daozhan(pos,value,save_path):
+def match_daozhan(pos, value, save_path):
     for i in range(len(pos)):
         if '到站' in value[i] and '公司' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+width and shr_pos[1][1]-int(height/2)<pos[i][0][1]<shr_pos[1][1]+int(height/2) and '发站' not in value[i] and '取货地址' not in value[i]:
+                if shr_pos[1][0] < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[1][1] - int(height / 2) < pos[i][0][
+                    1] < shr_pos[1][1] + int(height / 2) and '发站' not in value[i] and '取货地址' not in value[i]:
                     return value[i]
 
-    
-def match_phone_tuoyun(pos,value,save_path):
+
+def match_phone_tuoyun(pos, value, save_path):
     for i in range(len(pos)):
         if '车种车号' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width<pos[i][1][0]<shr_pos[0][0] and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height and '车号' not in value[i]:
+                if shr_pos[0][0] - width < pos[i][1][0] < shr_pos[0][0] and value[i].isdigit() and shr_pos[0][
+                    1] - height < pos[i][1][1] < shr_pos[0][1] + height and '车号' not in value[i]:
                     return value[i]
 
-def match_phone_shouhuo(pos,value,save_path):
+
+def match_phone_shouhuo(pos, value, save_path):
     for i in range(len(pos)):
         if '布号' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width<pos[i][1][0]<shr_pos[0][0] and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height and '布号' not in value[i]:
+                if shr_pos[0][0] - width < pos[i][1][0] < shr_pos[0][0] and value[i].isdigit() and shr_pos[0][
+                    1] - height < pos[i][1][1] < shr_pos[0][1] + height and '布号' not in value[i]:
                     return value[i]
 
     else:
         return ''
-def match_huowumingcheng(pos,value,save_path):
-    huowu=[]
+
+
+def match_huowumingcheng(pos, value, save_path):
+    huowu = []
     for i in range(len(pos)):
         if '货物名称' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width*1.5<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+(height*3.5):
+                if shr_pos[0][0] - width * 1.5 < pos[i][0][0] < shr_pos[0][0] + width and shr_pos[3][1] - height / 2 < \
+                        pos[i][0][1] < shr_pos[3][1] + (height * 3.5):
                     huowu.append(value[i])
             return huowu
     else:
         return huowu
 
 
-def match_jianshu_all(pos,value,save_path):
+def match_jianshu_all(pos, value, save_path):
     for i in range(len(pos)):
-        if '合计' in value[i] and len(value[i])==2:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+        if '合计' in value[i] and len(value[i]) == 2:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+width<pos[i][0][0]<shr_pos[1][0]+int(width*4) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height and '合计' not in value[i]:
-                    return value[i]+'件'
+                if shr_pos[1][0] + width < pos[i][0][0] < shr_pos[1][0] + int(width * 4) and value[i].isdigit() and \
+                        shr_pos[0][1] - height < pos[i][1][1] < shr_pos[0][1] + height and '合计' not in value[i]:
+                    return value[i] + '件'
         elif '包装' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[3][1]+height*4.5<pos[i][0][1]<shr_pos[3][1]+(height*5.5):
+                if shr_pos[0][0] - width / 2 < pos[i][0][0] < shr_pos[0][0] + width and shr_pos[3][1] + height * 4.5 < \
+                        pos[i][0][1] < shr_pos[3][1] + (height * 5.5):
                     return value[i]
+    else:
+        return 'None'
 
 
-
-def match_jianshu_split(pos,value,save_path):
-    huowu=[]
+def match_jianshu_split(pos, value, save_path):
+    huowu = []
     for i in range(len(pos)):
         if '件数' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width*1.5<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+(height*3.5):
+                if shr_pos[0][0] - width * 1.5 < pos[i][0][0] < shr_pos[0][0] + width and shr_pos[3][1] - height / 2 < \
+                        pos[i][0][1] < shr_pos[3][1] + (height * 3.5):
                     huowu.append(value[i])
-            if len(huowu)>0:
+            if len(huowu) > 0:
                 return huowu
     return huowu
 
 
-
-def match_baozhuang_all(pos,value,save_path):
+def match_baozhuang_all(pos, value, save_path):
     for i in range(len(pos)):
         if '包装' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[3][1]+height*3.5<pos[i][0][1]<shr_pos[3][1]+(height*4.5):
+                if shr_pos[0][0] - width / 2 < pos[i][0][0] < shr_pos[0][0] + width and shr_pos[3][1] + height * 3.5 < \
+                        pos[i][0][1] < shr_pos[3][1] + (height * 4.5):
                     return value[i]
-        elif '合计' in value[i] and len(value[i])==2:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+        elif '合计' in value[i] and len(value[i]) == 2:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+width*4<pos[i][0][0]<shr_pos[1][0]+int(width*5) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
+                if shr_pos[1][0] + width * 4 < pos[i][0][0] < shr_pos[1][0] + int(width * 5) and value[i].isdigit() and \
+                        shr_pos[0][1] - height < pos[i][1][1] < shr_pos[0][1] + height:
                     return value[i]
+    else:
+        return 'None'
 
-
-def match_huowujiage_all(pos,value,save_path):
+def match_huowujiage_all(pos, value, save_path):
     for i in range(len(pos)):
         if '货物价格' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[3][1]+height*3.5<pos[i][0][1]<shr_pos[3][1]+(height*4.5):
+                if shr_pos[0][0] - width / 2 < pos[i][0][0] < shr_pos[0][0] + width and shr_pos[3][1] + height * 3.5 < \
+                        pos[i][0][1] < shr_pos[3][1] + (height * 4.5):
                     return value[i]
-        elif '合计' in value[i] and len(value[i])==2:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+        elif '合计' in value[i] and len(value[i]) == 2:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+width*5<pos[i][0][0]<shr_pos[1][0]+int(width*8) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
+                if shr_pos[1][0] + width * 5 < pos[i][0][0] < shr_pos[1][0] + int(width * 8) and value[i].isdigit() and \
+                        shr_pos[0][1] - height < pos[i][1][1] < shr_pos[0][1] + height:
                     return value[i]
+    else:
+        return 'None'
 
-
-
-def match_zhongliang_all(pos,value,save_path):
+def match_zhongliang_all(pos, value, save_path):
     for i in range(len(pos)):
         if '重量' in value[i] and 'kg' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[3][1]+height*3.5<pos[i][0][1]<shr_pos[3][1]+(height*4.5):
+                if shr_pos[0][0] - width / 2 < pos[i][0][0] < shr_pos[0][0] + width and shr_pos[3][1] + height * 3.5 < \
+                        pos[i][0][1] < shr_pos[3][1] + (height * 4.5):
                     return value[i]
-        elif '合计' in value[i] and len(value[i])==2:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+        elif '合计' in value[i] and len(value[i]) == 2:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+width*8<pos[i][0][0]<shr_pos[1][0]+int(width*11) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
+                if shr_pos[1][0] + width * 8 < pos[i][0][0] < shr_pos[1][0] + int(width * 11) and value[i].isdigit() and \
+                        shr_pos[0][1] - height < pos[i][1][1] < shr_pos[0][1] + height:
                     return value[i]
+    else:
+        return 'None'
 
-
-def match_xinaglei_all(pos,value,save_path):
+def match_xinaglei_all(pos, value, save_path):
     for i in range(len(pos)):
         if '箱型箱类' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[3][1]+height*3.5<pos[i][0][1]<shr_pos[3][1]+(height*4.5):
+                if shr_pos[0][0] - width / 2 < pos[i][0][0] < shr_pos[0][0] + width and shr_pos[3][1] + height * 3.5 < \
+                        pos[i][0][1] < shr_pos[3][1] + (height * 4.5):
                     return value[i]
-        elif '合计' in value[i] and len(value[i])==2:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+        elif '合计' in value[i] and len(value[i]) == 2:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+width*11<pos[i][0][0]<shr_pos[1][0]+int(width*14) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
+                if shr_pos[1][0] + width * 11 < pos[i][0][0] < shr_pos[1][0] + int(width * 14) and value[
+                    i].isdigit() and shr_pos[0][1] - height < pos[i][1][1] < shr_pos[0][1] + height:
                     return value[i]
+    else:
+        return 'None'
 
-
-def match_xinaghap_all(pos,value,save_path):
+def match_xinaghap_all(pos, value, save_path):
     for i in range(len(pos)):
         if '箱号' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[3][1]+height*3.5<pos[i][0][1]<shr_pos[3][1]+(height*4.5):
+                if shr_pos[0][0] - width / 2 < pos[i][0][0] < shr_pos[0][0] + width and shr_pos[3][1] + height * 3.5 < \
+                        pos[i][0][1] < shr_pos[3][1] + (height * 4.5):
                     return value[i]
-        elif '合计' in value[i] and len(value[i])==2:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+        elif '合计' in value[i] and len(value[i]) == 2:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+width*14<pos[i][0][0]<shr_pos[1][0]+int(width*17) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
+                if shr_pos[1][0] + width * 14 < pos[i][0][0] < shr_pos[1][0] + int(width * 17) and value[
+                    i].isdigit() and shr_pos[0][1] - height < pos[i][1][1] < shr_pos[0][1] + height:
                     return value[i]
+    else:
+        return 'None'
 
-
-def match_shifeng_all(pos,value,save_path):
+def match_shifeng_all(pos, value, save_path):
     for i in range(len(pos)):
         if '箱号' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0] and shr_pos[3][1]+height*3.5<pos[i][0][1]<shr_pos[3][1]+(height*4.5):
+                if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] + height * 3.5 < pos[i][0][1] < \
+                        shr_pos[3][1] + (height * 4.5):
                     return value[i]
-        elif '合计' in value[i] and len(value[i])==2:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+        elif '合计' in value[i] and len(value[i]) == 2:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+width*17<pos[i][0][0]<shr_pos[1][0]+int(width*20) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
+                if shr_pos[1][0] + width * 17 < pos[i][0][0] < shr_pos[1][0] + int(width * 20) and value[
+                    i].isdigit() and shr_pos[0][1] - height < pos[i][1][1] < shr_pos[0][1] + height:
                     return value[i]
+    else:
+        return 'None'
 
-
-
-def match_quedingzl_all(pos,value,save_path):
+def match_quedingzl_all(pos, value, save_path):
     for i in range(len(pos)):
         if '人确定' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0] and shr_pos[3][1]+height*5.5<pos[i][0][1]<shr_pos[3][1]+(height*6.5):
+                if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] + height * 5.5 < pos[i][0][1] < \
+                        shr_pos[3][1] + (height * 6.5):
                     return value[i]
-        elif '合计' in value[i] and len(value[i])==2:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+        elif '合计' in value[i] and len(value[i]) == 2:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+width*20<pos[i][0][0]<shr_pos[1][0]+int(width*23) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
+                if shr_pos[1][0] + width * 20 < pos[i][0][0] < shr_pos[1][0] + int(width * 23) and value[
+                    i].isdigit() and shr_pos[0][1] - height < pos[i][1][1] < shr_pos[0][1] + height:
                     return value[i]
+    else:
+        return 'None'
 
-
-def match_tiji_all(pos,value,save_path):
+def match_tiji_all(pos, value, save_path):
     for i in range(len(pos)):
         if '体积' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0] and shr_pos[3][1]+height*4.5<pos[i][0][1]<shr_pos[3][1]+(height*6):
+                if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] + height * 4.5 < pos[i][0][1] < \
+                        shr_pos[3][1] + (height * 6):
                     return value[i]
-        elif '合计' in value[i] and len(value[i])==2:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+        elif '合计' in value[i] and len(value[i]) == 2:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+width*24<pos[i][0][0]<shr_pos[1][0]+int(width*25) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
+                if shr_pos[1][0] + width * 24 < pos[i][0][0] < shr_pos[1][0] + int(width * 25) and value[
+                    i].isdigit() and shr_pos[0][1] - height < pos[i][1][1] < shr_pos[0][1] + height:
                     return value[i]
+    else:
+        return 'None'
 
-
-def match_yunjia_all(pos,value,save_path):
+def match_yunjia_all(pos, value, save_path):
     for i in range(len(pos)):
         if '运价号' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0] and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+(height*6):
+                if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] - height / 2 < pos[i][0][1] < \
+                        shr_pos[3][1] + (height * 6):
                     return value[i]
+    else:
+        return 'None'
 
-def match_jifeizl_all(pos,value,save_path):
+def match_jifeizl_all(pos, value, save_path):
     for i in range(len(pos)):
         if '计费重量' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0] and shr_pos[3][1]+height*5<pos[i][0][1]<shr_pos[3][1]+(height*6.5):
+                if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] + height * 5 < pos[i][0][1] < \
+                        shr_pos[3][1] + (height * 6.5):
                     return value[i]
-        elif '合计' in value[i] and len(value[i])==2:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+        elif '合计' in value[i] and len(value[i]) == 2:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+width*29<pos[i][0][0]<shr_pos[1][0]+int(width*31) and value[i].isdigit() and shr_pos[0][1]-height<pos[i][1][1]<shr_pos[0][1]+height:
+                if shr_pos[1][0] + width * 29 < pos[i][0][0] < shr_pos[1][0] + int(width * 31) and value[
+                    i].isdigit() and shr_pos[0][1] - height < pos[i][1][1] < shr_pos[0][1] + height:
                     return value[i]
 
+    else:
+        return 'None'
 
-
-def match_huowujiage_split(pos,value,save_path):
-    huowu=[]
+def match_huowujiage_split(pos, value, save_path):
+    huowu = []
     for i in range(len(pos)):
         if '包装' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+(height*3.5):
+                if shr_pos[0][0] - width / 2 < pos[i][0][0] < shr_pos[0][0] + width and shr_pos[3][1] - height / 2 < \
+                        pos[i][0][1] < shr_pos[3][1] + (height * 3.5):
                     huowu.append(value[i])
-            if len(huowu)>0:
+            if len(huowu) > 0:
                 return huowu
     else:
         return huowu
 
 
-def match_zhongliang(pos,value,save_path):
+def match_zhongliang(pos, value, save_path):
     for i in range(len(pos)):
-        if '合计' in value[i] and len(value[i])==2:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+        if '合计' in value[i] and len(value[i]) == 2:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+int(5*width)<pos[i][0][0]<shr_pos[1][0]+int(width*15) and shr_pos[0][1]-height/2<pos[i][1][1]<shr_pos[0][1]+height/2 and '合计' not in value[i]:
-                    return value[i]+'KG'
+                if shr_pos[1][0] + int(5 * width) < pos[i][0][0] < shr_pos[1][0] + int(width * 15) and shr_pos[0][
+                    1] - height / 2 < pos[i][1][1] < shr_pos[0][1] + height / 2 and '合计' not in value[i]:
+                    return value[i] + 'KG'
 
 
-def match_xianghao(pos,value,save_path):
-    xianghao=[]
+def match_xianghao(pos, value, save_path):
+    xianghao = []
     for i in range(len(pos)):
         if '箱号' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]<pos[i][1][0]<shr_pos[1][0]+width and shr_pos[3][1]<pos[i][0][1]<shr_pos[3][1]+(height*3) and '箱号' not in value[i]:
+                if shr_pos[0][0] < pos[i][1][0] < shr_pos[1][0] + width and shr_pos[3][1] < pos[i][0][1] < shr_pos[3][
+                    1] + (height * 3) and '箱号' not in value[i]:
                     xianghao.append(value[i])
             return xianghao
-            
-                    
-def match_shifenghao(pos,value,save_path):
-    sf=[]
+
+
+def match_shifenghao(pos, value, save_path):
+    sf = []
     for i in range(len(pos)):
         if '箱号' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+width<pos[i][0][0]<shr_pos[1][0]+width*3 and shr_pos[3][1]+height*0.4<pos[i][0][1]<shr_pos[3][1]+int(height*3) and '施封' not in value[i]:
+                if shr_pos[1][0] + width < pos[i][0][0] < shr_pos[1][0] + width * 3 and shr_pos[3][1] + height * 0.4 < \
+                        pos[i][0][1] < shr_pos[3][1] + int(height * 3) and '施封' not in value[i]:
                     sf.append(value[i])
             return sf
     else:
         return sf
-        
 
-def match_feimu(pos,value,save_path):
-    feimu=[]
+
+def match_feimu(pos, value, save_path):
+    feimu = []
     for i in range(len(pos)):
         if '费目' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-int(width+width/2)<pos[i][0][0]<shr_pos[0][0] and shr_pos[3][1]<pos[i][0][1]<shr_pos[3][1]+int(height*3):
-                    if len(value[i])!=0:
+                if shr_pos[0][0] - int(width + width / 2) < pos[i][0][0] < shr_pos[0][0] and shr_pos[3][1] < pos[i][0][
+                    1] < shr_pos[3][1] + int(height * 3):
+                    if len(value[i]) != 0:
                         feimu.append(value[i])
         elif '税额' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width and shr_pos[3][1]<pos[i][0][1]<shr_pos[3][1]+int(height*5):
+                if shr_pos[1][0] - width / 2 < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[3][1] < pos[i][0][1] < \
+                        shr_pos[3][1] + int(height * 5):
                     pattern = re.compile("[\u4e00-\u9fa5]")
-                    s="".join(pattern.findall(value[i]))
-                    if len(s)!=0:
+                    s = "".join(pattern.findall(value[i]))
+                    if len(s) != 0:
                         feimu.append(s)
-    if len(feimu)==0:
+    if len(feimu) == 0:
         return 'None'
     else:
-        temp=[]
-        all_info=[]
+        temp = []
+        all_info = []
         for each in feimu:
             if each not in temp:
                 temp.append(each)
         for i in range(len(pos)):
             for j in range(len(temp)):
                 if temp[j] in value[i]:
-                    shr_pos=pos[i]
-                    height=pos[i][3][1]-pos[i][0][1]
-                    width=pos[i][1][0]-pos[i][0][0]
+                    shr_pos = pos[i]
+                    height = pos[i][3][1] - pos[i][0][1]
+                    width = pos[i][1][0] - pos[i][0][0]
                     for i in range(len(pos)):
-                        if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width*20 and shr_pos[0][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height/2:
+                        if shr_pos[0][0] - width / 2 < pos[i][0][0] < shr_pos[1][0] + width * 20 and shr_pos[0][
+                            1] - height / 2 < pos[i][0][1] < shr_pos[3][1] + height / 2:
                             all_info.append(value[i])
-        
-        temp2=[]
+
+        temp2 = []
         for each in all_info:
             if each not in temp2:
                 temp2.append(each)
-        return temp2
-                    
+        final_result=split_number_and_chinese(temp2)
+        info=to_dict(final_result)
+        return  info
 
 
-
-                    
-
-def match_feiyongheji(pos,value,save_path):
+def match_feiyongheji(pos, value, save_path):
     for i in range(len(pos)):
         if '大写' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width*2.4<pos[i][1][0]<shr_pos[0][0] and shr_pos[1][1]-height<pos[i][0][1]<shr_pos[1][1]+height and '￥' in value[i]:
+                if shr_pos[0][0] - width * 2.4 < pos[i][1][0] < shr_pos[0][0] and shr_pos[1][1] - height < pos[i][0][
+                    1] < shr_pos[1][1] + height and '￥' in value[i]:
                     return value[i]
 
         elif '￥' in value[i]:
             return value[i]
-        elif '费用合计' in value[i] or'用合计' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+        elif '费用合计' in value[i] or '用合计' in value[i]:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[1][1]-height<pos[i][0][1]<shr_pos[1][1]+height:
+                if shr_pos[1][0] < pos[i][0][0] < shr_pos[1][0] + width * 2 and shr_pos[1][1] - height < pos[i][0][1] < \
+                        shr_pos[1][1] + height:
                     return value[i]
 
 
-
-def match_shuie(pos,value,save_path):
-    shiue=[]
+def match_shuie(pos, value, save_path):
+    shiue = []
     for i in range(len(pos)):
         if '税额' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width and shr_pos[3][1]<pos[i][0][1]<shr_pos[3][1]+int(height*5):
-                    s="".join(filter(lambda s:s in'0123456789.', value[i]))
+                if shr_pos[1][0] - width / 2 < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[3][1] < pos[i][0][1] < \
+                        shr_pos[3][1] + int(height * 5):
+                    s = "".join(filter(lambda s: s in '0123456789.', value[i]))
                     shiue.append(s)
-    if len(shiue)==0:
+    if len(shiue) == 0:
         return 'None'
     else:
         return shiue
 
-                
 
-def match_jine(pos,value,save_path):
-    jine=[]
+def match_jine(pos, value, save_path):
+    jine = []
     for i in range(len(pos)):
         if '费目' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+width*2.5 <pos[i][0][0]<shr_pos[1][0]+width*4 and shr_pos[3][1]<pos[i][0][1]<shr_pos[3][1]+int(height*4):
-                    if len(value[i])!=0 and value[i][0].isdigit():
+                if shr_pos[1][0] + width * 2.5 < pos[i][0][0] < shr_pos[1][0] + width * 4 and shr_pos[3][1] < pos[i][0][
+                    1] < shr_pos[3][1] + int(height * 4):
+                    if len(value[i]) != 0 and value[i][0].isdigit():
                         jine.append(value[i])
         # elif '税额' in value[i]:
         #     shr_pos=pos[i]
@@ -551,122 +667,134 @@ def match_jine(pos,value,save_path):
         #         if shr_pos[0][0]-width<pos[i][1][0]<shr_pos[0][0]-width/2 and shr_pos[3][1]<pos[i][0][1]<shr_pos[3][1]+int(height*5):
         #             if value[i][0].isdigit():
         #                 jine.append(value[i])
-    if len(jine)==0:
+    if len(jine) == 0:
         return 'None'
     else:
         return jine
 
-def baozhuang_split(pos,value,save_path):
-    huowu=[]
+
+def baozhuang_split(pos, value, save_path):
+    huowu = []
     for i in range(len(pos)):
         if '包装' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width/2 and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+(height*3.5):
+                if shr_pos[0][0] - width / 2 < pos[i][0][0] < shr_pos[1][0] + width / 2 and shr_pos[3][1] - height / 2 < \
+                        pos[i][0][1] < shr_pos[3][1] + (height * 3.5):
                     huowu.append(value[i])
             return huowu
     else:
         return huowu
 
-def huowujiage_split(pos,value,save_path):
-    huowu=[]
+
+def huowujiage_split(pos, value, save_path):
+    huowu = []
     for i in range(len(pos)):
         if '货物价格' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0]and shr_pos[3][1]+height<pos[i][0][1]<shr_pos[3][1]+(height*4.5):
+                if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] + height < pos[i][0][1] < shr_pos[3][
+                    1] + (height * 4.5):
                     huowu.append(value[i])
             return huowu
     else:
         return huowu
 
 
-def zhongliang_split(pos,value,save_path):
-    huowu=[]
+def zhongliang_split(pos, value, save_path):
+    huowu = []
     for i in range(len(pos)):
         if '重量' in value[i] and 'kg' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0] and shr_pos[3][1]<pos[i][0][1]<shr_pos[3][1]+(height*3.5):
+                if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] < pos[i][0][1] < shr_pos[3][1] + (
+                        height * 3.5):
                     huowu.append(value[i])
             return huowu
     else:
         return huowu
 
-def xianglei_split(pos,value,save_path):
-    huowu=[]
+
+def xianglei_split(pos, value, save_path):
+    huowu = []
     for i in range(len(pos)):
         if '箱型箱类' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]<pos[i][1][0]<shr_pos[1][0]+width/2 and shr_pos[3][1]<pos[i][0][1]<shr_pos[3][1]+(height*3.5):
+                if shr_pos[0][0] < pos[i][1][0] < shr_pos[1][0] + width / 2 and shr_pos[3][1] < pos[i][0][1] < \
+                        shr_pos[3][1] + (height * 3.5):
                     huowu.append(value[i])
             return huowu
     else:
         return huowu
 
-def quedingzhongliang_split(pos,value,save_path):
-    huowu=[]
+
+def quedingzhongliang_split(pos, value, save_path):
+    huowu = []
     for i in range(len(pos)):
         if '人确定' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width and shr_pos[3][1]+height*1.1<pos[i][0][1]<shr_pos[3][1]+(height*4.5):
+                if shr_pos[0][0] - width / 2 < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[3][1] + height * 1.1 < \
+                        pos[i][0][1] < shr_pos[3][1] + (height * 4.5):
                     huowu.append(value[i])
             return huowu
     else:
         return huowu
 
 
-def tiji_split(pos,value,save_path):
-    huowu=[]
+def tiji_split(pos, value, save_path):
+    huowu = []
     for i in range(len(pos)):
         if '体积' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0]+width and shr_pos[3][1]+height*1.1<pos[i][0][1]<shr_pos[3][1]+(height*4.5):
+                if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[3][1] + height * 1.1 < pos[i][0][
+                    1] < shr_pos[3][1] + (height * 4.5):
                     huowu.append(value[i])
             return huowu
     else:
         return huowu
 
 
-def yunjia_split(pos,value,save_path):
-    huowu=[]
+def yunjia_split(pos, value, save_path):
+    huowu = []
     for i in range(len(pos)):
         if '运价号' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0]+width/4 and shr_pos[0][1]<pos[i][0][1]<shr_pos[3][1]+(height*4) and '号' not in value[i]:
+                if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][0] + width / 4 and shr_pos[0][1] < pos[i][0][1] < \
+                        shr_pos[3][1] + (height * 4) and '号' not in value[i]:
                     huowu.append(value[i])
             return huowu
     else:
         return huowu
 
 
-def jifeizhongliang_split(pos,value,save_path):
-    huowu=[]
+def jifeizhongliang_split(pos, value, save_path):
+    huowu = []
     for i in range(len(pos)):
         if '计费重量' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0] and shr_pos[3][1]+height<pos[i][0][1]<shr_pos[3][1]+(height*4.5):
+                if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] + height < pos[i][0][1] < shr_pos[3][
+                    1] + (height * 4.5):
                     huowu.append(value[i])
             return huowu
     else:

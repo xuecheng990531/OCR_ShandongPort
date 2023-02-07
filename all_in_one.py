@@ -157,6 +157,37 @@ def match_jiashizheng(pos,value,save_path):
         "准驾车型":chexing,"证号":zhenghao,"有效期":youxiaoqi
     }
 
+# def match_tielu(pos,value,save_path):
+#     huowu=id7.match_huowumingcheng(pos,value,save_path)
+#     xuqiuhao=id7.match_xuqiuhao(pos,value,save_path)
+#     fazhan=id7.match_fazhan(pos,value,save_path)
+#     # mingcheng=tielu.match_mingcheng(pos,value)
+#     daozhan=id7.match_daozhan(pos,value,save_path)
+#     tuoyunmingcheng=id7.match_tuoyunmingcheng(pos,value,save_path)
+#     shouhuomingcheng=id7.match_shouhuomingcheng(pos,value,save_path)
+#     jianshu_all=id7.match_jianshu_all(pos,value,save_path)
+#     zhongliang=id7.match_zhongliang(pos,value,save_path)
+#     xianghao=id7.match_xianghao(pos,value,save_path)
+#     shifenghao=id7.match_shifenghao(pos,value,save_path)
+#     # quedingzhongliang=tielu.match_quedingzhongliang(pos,value)
+#     feimu=id7.match_feimu(pos,value,save_path)
+#     feiyongheji=id7.match_feiyongheji(pos,value,save_path)
+#     shuie=id7.match_shuie(pos,value,save_path)
+#     # jine=tielu.match_jine(pos,value)
+#     tuoyunshoujihaoma=id7.match_phone_tuoyun(pos,value,save_path)
+#     shouhuoshoujihaoma=id7.match_phone_shouhuo(pos,value,save_path)
+#     tuoyunren=id7.match_tuoyunren(pos,value,save_path)
+#     daozhanren=id7.match_daozhanren(pos,value,save_path)
+
+#     return {
+#         "需求号":xuqiuhao,
+#         "托运名称":tuoyunmingcheng,"发站":fazhan,"托运经办人":tuoyunren,"托运经办人联系电话":tuoyunshoujihaoma,
+#         "收货名称":shouhuomingcheng,"到站":daozhan,"到站经办人":daozhanren,"到站经办人联系电话":shouhuoshoujihaoma,
+#         "件数":jianshu_all,"总重量":zhongliang,"厢号":xianghao,
+#         "集装箱施封号":shifenghao,"确定重量":zhongliang,"费目":feimu,
+#         "税额":shuie,"费用合计":feiyongheji,"货物详情":'0'
+#     }
+
 
 def match_tielu2(pos,value,save_path):
     yundan=id7.yundanhao(pos,value,save_path)
@@ -271,7 +302,7 @@ def match_tielu2(pos,value,save_path):
         '运单号':yundan,
         "托运名称":tuoyunmingcheng,"发站":fazhan,
         "收货名称":shouhuomingcheng,"到站":daozhan,
-        '货物明细信息':d,'货物合计信息':hejixinxi,'费目信息':feimu
+        '货物明细信息':d,'货物合计信息':hejixinxi,'详细信息':feimu
     }
 
 def match_daoluyunshujingyingzigezheg(pos,value,save_path):
