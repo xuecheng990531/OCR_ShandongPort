@@ -10,7 +10,7 @@ import cv2
 import paddleocr
 
 imgType_list = {'.jpg', '.bmp', '.png', '.jpeg', '.jfif', '.webp'}
-ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=24,use_gpu=True ,det_limit_side_len=1216)
+ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=8,use_gpu=True ,det_limit_side_len=1216,use_multiprocess=True)
 
 #-------------------------------------------------图片上传和删除-----------------------------------
 async def save_img(File, filename):

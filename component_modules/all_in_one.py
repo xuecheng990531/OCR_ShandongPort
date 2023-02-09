@@ -164,23 +164,15 @@ def match_tielu2(pos,value,save_path):
     huowu=id7.match_huowumingcheng(pos,value,save_path)
     xuqiuhao=id7.match_xuqiuhao(pos,value,save_path)
     fazhan=id7.match_fazhan(pos,value,save_path)
-    # mingcheng=tielu.match_mingcheng(pos,value)
     daozhan=id7.match_daozhan(pos,value,save_path)
     tuoyunmingcheng=id7.match_tuoyunmingcheng(pos,value,save_path)
     shouhuomingcheng=id7.match_shouhuomingcheng(pos,value,save_path)
     jianshu_all=id7.match_jianshu_all(pos,value,save_path)
-    # zhongliang=id7.match_zhongliang(pos,value,save_path)
     xianghao=id7.match_xianghao(pos,value,save_path)
     shifenghao=id7.match_shifenghao(pos,value,save_path)
-    # quedingzhongliang=tielu.match_quedingzhongliang(pos,value)
     feimu=id7.match_feimu(pos,value,save_path)
-    # feiyongheji=id7.match_feiyongheji(pos,value,save_path)
     shuie=id7.match_shuie(pos,value,save_path)
     jine=id7.match_jine(pos,value,save_path)
-    # tuoyunshoujihaoma=id7.match_phone_tuoyun(pos,value,save_path)
-    # shouhuoshoujihaoma=id7.match_phone_shouhuo(pos,value,save_path)
-    # tuoyunren=id7.match_tuoyunren(pos,value,save_path)
-    # daozhanren=id7.match_daozhanren(pos,value,save_path)
     jianshu_split=id7.match_jianshu_split(pos,value,save_path)
     baozhuang_split=id7.baozhuang_split(pos,value,save_path)
     zhongliang_split=id7.zhongliang_split(pos,value,save_path)
@@ -200,6 +192,11 @@ def match_tielu2(pos,value,save_path):
     tj_all=id7.match_tiji_all(pos,value,save_path)
     yunjia_all=id7.match_yunjia_all(pos,value,save_path)
     jifei_all=id7.match_jifeizl_all(pos,value,save_path)
+    feimu_detail=id7.match_feimu_detail(feimu,jine,shuie)
+    tuoyunren=id7.match_tuoyunren(pos,value,save_path)
+    tuoyun_phone=id7.match_phone_tuoyun(pos,value,save_path)
+    shouhuoren=id7.match_shouhuoren(pos,value,save_path)
+    shouhuo_phone = id7.match_phone_shouhuo(pos, value, save_path)
 
     d = [{} for i in range(len(huowu))]
     for i in range(len(huowu)):
@@ -249,7 +246,7 @@ def match_tielu2(pos,value,save_path):
             d[i]['体积']=tiji_split[i]
 
         if len(yunjia_split)!=len(huowu):
-            d[i]['运价号']='None'
+            d[i]['运价号']=yunjia_split[-1]
         else:
             d[i]['运价号']=yunjia_split[i]
 
@@ -262,7 +259,7 @@ def match_tielu2(pos,value,save_path):
         '件数':jianshu_all,'包装':baozhuang_all,
         '货物价格':huowujg_all,'重量':zl_all,'箱型箱类':xl_all,
         '箱号':xh_all,'集装箱施封号':sfh_all,'承运人确定重量':qdzl_all,
-        '体积':tj_all,'运价号':yunjia_all,'计费重量':jifei_all
+        '体积':tj_all,'运价号':yunjia_split[-1],'计费重量':jifei_all
     }]
 
     return {
@@ -270,8 +267,10 @@ def match_tielu2(pos,value,save_path):
         '车种车号':chehao,
         '运单号':yundan,
         "托运名称":tuoyunmingcheng,"发站":fazhan,
+        "托运联系人":tuoyunren,"托运联系人电话":tuoyun_phone,
         "收货名称":shouhuomingcheng,"到站":daozhan,
-        '货物明细信息':d,'货物合计信息':hejixinxi,'费目信息':feimu
+        "收货联系人": shouhuoren, "收货联系人电话": shouhuo_phone,
+        '货物明细信息':d,'货物合计信息':hejixinxi,'费目信息':feimu_detail
     }
 
 def match_daoluyunshujingyingzigezheg(pos,value,save_path):
