@@ -417,7 +417,7 @@ def match_tiji_all(pos, value, save_path):
             width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
                 if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] + height * 4.5 < pos[i][0][1] < \
-                        shr_pos[3][1] + (height * 6):
+                        shr_pos[3][1] + (height * 6) and value[i].isdigit():
                     return value[i]
         elif '合计' in value[i] and len(value[i]) == 2:
             shr_pos = pos[i]
