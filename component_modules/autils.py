@@ -39,7 +39,7 @@ def detect_value(pos,ID,value,Type,save_path,Envir):
     if Envir=='main':
         return {"检测结果":removed_result}
     else:
-        return {"检测结果":removed_result,"算法检测的所有结果":value}
+        return {"检测结果":removed_result,"算法检测的所有结果":value,"坐标":pos}
 #-------------------------------------------------倾斜检测并返回结果-----------------------------------
 
 

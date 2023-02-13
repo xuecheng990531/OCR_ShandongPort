@@ -170,9 +170,11 @@ def match_tielu2(pos,value,save_path):
     jianshu_all=id7.match_jianshu_all(pos,value,save_path)
     xianghao=id7.match_xianghao(pos,value,save_path)
     shifenghao=id7.match_shifenghao(pos,value,save_path)
-    feimu=id7.match_feimu(pos,value,save_path)
-    shuie=id7.match_shuie(pos,value,save_path)
-    jine=id7.match_jine(pos,value,save_path)
+
+    feimu,origin_feimu = id7.match_feimu(pos, value, save_path)
+    jine = id7.match_jine(pos, value, save_path)
+    shuie = id7.match_shuie(pos, value, save_path,jine_list=jine)
+
     jianshu_split=id7.match_jianshu_split(pos,value,save_path)
     baozhuang_split=id7.baozhuang_split(pos,value,save_path)
     zhongliang_split=id7.zhongliang_split(pos,value,save_path)
@@ -246,7 +248,7 @@ def match_tielu2(pos,value,save_path):
             d[i]['体积']=tiji_split[i]
 
         if len(yunjia_split)!=len(huowu):
-            d[i]['运价号']=yunjia_split[-1]
+            d[i]['运价号']=yunjia_split[0]
         else:
             d[i]['运价号']=yunjia_split[i]
 
@@ -259,7 +261,7 @@ def match_tielu2(pos,value,save_path):
         '件数':jianshu_all,'包装':baozhuang_all,
         '货物价格':huowujg_all,'重量':zl_all,'箱型箱类':xl_all,
         '箱号':xh_all,'集装箱施封号':sfh_all,'承运人确定重量':qdzl_all,
-        '体积':tj_all,'运价号':yunjia_split[-1],'计费重量':jifei_all
+        '体积':tj_all,'运价号':yunjia_split[0],'计费重量':jifei_all
     }]
 
     return {

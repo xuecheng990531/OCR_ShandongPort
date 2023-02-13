@@ -51,9 +51,7 @@ PATTERN = r'([\u4e00-\u9fa5]{2,5}?(?:省|自治区|市)){0,1}([\u4e00-\u9fa5]{2,
 #             jine.append(new[i])
 #         elif i % 3 == 2:
 #             shuie.append(new[i])
-#     print(feimu)
-#     print(jine)
-#     print(shuie)
+
 #     d = [{} for i in range(len(feimu))]
 #     for j in range(len(feimu)):
 #         d[j]['费目'] = str(feimu[j])
@@ -539,7 +537,7 @@ def match_yunjia_all(pos, value, save_path):
             width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
                 if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] - height / 2 < pos[i][0][1] < \
-                        shr_pos[3][1] + (height * 3) and value[i].isdigit():
+                        shr_pos[3][1] + (height * 6) and value[i].isdigit():
                     return value[i]
     else:
         return 'None'
@@ -627,6 +625,7 @@ def match_shifenghao(pos, value, save_path):
 
 def match_feimu(pos, value, save_path):
     feimu = []
+    origin_feimu=[]
     for i in range(len(pos)):
         if '费目' in value[i]:
             shr_pos = pos[i]
@@ -637,6 +636,7 @@ def match_feimu(pos, value, save_path):
                     1] < shr_pos[3][1] + int(height * 5):
                     if len(value[i]) != 0:
                         feimu.append(value[i])
+                    origin_feimu.append(value[i])
         elif '税额' in value[i]:
             shr_pos = pos[i]
             height = pos[i][3][1] - pos[i][0][1]
@@ -648,10 +648,11 @@ def match_feimu(pos, value, save_path):
                     s = "".join(pattern.findall(value[i]))
                     if len(s) != 0:
                         feimu.append(s)
+                    origin_feimu.append(value[i])
     if len(feimu) == 0:
         return 'None'
     else:
-        return feimu
+        return feimu,origin_feimu
 
 
 
@@ -678,28 +679,31 @@ def match_feiyongheji(pos, value, save_path):
                     return value[i]
 
 
-def match_shuie(pos, value, save_path):
-    shiue = []
-    for i in range(len(pos)):
-        if '税额' in value[i]:
-            shr_pos = pos[i]
-            height = pos[i][3][1] - pos[i][0][1]
-            width = pos[i][1][0] - pos[i][0][0]
-            for i in range(len(pos)):
-                if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][0] + width/2 and shr_pos[3][1]-height/2 < pos[i][0][1] < \
-                        shr_pos[3][1] + int(height * 6):
-                    s = "".join(filter(lambda s: s in '0123456789.', value[i]))
-                    shiue.append(s)
-    if len(shiue) == 0:
-        return 'None'
-    else:
-        return shiue
+
+
+def match_shuie(pos,value,save_path,jine_list):
+    shuie=[]
+    for j in range(len(jine_list)):
+        for i in range(len(pos)):
+            if jine_list[j] in value[i]:
+                shr_pos = pos[i]
+                height = pos[i][3][1] - pos[i][0][1]
+                width = pos[i][1][0] - pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[1][0] < pos[i][0][0] < shr_pos[1][0] + width*4 and shr_pos[0][1] - height / 2 < pos[i][0][1] < shr_pos[0][1]+height/2:
+                        s = "".join(filter(lambda s: s in '0123456789.', value[i]))
+                        shuie.append(s)
+                        break
+                break
+    return shuie
+
+
 
 def match_feimu_detail(feimu,jine,shuie):
+    print('费目是',feimu)
+    print('金额是',jine)
+    print('税额是',shuie)
     feimu_detail=[]
-    print(feimu)
-    print(jine)
-    print(shuie)
     if len(feimu) == len(jine) == len(shuie):
         for i in range(len(feimu)):
             list = {
@@ -713,27 +717,33 @@ def match_feimu_detail(feimu,jine,shuie):
 def match_jine(pos, value, save_path):
     jine = []
     for i in range(len(pos)):
-        if '费目' in value[i]:
+        if '箱号' in value[i]:
             shr_pos = pos[i]
             height = pos[i][3][1] - pos[i][0][1]
             width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0] + width * 1.5 < pos[i][0][0] < shr_pos[1][0] + width * 4 and shr_pos[3][1] < pos[i][0][
-                    1] < shr_pos[3][1] + int(height * 6):
+                if shr_pos[0][0]  < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[3][1]+height*6 < pos[i][0][
+                    1] < shr_pos[3][1] + int(height * 10):
                     if len(value[i]) != 0 and value[i][0].isdigit():
                         jine.append(value[i])
-        # elif '税额' in value[i]:
-        #     shr_pos=pos[i]
-        #     height=pos[i][3][1]-pos[i][0][1]
-        #     width=pos[i][1][0]-pos[i][0][0]
-        #     for i in range(len(pos)):
-        #         if shr_pos[0][0]-width<pos[i][1][0]<shr_pos[0][0]-width/2 and shr_pos[3][1]<pos[i][0][1]<shr_pos[3][1]+int(height*5):
-        #             if value[i][0].isdigit():
-        #                 jine.append(value[i])
+            for i in range(len(pos)):
+                if '运价' in value[i]:
+                    shr_pos = pos[i]
+                    height = pos[i][3][1] - pos[i][0][1]
+                    width = pos[i][1][0] - pos[i][0][0]
+                    for i in range(len(pos)):
+                        if shr_pos[0][0] - width < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] + height * 6 < \
+                                pos[i][0][
+                                    1] < shr_pos[3][1] + int(height * 10):
+                            if len(value[i]) != 0 and value[i][0].isdigit():
+                                jine.append(value[i])
+
     if len(jine) == 0:
         return 'None'
     else:
         return jine
+
+
 
 
 def baozhuang_split(pos, value, save_path):
