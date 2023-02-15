@@ -8,6 +8,16 @@ import aiofiles
 import numpy as np
 import cv2
 import paddleocr
+import  logging
+
+logger = logging.getLogger(__name__)
+logger.setLevel(level = logging.INFO)
+handler = logging.FileHandler("log.txt")
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
 
 imgType_list = {'.jpg', '.bmp', '.png', '.jpeg', '.jfif', '.webp'}
 ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=8,use_gpu=True ,det_limit_side_len=1216,use_multiprocess=True)
@@ -17,6 +27,7 @@ async def save_img(File, filename):
     async with aiofiles.open(os.path.join('save_files',filename), 'wb') as out_file:
         content = await File.read()
         await out_file.write(content)
+    logger.info("文件：----> "+filename+" 上传成功!")
     print("文件：----> "+filename+" 上传成功!")
 
 def del_upload_file():
@@ -25,6 +36,7 @@ def del_upload_file():
         for name in files:
             if name.endswith(".png") or name.endswith(".jpg") or name.endswith(".pdf") or name.endswith(".jpeg"):
                 os.remove(os.path.join(root, name))
+                logger.info("文件：----> " + os.path.join(root, name)+" 删除成功!\n")
                 print("文件：----> " + os.path.join(root, name)+" 删除成功!")
 #-------------------------------------------------图片上传和删除-----------------------------------
 

@@ -1,9 +1,18 @@
 import os
+import logging
 import uvicorn
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi import FastAPI, UploadFile, File, applications
 from typing import Optional
 from component_modules.autils import *
+
+logger = logging.getLogger(__name__)
+logger.setLevel(level=logging.INFO)
+handler = logging.FileHandler("log.txt")
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
 
 
 def swagger_monkey_patch(*args, **kwargs):
@@ -74,6 +83,7 @@ async def ocr(ID: int, Type: Optional[str] = None, Envir: Optional[str] = 'main'
     save_path = os.path.join('save_files', filename)
 
     if extension not in imgType_list and extension != '.pdf':
+        logger.error("上传错误,上传的文件不在可上传范围内")
         return {"上传错误": '上传的文件不在可上传范围内'}
     else:
 
@@ -101,4 +111,4 @@ async def ocr(ID: int, Type: Optional[str] = None, Envir: Optional[str] = 'main'
 
 
 if __name__ == '__main__':
-    uvicorn.run(app='app:app', host='0.0.0.0', port=8228, reload=True)
+    uvicorn.run(app='app:app', host='0.0.0.0', port=8008, reload=True)

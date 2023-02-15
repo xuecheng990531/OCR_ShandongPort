@@ -623,8 +623,8 @@ def match_jine(pos, value, save_path):
             height = pos[i][3][1] - pos[i][0][1]
             width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]  < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[3][1]+height*6 < pos[i][0][
-                    1] < shr_pos[3][1] + int(height * 14):
+                if shr_pos[0][0]  < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[3][1]+height*5 < pos[i][0][
+                    1] < shr_pos[3][1] + int(height * 10):
                     if len(value[i]) != 0 and value[i][0].isdigit():
                         jine.append(value[i])
             for i in range(len(pos)):
@@ -633,9 +633,9 @@ def match_jine(pos, value, save_path):
                     height = pos[i][3][1] - pos[i][0][1]
                     width = pos[i][1][0] - pos[i][0][0]
                     for i in range(len(pos)):
-                        if shr_pos[0][0] - width < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] + height * 6 < \
+                        if shr_pos[0][0] - width < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] + height * 5 < \
                                 pos[i][0][
-                                    1] < shr_pos[3][1] + int(height * 14):
+                                    1] < shr_pos[3][1] + int(height * 10):
                             if len(value[i]) != 0 and value[i][0].isdigit():
                                 jine.append(value[i])
 
