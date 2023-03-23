@@ -1,4 +1,5 @@
 import  re
+from paddlenlp import Taskflow
 from LAC import LAC
 lac=LAC(mode='lac')
 
@@ -7,17 +8,24 @@ id_zhengze=r'^([1-9]\d{5}[12]\d{3}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])\d{3}[0
 
 
 def match_name(pos,value,save_path):
+    
     for i in range(len(pos)):
         if '姓名' in value[i]:
             if len(value[i].split('名')[-1])!=0:
-                return value[i].split('名')[-1]
+                if '性别' in value[i]:
+                    return value[i].split('名')[-1].split('性别')[0]
+                else:
+                    return value[i].split('名')[-1]
             else:
                 shr_pos=pos[i]
                 height=pos[i][3][1]-pos[i][0][1]
                 width=pos[i][1][0]-pos[i][0][0]
                 for i in range(len(pos)):
                     if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[0][1]-int(2*height)<pos[i][0][1]<shr_pos[2][1]+int(height/2):
-                        return value[i]
+                        if '性别' in value[i]:
+                            return value[i].split('性别')[0]
+                        else:
+                            return value[i]
         else:
             user_name_lis = []
             for i in range(len(pos)):
@@ -49,6 +57,8 @@ def match_shenfenzhenghao(pos,value,save_path):
             if len(value[i].split('证')[-1])>5:
                 num_list = [i for i in value[i] if str.isdigit(i)]
                 return value[i].split('证')[-1][int(num_list[0])-1:]
+        elif value[i][2:8].isdigit() and len(value[i])>10:
+            return value[i]
     else:
         return '0'
         
@@ -64,12 +74,24 @@ def match_congyezigeleibie(pos,value,save_path):
                 if shr_pos[1][0]+width*4.5<pos[i][0][0]<shr_pos[1][0]+width*10 and shr_pos[0][1]-int(2*height)<pos[i][0][1]<shr_pos[2][1]+int(height/2):
                     type.append(value[i])
             all=''.join(type)
-            if '经营性'in all or '道路' in all or '驾驶' in all:
+            if '道路' in all or '驾驶' in all:
+                if '经营性'in all:
+                    return '经营性道路货物运输驾驶员'
+                elif '旅客' in all or '普货' in all: 
+                    return '道路旅客普货运输驾驶员'
+                else:
+                    return '道路货物运输驾驶员'
+            elif '经营性' in all:
                 return '经营性道路货物运输驾驶员'
             elif 'J-货运' in all:
                 return 'J-货运'
-        elif '经营性'in value[i] or '道路' in value[i] or '驾驶' in value[i] and '运输管理' not in value:
-            return '经营性道路货物运输驾驶员'
+        elif '道路' in value[i] or '驾驶' in value[i] and '运输管理' not in value:
+            if '经营性'in value[i]:
+                return '经营性道路货物运输驾驶员'
+            else:
+                return '道路货物运输驾驶员'
+        elif '旅客' in value[i] or '普货' in value[i]: 
+            return '道路旅客普货运输驾驶员'
         elif 'J-货运' in value[i] or 'J-' in value[i]:
             result=[]
             shr_pos=pos[i]

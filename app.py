@@ -51,6 +51,8 @@ async def ocr(ID: int, Type: Optional[str] = None, Envir: Optional[str] = 'main'
 
     - ID=2------------>入境货物检验检疫证明
 
+    - ID=16------------>入境货物检验检疫证明,明细部分是竖着展示的
+
     - ID=3------------>进口报关单
 
     - ID=4------------>身份证
@@ -96,14 +98,17 @@ async def ocr(ID: int, Type: Optional[str] = None, Envir: Optional[str] = 'main'
                 check(img_path=save_path)
             elif ID == 12 or ID == 11:
                 save_path = process_ID12(save_path)
+            elif ID==5:
+                save_path=process_ID5(save_path)
             pos, value = detect_img(save_path)
             return detect_value(pos, ID, value, Type, save_path, Envir)
 
         else:
             count, img_list = pdf_img(save_path, name)
 
-            if ID == 7 or ID == 3 or ID == 11:
+            if ID == 7 or ID == 3 or ID == 11 :
                 check(img_path=img_list[0])
+
 
             pos, value = detect_pdf(img_list, count)
 
@@ -111,4 +116,4 @@ async def ocr(ID: int, Type: Optional[str] = None, Envir: Optional[str] = 'main'
 
 
 if __name__ == '__main__':
-    uvicorn.run(app='app:app', host='0.0.0.0', port=8228, reload=True)
+    uvicorn.run(app='app:app', host='0.0.0.0', port=8008, reload=True)

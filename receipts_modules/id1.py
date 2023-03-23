@@ -128,18 +128,24 @@ def match_tidanhao(pos,value,save_path):
 def match_IMO(pos,value,save_path):
     result=[]
     for i in range(len(pos)):
-        if '危险类别' in value[i]:
+        if '/-' in value[i]:
+            if value[i].split('/-')[0].isdigit() or value[i].split('/-')[0]=='-':
+                return  value[i]
+
+        # 竖直识别
+        if '危险类别' in value[i] and len(value[i]):
             shr_pos=pos[i]
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-int(width/5)<pos[i][0][0]<shr_pos[1][0]+int(width) and shr_pos[3][1]-height<pos[i][0][1]<shr_pos[3][1]+height:
+                if shr_pos[0][0]-int(width/5)<pos[i][0][0]<shr_pos[1][0]+width/3 and shr_pos[3][1]-height<pos[i][0][1]<shr_pos[3][1]+height:
                     result.append(value[i])
+                
             if len(result)!=0:
-                for i in range(len(number)):
-                    for j in range(len(result)):
-                        if number[i] in result[j]:
-                            return result[j]
+                for j in range(len(result)):
+                    if '/-' in result[j]:
+                        return result[j]
+            
 
 def match_UN(pos,value,save_path):
     for i in range(len(pos)):

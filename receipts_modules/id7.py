@@ -604,11 +604,18 @@ def match_feimu_detail(feimu,jine,shuie):
     print('费目是',feimu)
     print('金额是',jine)
     print('税额是',shuie)
+
+    # 合并feimu中已经有的信息
+    feimu_new=[]
+    for each in feimu:
+        if each not in feimu_new:
+            feimu_new.append(each)	
+
     feimu_detail=[]
-    if len(feimu) == len(jine) == len(shuie):
-        for i in range(len(feimu)):
+    if len(feimu_new) == len(jine) == len(shuie):
+        for i in range(len(feimu_new)):
             list = {
-                "费目": feimu[i], "金额": jine[i], "税额": shuie[i]
+                "费目": feimu_new[i], "金额": jine[i], "税额": shuie[i]
             }
             feimu_detail.append(list)
     return  feimu_detail

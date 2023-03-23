@@ -1,4 +1,5 @@
-from io import IncrementalNewlineDecoder
+from paddlenlp import taskflow
+schema = ['注册日期']
 import re
 from LAC import LAC
 import cv2
@@ -188,7 +189,9 @@ def match_fadongjihaoma(pos,value,save_path):
     else:
         return '0'
 def match_zhucedate(pos,value,save_path):
+    ie = Taskflow('information_extraction', schema=schema)
     for i in range(len(pos)):
+
         if '注册日' in value[i] or '注册口' in value[i] or '册日期' in value[i]:
             if len(value[i].split('册')[-1])>7:
                 return value[i].split('-')[0][-4:]

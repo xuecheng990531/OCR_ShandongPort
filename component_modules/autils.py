@@ -20,7 +20,7 @@ logger.addHandler(handler)
 
 
 imgType_list = {'.jpg', '.bmp', '.png', '.jpeg', '.jfif', '.webp'}
-ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=8,use_gpu=True ,det_limit_side_len=1216,use_multiprocess=True)
+ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=16,use_gpu=True ,det_limit_side_len=1216,use_multiprocess=True)
 
 #-------------------------------------------------图片上传和删除-----------------------------------
 async def save_img(File, filename):
@@ -94,6 +94,19 @@ def process_ID12(img_path):
         kernel = np.ones((2, 2),np.uint8)
         img_process = cv2.erode(zengqiang, kernel)
     return img_process
+
+def process_ID5(img_path):
+    img=cv2.imread(img_path)
+    if img.shape[2]=='3':
+        b,g,r=cv2.split(img)
+        zengqiang=gama_transfer(r)
+        kernel = np.ones((2, 2),np.uint8)
+        img_process = cv2.erode(zengqiang, kernel)
+    else:
+        zengqiang=gama_transfer(img)
+        kernel = np.ones((2, 2),np.uint8)
+        img_process = cv2.erode(zengqiang, kernel)
+    return img_process
 #-------------------------------------------------对ID12的图像进行处理-----------------------------------
 
 
@@ -153,8 +166,8 @@ def remove(dict):
         else:
             if '：' in dict[i]:
                 dict[i]=dict[i].replace('：','')
-            elif '*' in dict[i]:
-                dict[i]=dict[i].replace('*','')
+            # elif '*' in dict[i]:
+            #     dict[i]=dict[i].replace('*','')
             elif ':' in dict[i]:
                 dict[i]=dict[i].replace(':','')
             elif '，' in dict[i]:

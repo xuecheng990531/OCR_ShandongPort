@@ -124,18 +124,22 @@ def match_jizhuangxiang(pos,value,save_path):
 def match_shengchanriqi(pos,value,save_path):
     for i in range(len(pos)):
         if '生产日期' in value[i]:
+            print('yes')
             shr_pos=pos[i]
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-int(width/5)<pos[i][0][0]<shr_pos[1][0] and shr_pos[3][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+height and '-' in value[i]:
-                    return value[i]
-        else:
-            if '-' in value[i] and value[i].split('-')[0][-1].isdigit() and value[i].split('-')[-1][0].isdigit():
-                if '克' in value[i]:
-                    return value[i].split('克')[-1]
-                else:
-                    return value[i]
+                if shr_pos[0][0]<pos[i][1][0]<shr_pos[1][0]+width*2 and shr_pos[3][1]-int(height/3)<pos[i][0][1]<shr_pos[3][1]+height+height/2 and '-' in value[i]:
+                    if '千克' in value[i]:
+                        return value[i].split('千克')[-1]
+                    else:
+                        return value[i]
+        # else:
+        #     if '-' in value[i] and value[i].split('-')[0][-1].isdigit() and value[i].split('-')[-1][0].isdigit():
+        #         if '克' in value[i]:
+        #             return value[i].split('克')[-1]
+        #         else:
+        #             return value[i]
           
 
 def match_shengchanchangjia(pos,value,save_path):
@@ -185,25 +189,21 @@ def match_guige(pos,value,save_path):
     if '无规格' in value:
         return '无规格'
 
+    guojia=match_shuchuguojia(pos,value,save_path)
     for i in range(len(pos)):
-        if '规格' in value[i] and len(value[i])==2:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
-            for i in range(len(pos)):
-                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0] and shr_pos[3][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+height:
-                    return value[i]
-        else:
-            if '生产日期' in value[i]:
-                shr_pos=pos[i]
-                height=pos[i][3][1]-pos[i][0][1]
-                width=pos[i][1][0]-pos[i][0][0]
-                for i in range(len(pos)):
-                    if shr_pos[0][0]-width*2.5<pos[i][0][0]<shr_pos[0][0] and shr_pos[3][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+height*1.4:
-                        if '*' in value[i]:
-                            return value[i].split('*')[0]
-                        else:
-                            return value[i]
+        if '规格' in value[i]:
+            ymin=pos[i][0][1]
+            ymax=pos[i][2][1]
+            xmin=pos[i][0][0]
+            xmax=pos[i][2][0]
+            img_height=pos[i][3][1]-pos[i][0][1]
+            img_width=pos[i][1][0]-pos[i][0][0]
+            pos,result=ReRec2(save_path,ymax-img_height/2,ymax+img_height,xmin,xmax+img_width*2,value='id2v_guige')
+            result= ''.join(result)
+            if guojia in result:
+                result2=result.split(str(guojia))[-1].split('*')[0]
+                return result2
+
 
 def match_hetonghao(pos,value,save_path):
     for i in range(len(pos)):
