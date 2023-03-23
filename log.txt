@@ -343,3 +343,5 @@
 2023-03-23 13:52:05,062 - component_modules.autils - INFO - 文件：----> save_files/img_2.png 删除成功!
 
 2023-03-23 13:52:23,029 - component_modules.autils - INFO - 文件：----> img_5.png 上传成功!
+2023-03-23 13:52:37,467 - component_modules.autils - INFO - 文件：----> save_files/img_5.png 删除成功!
+
