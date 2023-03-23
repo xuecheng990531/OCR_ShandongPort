@@ -9,6 +9,7 @@ import numpy as np
 import cv2
 import paddleocr
 import  logging
+import re
 
 logger = logging.getLogger(__name__)
 logger.setLevel(level = logging.INFO)
@@ -20,7 +21,7 @@ logger.addHandler(handler)
 
 
 imgType_list = {'.jpg', '.bmp', '.png', '.jpeg', '.jfif', '.webp'}
-ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=16,use_gpu=True ,det_limit_side_len=1216,use_multiprocess=True)
+ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=1,use_gpu=True ,det_limit_side_len=1216,use_multiprocess=False)
 
 #-------------------------------------------------图片上传和删除-----------------------------------
 async def save_img(File, filename):
@@ -109,6 +110,30 @@ def process_ID5(img_path):
     return img_process
 #-------------------------------------------------对ID12的图像进行处理-----------------------------------
 
+#-------------------------------------------------分离汉字和数字-----------------------------------
+def separate_digits_and_chinese_chars(string):
+    # 定义匹配数字和汉字字符的正则表达式
+    digit_pattern = r'\d+'
+    chinese_char_pattern = r'[\u4e00-\u9fa5]+'
+    # 使用re.findall()函数找到所有匹配项，并存储在相应的列表中
+    digits_list = re.findall(digit_pattern, string)
+    if len(digits_list)==3:
+        return digits_list[0] +'*'+ digits_list[1]+ '*'+ digits_list[2]+'mm'
+    else:
+        return digits_list
+#-------------------------------------------------分离汉字和数字-----------------------------------
+
+#-------------------------------------------------分离英语和其他-----------------------------------
+def split_address(string):
+    english_chars = ""
+    non_english_chars = ""
+    for char in string:
+        if char.isalpha() and ord(char) < 128: # 只保留ASCII码范围内的英文字符
+            english_chars += char
+        else:
+            non_english_chars += char
+    return non_english_chars
+#-------------------------------------------------分离英语和其他-----------------------------------
 
 #-------------------------------------------------detect-----------------------------------
 def detect_img(img_path):

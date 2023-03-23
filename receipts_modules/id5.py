@@ -1,5 +1,3 @@
-from paddlenlp import taskflow
-schema = ['注册日期']
 import re
 from LAC import LAC
 import cv2
@@ -8,7 +6,8 @@ sys.path.append('../')
 from component_modules import autils
 
 def ReRec2(path,ymin,ymax,xmin,xmax,value):
-    image = cv2.imread(path)
+    cv2.imwrite('save_files/crop/new.png',path)
+    image = cv2.imread('save_files/crop/new.png')
     cropImg=image[int(ymin):int(ymax),int(xmin):int(xmax)]
     pos,value=autils.detect_img(cropImg)
     return pos,value
@@ -22,17 +21,21 @@ province=['京','沪','津','渝','鲁','冀','晋','蒙','辽','吉','黑','苏
 
 def match_haoma(pos,value,save_path):
     for i in range(len(pos)):
-        if value[i][0] in province:
-            #print(value[i])
+        match = re.search(r'[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼]{1}[A-HJ-NP-Z]([0-9ABCDEFGHJKLMNPQRSTUVWXYZ]{5})', value[i])
+        if match:
+            return match.group()
+
+        elif value[i][0] in province:
             return value[i]
         elif '码' in value[i]:
-            if value[i].split('码')[1]!="":
-                #print(value[i])
-                return value[i].split('码')[1]
-            elif value[i+1][0] in province or value[i+1][1] in province:
-                return value[i+1]
-    else:
-        return '0'
+            if len(value[i].split('码')[-1])>0:
+                return value[i].split('码')[-1]
+            else:
+                match = re.search(r'[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼]{1}[A-HJ-NP-Z]([0-9ABCDEFGHJKLMNPQRSTUVWXYZ]{5})', value[i])
+                if match:
+                    return match.group()
+            
+
 
 def match_cheliangleixing(pos,value,save_path):
     for i in range(len(pos)):
@@ -45,25 +48,33 @@ def match_cheliangleixing(pos,value,save_path):
                 width=pos[i][1][0]-pos[i][0][0]
                 for i in range(len(pos)):
                     if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width and shr_pos[1][1]-int(height/2)<pos[i][0][1]<shr_pos[1][1]+height:
-                        return value[i]
+                        if '重型' in value[i]:
+                            return '重型半挂牵引车'
+                        else:
+                            return value[i]
+
         elif 'Vehicle Type' in value[i]:
             shr_pos=pos[i]
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
                 if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[1][1]-height*4<pos[i][0][1]<shr_pos[1][1]+height:
-                    return value[i]
+                    if '重型' in value[i]:
+                        return '重型半挂牵引车'
+                    else:
+                        return value[i]
         elif '重型' and '半挂' in value[i]:
-            return value[i]
-    else:
-        return '无'        
+            return '重型半挂牵引车'
+        elif '重型' in value[i] and '车' in value[i]:
+            return '重型半挂牵引车'
+     
 
 def match_suoyouren(pos,value,save_path):
     for i in range(len(pos)):
         if '所有人' in value[i] or '有人' in value[i]:
             if len(value[i].split('人')[-1])>1:
                 return value[i].split('人')[-1]
-        elif '所' in value[i] and '人' in value[i]:
+        if '所' in value[i] and '人' in value[i]:
             if len(value[i].split('人')[-1])>1:
                 return value[i].split('人')[-1]
             else:
@@ -74,15 +85,15 @@ def match_suoyouren(pos,value,save_path):
                     if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+width and shr_pos[1][1]-height/2<pos[i][0][1]<shr_pos[2][1]+height/2 and 'Type' not in value[i]:
                         return value[i] 
 
-        elif '中华人民共和国' in value[i]:
+        if '中华人民共和国' in value[i]:
             name=[]
             shr_pos=pos[i]
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-int(width/6)<pos[i][0][0]<shr_pos[1][0]+int(width/6) and shr_pos[3][1]+2.3*height<pos[i][0][1]<shr_pos[3][1]+int(height*3):
+                if shr_pos[0][0]-int(width/6)<pos[i][0][0]<shr_pos[1][0]+int(width/6) and shr_pos[3][1]+2.3*height<pos[i][0][1]<shr_pos[3][1]+int(height*2.5):
                     return value[i]
-        elif '有限公司' in value[i]:
+        if '有限公司' in value[i]:
             return value[i]
 
 def match_address(pos,value,save_path):
@@ -154,22 +165,22 @@ def match_pinpaixinghao(pos,value,save_path):
                 return value[i].split('号')[-1]
         elif '牌' in value[i] and re.match('[0-9A-Z]',value[i].split('牌')[-1]):
             return value[i]
-    else:
-        return '0'
+
+
+
 def match_cheliangshibiedaihao(pos,value,save_path):
     for i in range(len(pos)):
-        if '识别' in value[i] or '代号' in value[i] or '车辆' in value[i] and '类' not in value[i]:
-            if len(value[i].split('号')[-1])>5:
-                return value[i].split('号')[-1]
-            else:
-                shr_pos=pos[i]
-                height=pos[i][3][1]-pos[i][0][1]
-                width=pos[i][1][0]-pos[i][0][0]
-                for i in range(len(pos)):
-                    if shr_pos[1][0]-int(width/2) <pos[i][0][0]<shr_pos[1][0]+width and shr_pos[1][1]-int(height/2)<pos[i][0][1]<shr_pos[1][1]+int(height+height/2):
-                        return value[i]
-    else:
-        return '0'
+        if '识别' in value[i] or '代号' in value[i]:
+            if '类' not in value[i]:
+                if len(value[i].split('号')[-1])>5:
+                    return value[i].split('号')[-1]
+                else:
+                    shr_pos=pos[i]
+                    height=pos[i][3][1]-pos[i][0][1]
+                    width=pos[i][1][0]-pos[i][0][0]
+                    for i in range(len(pos)):
+                        if shr_pos[1][0]-int(width/2) <pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[1][1]+int(height+height/2) and len(value[i])>10:
+                            return value[i]
 
 
                 
@@ -189,12 +200,18 @@ def match_fadongjihaoma(pos,value,save_path):
     else:
         return '0'
 def match_zhucedate(pos,value,save_path):
-    ie = Taskflow('information_extraction', schema=schema)
     for i in range(len(pos)):
-
-        if '注册日' in value[i] or '注册口' in value[i] or '册日期' in value[i]:
+        if '注册日' in value[i] or '注册口' in value[i] or '册日期' in value[i] or '注册旧' in value[i]:
             if len(value[i].split('册')[-1])>7:
-                return value[i].split('-')[0][-4:]
+                if '发' in value[i].split('册')[-1]:
+                    result= value[i].split('册')[-1].split('发')[0]
+                    match=re.search(r'\d{4}-\d{1,2}-\d{1,2}',result)
+                    return match.group()
+                else:
+                    result=value[i].split('册')[-1]
+                    match=re.search(r'\d{4}-\d{1,2}-\d{1,2}',result)
+                    if match:
+                        return match.group()
             else:
                 result=[]
                 shr_pos=pos[i]
@@ -206,7 +223,31 @@ def match_zhucedate(pos,value,save_path):
                 if len(result)!=0:
                     for i in range(len(result)):
                         if '-' in result[i] and result[i].split('-')[0][-1].isdigit():
-                            return result[i]
+                            if '发证' in result[i]:
+                                return result[i].split('发证')[0]
+                            else:
+                                return result[i]
+        else:
+            result=[]
+            if '支队' in value[i]:
+                shr_pos=pos[i]
+                height=pos[i][3][1]-pos[i][0][1]
+                width=pos[i][1][0]-pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+width*4 and shr_pos[1][1]-int(height/2)<pos[i][0][1]<shr_pos[2][1]+height:
+                        result.append(value[i])
+                if len(result)!=0:
+                    result_new=''.join(result)
+                    match=re.search(r'\d{4}-\d{1,2}-\d{1,2}',result_new)
+                    if match:
+                        return match.group()
+                        
+
+            # if '-' in value[i] and value[i].split('-')[0][-1].isdigit():
+            #     match=re.search(r'\d{4}-\d{1,2}-\d{1,2}',value[i])
+            #     if match:
+            #         return match.group()
+
 
 def match_zairenshu(pos,value,save_path):
     for i in range(len(value)):
@@ -227,26 +268,31 @@ def match_zairenshu(pos,value,save_path):
 
 def match_weight_sum(pos,value,save_path):
     for i in range(len(value)):
-        if '总质量' in value[i] or '总质' in value[i] or '总' in value[i] and '牵引' not in value[i] and '准' not in value[i]:
-            if len(value[i])>5:
+        if '总质量' in value[i] or '总质' in value[i] or '总' in value[i]:
+            if len(value[i])>3:
                 result="".join(list(filter(str.isdigit, value[i])))
-                return result+'kg'
-            else:
-                shr_pos=pos[i]
-                height=pos[i][3][1]-pos[i][0][1]
-                width=pos[i][1][0]-pos[i][0][0]
-                for i in range(len(pos)):
-                    if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(3*width) and shr_pos[1][1]-int(2*height)<pos[i][0][1]<shr_pos[1][1]+height:
-                        return value[i]
+                if len(result)!=0:
+                    return result+'kg'
+
+            elif '牵引' not in value[i] and '准' not in value[i]:
+                if len(value[i])>5:
+                    result="".join(list(filter(str.isdigit, value[i])))
+                    if len(result)!=0:
+                        return result+'kg'
+                else:
+                    shr_pos=pos[i]
+                    height=pos[i][3][1]-pos[i][0][1]
+                    width=pos[i][1][0]-pos[i][0][0]
+                    for i in range(len(pos)):
+                        if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(3*width) and shr_pos[1][1]-int(2*height)<pos[i][0][1]<shr_pos[1][1]+height:
+                            return value[i]
         elif '核定载质量' in value[i]:
             shr_pos=pos[i]
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+2*width and shr_pos[1][1]-int(4.4*height)<pos[i][0][1]<shr_pos[1][1]+height*2:
+                if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+2*width and shr_pos[1][1]-int(4.4*height)<pos[i][0][1]<shr_pos[1][1]:
                     return value[i]
-    else:
-        return '0kg'
                 
 
 def match_weight_zhengbei(pos,value,save_path):
@@ -300,42 +346,63 @@ def match_weight_heding(pos,value,save_path):
                         return result+'kg'
 
 def match_weight_qianyin(pos,value,save_path):
+
     for i in range(len(value)):
-        # if '总质量' in value[i] and '准' in value[i]:
-        #     if len(value[i].split('量')[1])>4:
-        #         return value[i].split('量')[-1]
-        #     else:
-        #         shr_pos=pos[i]
-        #         height=pos[i][3][1]-pos[i][0][1]
-        #         width=pos[i][1][0]-pos[i][0][0]
-        #         for i in range(len(pos)):
-        #             if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(2*width) and shr_pos[1][1]-int(3*height)<pos[i][0][1]<shr_pos[2][1]+height/2 and '核定' not in value[i]:
-        #                 if value[i]!='':
-        #                     return '0kg'
-        #                 else:
-        #                     return value[i]
-        if '尺寸' in value[i] or '尺' in value[i]:
-            chicun=[]
+        if '准' in value[i] and '质量' in value[i]:
+            if len(value[i].split('质量')[-1])>3:
+                return value[i]
+            else:
+                shr_pos=pos[i]
+                height=pos[i][3][1]-pos[i][0][1]
+                width=pos[i][1][0]-pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+width*4 and shr_pos[1][1]-height<pos[i][2][1]<shr_pos[2][1]+height and value[i][0].isdigit():
+                        return value[i]
+        elif '准' in value[i] and '总' in value[i]:
             shr_pos=pos[i]
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]+width*5<pos[i][0][0]<shr_pos[1][0]+width*40 and shr_pos[1][1]-height*2.2<pos[i][0][1]<shr_pos[2][1]+height/2:
-                    chicun.append(value[i])
-            if len(chicun)>0:
-                for i in range(len(chicun)):
-                    if 'kg' in chicun[i]:
-                        return chicun[i]
-    else:
-        return '0'
+                if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+width*4 and shr_pos[1][1]-height<pos[i][2][1]<shr_pos[2][1]+height and value[i][0].isdigit():
+                    return value[i]
+
+        elif '尺寸' in value[i] or '尺' in value[i]:
+            chicun=[]
+            shr_pos=pos[i]
+            height=pos[i][3][1]-pos[i][0][1]
+            width=pos[i][1][0]-pos[i][0][0]
+
+            if len(value[i])<6:
+                for i in range(len(pos)):
+                    if shr_pos[1][0]+width*5<pos[i][0][0]<shr_pos[1][0]+width*40 and shr_pos[1][1]-height*2.2<pos[i][0][1]<shr_pos[2][1]+height/2 and value[i][0].isdigit():
+                        chicun.append(value[i])
+                if len(chicun)>0:
+                    for i in range(len(chicun)):
+                        if 'kg' in chicun[i]:
+                            return chicun[i]
+
+        elif  '核定载质量' in value[i]:
+            if len(value[i].split('量')[-1])!=0:
+                return value[i].split('量')[-1]
+            else:
+                shr_pos=pos[i]
+                height=pos[i][3][1]-pos[i][0][1]
+                width=pos[i][1][0]-pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(3*width) and shr_pos[1][1]+height<pos[i][0][1]<shr_pos[2][1]+height*1.5 and value[i][2].isdigit():
+                        result="".join(list(filter(str.isdigit, value[i])))
+                        return result+'kg' 
+
 def match_chicun(pos,value,save_path):
     for i in range(len(value)):
         if '外' in value[i]:
             if len(value[i])>10:
-                if '寸' in value[i]:
-                    return value[i].split('寸')[-1].split('m')[0]+'mm'
-                else:
-                    return value[i].split('m')[0]+'mm'
+                s=autils.separate_digits_and_chinese_chars(value[i])
+                return s
+                # if '寸' in value[i]:
+                #     return value[i].split('寸')[-1].split('m')[0]+'mm'
+                # else:
+                #     return value[i].split('m')[0]+'mm'
             else:
                 shr_pos=pos[i]
                 height=pos[i][3][1]-pos[i][0][1]

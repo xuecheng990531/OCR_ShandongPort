@@ -2,8 +2,15 @@
 from LAC import LAC
 import re
 lac = LAC(mode="lac")
+import sys
+sys.path.append('../')
+from component_modules import autils
 
 zhunjia=['A1','A2','A3','B1','B2','C1','C2','C3','C4']
+provinces = ["北京", "天津", "上海", "重庆", "新疆", "西藏", "宁夏", "内蒙古",
+             "广西", "黑龙江", "吉林", "辽宁", "河北", "山东", "江苏", "安徽",
+             "浙江", "福建", "广东", "海南", "云南", "贵州", "四川", "湖南",
+             "湖北", "河南", "山西", "陕西", "甘肃", "青海", "江西", "台湾", "香港", "澳门"]
 
 def match_name(pos,value,save_path):
     for i in range(len(pos)):
@@ -74,8 +81,14 @@ def match_jiashizhenghao(pos,value,save_path):
                 height=pos[i][3][1]-pos[i][0][1]
                 width=pos[i][1][0]-pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+int(2*width) and shr_pos[1][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]:
+                    if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+int(2*width) and shr_pos[1][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]:
                         return value[i]
+        else:
+            if len(value[i])>10 and value[i][2:5].isdigit():
+                if '号' in value[i]:
+                    return value[i].split('号')[-1]
+                else:
+                    return value[i]
 
 def match_address(pos,value,save_path):
     address=[]
@@ -85,6 +98,7 @@ def match_address(pos,value,save_path):
             if len(value[i].split('址')[-1])>3:
                 return value[i].split('址')[-1]
             else:
+                
                 shr_pos=pos[i]
                 height=pos[i][3][1]-pos[i][0][1]
                 width=pos[i][1][0]-pos[i][0][0]
@@ -94,20 +108,52 @@ def match_address(pos,value,save_path):
                 if len(address)>0:
                     result = ''.join(address)
                     return result
+
+
         elif '性别' in value[i]:
             shr_pos=pos[i]
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width*10<pos[i][0][0]<shr_pos[0][0]-3*width and shr_pos[3][1]+height/2<pos[i][0][1]<shr_pos[3][1]+height*3.4:
+                if shr_pos[0][0]-width*9<pos[i][0][0]<shr_pos[0][0] and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height*2:
                     address2.append(value[i])
             if len(address2)>0:
                 result=''.join(address2)
-                if '址' in result:
-                    return result.split('址')[-1]
+                results=autils.split_address(result)
+                if '住址' in results:
+                    a= results.replace('住址', '')
+                    for i in range(len(provinces)):
+                        if provinces[i] in a:
+                            return str(provinces[i])+a.split(str(provinces[i]))[-1]
                 else:
-                    return result
-    return '无'
+                    for i in range(len(provinces)):
+                        if provinces[i] in results:
+                            return str(provinces[i])+a.split(str(provinces[i]))[-1]
+
+        elif '中华人民共和国机动车驾驶证' in value[i] and '副页' not in value[i]:
+            shr_pos=pos[i]
+            height=pos[i][3][1]-pos[i][0][1]
+            width=pos[i][1][0]-pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[0][0]-width<pos[i][0][0]<shr_pos[0][0]+width/4 and shr_pos[3][1]+height*2<pos[i][0][1]<shr_pos[3][1]+height*5:
+                    address2.append(value[i])
+            if len(address2)>0:
+                result=''.join(address2)
+                results=autils.split_address(result)
+                if '住址' in results:
+                    a=results.replace('住址', '')
+                    for i in range(len(provinces)):
+                        if provinces[i] in a:
+                            return str(provinces[i])+a.split(str(provinces[i]))[-1]
+
+                else:
+                    for i in range(len(provinces)):
+                        if provinces[i] in results:
+                            return str(provinces[i])+a.split(str(provinces[i]))[-1]
+
+
+        
+
 
 def match_chexing(pos,value,save_path):
     for i in range(len(pos)):
@@ -127,9 +173,7 @@ def match_chexing(pos,value,save_path):
 
 def match_valid_date(pos,value,save_path):
     for i in range(len(pos)):
-        if '至' in value[i] and len(value[i].split('至')[-1])>4:
+        if '至' in value[i]:
             return value[i].split('至')[-1]
         elif '年' in value[i]:
             return value[i]
-    else:
-        return '0'
