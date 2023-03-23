@@ -264,3 +264,82 @@
 
 2023-03-23 11:06:26,614 - component_modules.autils - INFO - 文件：----> save_files/215836956_2.png 删除成功!
 
+2023-03-23 11:20:34,914 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 3.pdf 上传成功!
+2023-03-23 11:20:44,999 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 3_0.png 删除成功!
+
+2023-03-23 11:25:34,586 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 3.pdf 上传成功!
+2023-03-23 11:25:44,675 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 3_0.png 删除成功!
+
+2023-03-23 11:28:02,555 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 3.pdf 上传成功!
+2023-03-23 11:28:12,351 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 3_0.png 删除成功!
+
+2023-03-23 11:28:39,584 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 3.pdf 上传成功!
+2023-03-23 11:28:49,340 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 3_0.png 删除成功!
+
+2023-03-23 13:25:23,523 - component_modules.autils - INFO - 文件：----> img_0.png 上传成功!
+2023-03-23 13:25:37,827 - component_modules.autils - INFO - 文件：----> save_files/img_0.png 删除成功!
+
+2023-03-23 13:28:50,635 - component_modules.autils - INFO - 文件：----> 微信图片_20220704095418.jpg 上传成功!
+2023-03-23 13:28:53,888 - component_modules.autils - INFO - 文件：----> save_files/微信图片_20220704095418.jpg 删除成功!
+
+2023-03-23 13:29:14,737 - component_modules.autils - INFO - 文件：----> 微信图片_20220704095330.jpg 上传成功!
+2023-03-23 13:29:18,100 - component_modules.autils - INFO - 文件：----> save_files/微信图片_20220704095330.jpg 删除成功!
+
+2023-03-23 13:30:04,904 - component_modules.autils - INFO - 文件：----> 微信图片_20220704095347.jpg 上传成功!
+2023-03-23 13:30:08,074 - component_modules.autils - INFO - 文件：----> save_files/微信图片_20220704095347.jpg 删除成功!
+
+2023-03-23 13:30:44,734 - component_modules.autils - INFO - 文件：----> 微信图片_20220704095352.jpg 上传成功!
+2023-03-23 13:30:47,826 - component_modules.autils - INFO - 文件：----> save_files/微信图片_20220704095352.jpg 删除成功!
+
+2023-03-23 13:32:21,199 - component_modules.autils - INFO - 文件：----> 微信图片_20220704095441.jpg 上传成功!
+2023-03-23 13:32:24,257 - component_modules.autils - INFO - 文件：----> save_files/微信图片_20220704095441.jpg 删除成功!
+
+2023-03-23 13:35:33,265 - component_modules.autils - INFO - 文件：----> 微信图片_20220704095441.jpg 上传成功!
+2023-03-23 13:35:36,416 - component_modules.autils - INFO - 文件：----> save_files/微信图片_20220704095441.jpg 删除成功!
+
+2023-03-23 13:36:35,945 - component_modules.autils - INFO - 文件：----> 微信图片_20220704095352.jpg 上传成功!
+2023-03-23 13:36:39,274 - component_modules.autils - INFO - 文件：----> save_files/微信图片_20220704095352.jpg 删除成功!
+
+2023-03-23 13:36:57,679 - component_modules.autils - INFO - 文件：----> 微信图片_20220704095358.jpg 上传成功!
+2023-03-23 13:37:00,821 - component_modules.autils - INFO - 文件：----> save_files/微信图片_20220704095358.jpg 删除成功!
+
+2023-03-23 13:37:11,412 - component_modules.autils - INFO - 文件：----> 微信图片_20220704095525.jpg 上传成功!
+2023-03-23 13:37:14,641 - component_modules.autils - INFO - 文件：----> save_files/微信图片_20220704095525.jpg 删除成功!
+
+2023-03-23 13:39:14,192 - component_modules.autils - INFO - 文件：----> img_0.png 上传成功!
+2023-03-23 13:39:28,556 - component_modules.autils - INFO - 文件：----> save_files/img_0.png 删除成功!
+
+2023-03-23 13:41:12,009 - component_modules.autils - INFO - 文件：----> img_0.png 上传成功!
+2023-03-23 13:41:26,313 - component_modules.autils - INFO - 文件：----> save_files/img_0.png 删除成功!
+
+2023-03-23 13:42:34,131 - component_modules.autils - INFO - 文件：----> img_0.png 上传成功!
+2023-03-23 13:42:48,467 - component_modules.autils - INFO - 文件：----> save_files/img_0.png 删除成功!
+
+2023-03-23 13:43:05,512 - component_modules.autils - INFO - 文件：----> img_0.png 上传成功!
+2023-03-23 13:43:19,806 - component_modules.autils - INFO - 文件：----> save_files/img_0.png 删除成功!
+
+2023-03-23 13:44:18,423 - component_modules.autils - INFO - 文件：----> img_0.png 上传成功!
+2023-03-23 13:44:32,681 - component_modules.autils - INFO - 文件：----> save_files/img_0.png 删除成功!
+
+2023-03-23 13:44:45,510 - component_modules.autils - INFO - 文件：----> img_1.png 上传成功!
+2023-03-23 13:44:59,963 - component_modules.autils - INFO - 文件：----> save_files/img_1.png 删除成功!
+
+2023-03-23 13:45:57,227 - component_modules.autils - INFO - 文件：----> img_1.png 上传成功!
+2023-03-23 13:46:11,659 - component_modules.autils - INFO - 文件：----> save_files/img_1.png 删除成功!
+
+2023-03-23 13:47:07,318 - component_modules.autils - INFO - 文件：----> img_1.png 上传成功!
+2023-03-23 13:47:21,884 - component_modules.autils - INFO - 文件：----> save_files/img_1.png 删除成功!
+
+2023-03-23 13:48:03,015 - component_modules.autils - INFO - 文件：----> img_1.png 上传成功!
+2023-03-23 13:48:17,520 - component_modules.autils - INFO - 文件：----> save_files/img_1.png 删除成功!
+
+2023-03-23 13:49:00,739 - component_modules.autils - INFO - 文件：----> img_1.png 上传成功!
+2023-03-23 13:49:15,165 - component_modules.autils - INFO - 文件：----> save_files/img_1.png 删除成功!
+
+2023-03-23 13:51:14,711 - component_modules.autils - INFO - 文件：----> img_1.png 上传成功!
+2023-03-23 13:51:29,161 - component_modules.autils - INFO - 文件：----> save_files/img_1.png 删除成功!
+
+2023-03-23 13:51:50,716 - component_modules.autils - INFO - 文件：----> img_2.png 上传成功!
+2023-03-23 13:52:05,062 - component_modules.autils - INFO - 文件：----> save_files/img_2.png 删除成功!
+
+2023-03-23 13:52:23,029 - component_modules.autils - INFO - 文件：----> img_5.png 上传成功!

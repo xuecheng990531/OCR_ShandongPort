@@ -610,6 +610,7 @@ def match_feimu_detail(feimu,jine,shuie):
     for each in feimu:
         if each not in feimu_new:
             feimu_new.append(each)	
+    print('新费目是',feimu_new)
 
     feimu_detail=[]
     if len(feimu_new) == len(jine) == len(shuie):
@@ -631,7 +632,7 @@ def match_jine(pos, value, save_path):
             width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
                 if shr_pos[0][0]  < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[3][1]+height*5 < pos[i][0][
-                    1] < shr_pos[3][1] + int(height * 10):
+                    1] < shr_pos[3][1] + int(height * 12):
                     if len(value[i]) != 0 and value[i][0].isdigit():
                         jine.append(value[i])
             for i in range(len(pos)):
@@ -642,7 +643,7 @@ def match_jine(pos, value, save_path):
                     for i in range(len(pos)):
                         if shr_pos[0][0] - width < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] + height * 5 < \
                                 pos[i][0][
-                                    1] < shr_pos[3][1] + int(height * 10):
+                                    1] < shr_pos[3][1] + int(height * 12):
                             if len(value[i]) != 0 and value[i][0].isdigit():
                                 jine.append(value[i])
 
@@ -678,10 +679,12 @@ def huowujiage_split(pos, value, save_path):
             height = pos[i][3][1] - pos[i][0][1]
             width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] + height < pos[i][0][1] < shr_pos[3][
-                    1] + (height * 4.5):
+                if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] < pos[i][0][1] < shr_pos[3][
+                    1] + (height * 3.5) and value[i][0].isdigit():
                     huowu.append(value[i])
+            print('货物价格',huowu)
             return huowu
+            
     else:
         return huowu
 
@@ -775,7 +778,7 @@ def jifeizhongliang_split(pos, value, save_path):
             height = pos[i][3][1] - pos[i][0][1]
             width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]-width/2 < pos[i][1][0] < shr_pos[1][0]+width and shr_pos[3][1] + height < pos[i][0][1] < shr_pos[3][
+                if shr_pos[1][0]-width/2 < pos[i][1][0] < shr_pos[1][0]+width and shr_pos[3][1]  < pos[i][0][1] < shr_pos[3][
                     1] + (height * 4.5) and value[i][0].isdigit():
                     huowu.append(value[i])
             return huowu

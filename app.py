@@ -96,7 +96,7 @@ async def ocr(ID: int, Type: Optional[str] = None, Envir: Optional[str] = 'main'
         if extension in imgType_list:
             if ID == 7 or ID == 3 or ID == 11:
                 check(img_path=save_path)
-            elif ID == 12 or ID == 11:
+            elif ID == 12 or ID == 11 or ID==14:
                 save_path = process_ID12(save_path)
             elif ID==5:
                 save_path=process_ID5(save_path)

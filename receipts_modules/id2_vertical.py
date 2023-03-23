@@ -191,7 +191,7 @@ def match_guige(pos,value,save_path):
 
     guojia=match_shuchuguojia(pos,value,save_path)
     for i in range(len(pos)):
-        if '规格' in value[i]:
+        if '原产国' in value[i]:
             ymin=pos[i][0][1]
             ymax=pos[i][2][1]
             xmin=pos[i][0][0]
@@ -200,9 +200,7 @@ def match_guige(pos,value,save_path):
             img_width=pos[i][1][0]-pos[i][0][0]
             pos,result=ReRec2(save_path,ymax-img_height/2,ymax+img_height,xmin,xmax+img_width*2,value='id2v_guige')
             result= ''.join(result)
-            if guojia in result:
-                result2=result.split(str(guojia))[-1].split('*')[0]
-                return result2
+            return result
 
 
 def match_hetonghao(pos,value,save_path):
