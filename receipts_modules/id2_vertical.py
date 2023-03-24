@@ -186,22 +186,34 @@ def match_pinpai(pos,value,save_path):
                             return value[i]
 
 def match_guige(pos,value,save_path):
+    gj=match_shuchuguojia(pos, value, save_path)
     if '无规格' in value:
         return '无规格'
+    else:
+        result=[]
+        for i in range(len(pos)):
+            if '证明' in value[i] and len(value[i])==2:
+                print(';alskdajd')
+                shr_pos=pos[i]
+                height=pos[i][3][1]-pos[i][0][1]
+                width=pos[i][1][0]-pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0]*100 and shr_pos[3][1]+2*height<pos[i][0][1]<shr_pos[3][1]+height*3:
+                        result.append(value[i])
+        if len(result)!=0:
+            all=''.join(result)
+            if str(gj) in all:
+                new=all.split(str(gj))[-1]
+                if '*' in new:
+                    return new.split('*')[0]
+                else:
+                    return new
+            else:
+                if '**/' in all:
+                    all= all.split('**/')[0]
+                    return all
 
-    guojia=match_shuchuguojia(pos,value,save_path)
-    for i in range(len(pos)):
-        if '原产国' in value[i]:
-            ymin=pos[i][0][1]
-            ymax=pos[i][2][1]
-            xmin=pos[i][0][0]
-            xmax=pos[i][2][0]
-            img_height=pos[i][3][1]-pos[i][0][1]
-            img_width=pos[i][1][0]-pos[i][0][0]
-            pos,result=ReRec2(save_path,ymax-img_height/2,ymax+img_height,xmin,xmax+img_width*2,value='id2v_guige')
-            result= ''.join(result)
-            return result
-
+                
 
 def match_hetonghao(pos,value,save_path):
     for i in range(len(pos)):
