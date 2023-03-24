@@ -31,8 +31,7 @@ def match_hangming(pos, value,save_path):
                         if ves_pos[0][0]-int(width/2)<pos[i][0][0]<ves_pos[0][0]+width/2 and ves_pos[3][1]-height/2<pos[i][0][1]<ves_pos[3][1]+height*3:
                             vessel.append(value[i])
             return vessel
-    else:
-        return '0'
+
         
 def match_hangci(pos, value,save_path):
     for i in range(len(pos)):
@@ -59,8 +58,6 @@ def match_hangci(pos, value,save_path):
                 if shr_pos[0][0]-int(width/2)<pos[i][0][0]<shr_pos[0][0]+width/2 and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height*3:
                     hangci.append(value[i])
             return ''.join(hangci)
-    else:
-        return '0'
 
 def match_tidanhao(pos,value,save_path):
     for i in range(len(pos)):
@@ -79,8 +76,17 @@ def match_tidanhao(pos,value,save_path):
                 for i in range(len(pos)):
                     if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(width*2) and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[0][1]+int(height/2):
                         return value[i] 
-    else:
-        return '0'
+        elif '订舱号' in value[i]:
+            if len(value[i].split('号')[-1])>3 and value[i].split('号')[-1][2:3].isdigit():
+                return value[i].split('号')[-1]
+            else:
+                shr_pos=pos[i]
+                height=pos[i][3][1]-pos[i][0][1]
+                width=pos[i][1][0]-pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(width*4) and shr_pos[0][1]-height<pos[i][0][1]<shr_pos[3][1]+int(height/2) and value[i].isdigit():
+                        return value[i] 
+
 
 def jianshu_xiangxing(pos,value,save_path):
     for i in range(len(pos)):
@@ -102,22 +108,30 @@ def match_xiangxing(pos,value,save_path):
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(width*2) and shr_pos[1][1]-height/2<pos[i][0][1]<shr_pos[1][1]+height:
+                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0]+int(width*2) and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height:
+                    return value[i] 
+        elif '尺寸' in value[i] and '高度' in value[i]:
+            shr_pos=pos[i]
+            height=pos[i][3][1]-pos[i][0][1]
+            width=pos[i][1][0]-pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0]+int(width*2) and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height:
                     return value[i] 
         elif 'DRY' in value[i]:
-            return 'DRY'
+            if value[i].split('DRY')[0][-1].isdigit():
+                return value[i]
         elif 'TANK' in value[i]:
-            return 'TANK'
+             if value[i].split('TANK')[0][-1].isdigit():
+                return value[i]
     else:
         return 'no type'
+
+
+
 def match_zhongliang(pos,value,save_path):
     for i in range(len(pos)):
         if 'KGS' in value[i]:
             return value[i]
-    else:
-        return '0'
-def match_chaozhongxiang(pos,value,save_path):
-    return "0"
 
 def match_mudigang(pos,value,save_path):
     for i in range(len(pos)):
@@ -128,13 +142,31 @@ def match_mudigang(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[3][1]+height<pos[i][0][1]<shr_pos[3][1]+height*2:
                     return value[i]
-    else:
-        return '0'
-def match_zhongzhuangang(pos,value,save_path):
-    return "0"
+        elif '交货地' in value[i]:
+            if len(value[i].split('交货地')[-1])>3:
+                return value[i].split('交货地')[-1]
+            else:
+                shr_pos=pos[i]
+                height=pos[i][3][1]-pos[i][0][1]
+                width=pos[i][1][0]-pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[1][1]-height/1.2<pos[i][0][1]<shr_pos[3][1]+height/1.2:
+                        return value[i]
+
 
 def match_huoming(pos,value,save_path):
-    return "0"
+    for i in range(len(pos)):
+        if 'Customer Cargo' in value[i]:
+            if len(value[i].split('Cargo')[-1])>3:
+                return value[i].split('Cargo')[-1]
+            else:
+                shr_pos=pos[i]
+                height=pos[i][3][1]-pos[i][0][1]
+                width=pos[i][1][0]-pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[1][1]-height/1.2<pos[i][0][1]<shr_pos[3][1]+height/1.2:
+                        return value[i]
+
 
 def match_jianshu(pos,value,save_path):
     for i in range(len(pos)):
@@ -147,38 +179,41 @@ def match_jianshu(pos,value,save_path):
             for i in range(len(pos)):
                 if shr_pos[0][0]-int(width/4)<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[3][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+height:
                     return value[i] 
-    else:
-        return '0'
-def match_chicun(pos,value,save_path):
-    for i in range(len(pos)):
-        if 'Size/Type' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
-            for i in range(len(pos)):
-                if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0] and shr_pos[2][1]-height/2<pos[i][0][1]<shr_pos[2][1]+height:
-                    num = re.findall("\d+\.?\d*", value[i])
-                    return num[0]
-    else:
-        return '0'
-def match_wendu(pos,value,save_path):
-    return '0'
 
-def match_shidu(pos,value,save_path):
-    return '0'
+def match_chicun(pos,value,save_path):
+    xiangxings=match_xiangxing(pos, value, save_path)
+    if xiangxings:
+        for i in range(len(pos)):
+            if str(xiangxings) in value[i]:
+                if value[i+1][0].isdigit():
+                    return value[i+1]
+            else:
+                if '(ft.in)' in value[i] or 'Collapsible' in value[i]:
+                    shr_pos=pos[i]
+                    height=pos[i][3][1]-pos[i][0][1]
+                    width=pos[i][1][0]-pos[i][0][0]
+                    for i in range(len(pos)):
+                        if shr_pos[0][0]-width/4<pos[i][0][0]<shr_pos[0][0]+width/2 and shr_pos[2][1]-height<pos[i][0][1]<shr_pos[2][1]+height:
+                            print(value[i])
+                            num = re.findall("\d+\.?\d*", value[i])
+                            return num[0]
+    else:
+        for i in range(len(pos)):
+            if '(ft.in)' in value[i] or 'Collapsible' in value[i]:
+                    shr_pos=pos[i]
+                    height=pos[i][3][1]-pos[i][0][1]
+                    width=pos[i][1][0]-pos[i][0][0]
+                    for i in range(len(pos)):
+                        if shr_pos[0][0]-width/4<pos[i][0][0]<shr_pos[0][0]+width/2 and shr_pos[2][1]-height<pos[i][0][1]<shr_pos[2][1]+height:
+                            print(value[i])
+                            num = re.findall("\d+\.?\d*", value[i])
+                            return num[0]
+
+
+
 
 def match_weixiandengji(pos,value,save_path):
     for i in range(len(pos)):
         if 'IMO Class' in value[i]:
             return value[i]
-    else:
-        return '0'
 
-def match_weixianfudengji(pos,value,save_path):
-    return '0'
-
-def match_weiguihao(pos,value,save_path):
-    return "0"
-
-def match_xuqiu(pos,value,save_path):
-    return "0"

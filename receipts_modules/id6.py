@@ -147,6 +147,7 @@ def match_address(pos,value,save_path):
                             return str(provinces[i])+a.split(str(provinces[i]))[-1]
 
                 else:
+                    a=results.replace('住址', '')
                     for i in range(len(provinces)):
                         if provinces[i] in results:
                             return str(provinces[i])+a.split(str(provinces[i]))[-1]
@@ -174,6 +175,16 @@ def match_chexing(pos,value,save_path):
 def match_valid_date(pos,value,save_path):
     for i in range(len(pos)):
         if '至' in value[i]:
-            return value[i].split('至')[-1]
-        elif '年' in value[i]:
-            return value[i]
+            if '长期' not in value[i]:
+                if '实习' not in value[i]:
+                    if value[i].split('至')[-1][1:2].isdigit():
+                        return value[i].split('至')[-1]
+            else:
+                return '长期'
+        elif '有效' in value[i] and len(value[i])>5:
+            if '限' in value[i]:
+                return value[i].split('限')[-1]
+            elif '年' in value[i] and value[i].split('年')[0][-1].isdigit():
+                all=re.findall(r'\d+', value[i])
+                return str(all[-1])+'年'
+

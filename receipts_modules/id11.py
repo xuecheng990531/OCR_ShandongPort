@@ -1,5 +1,4 @@
 import  re
-from paddlenlp import Taskflow
 from LAC import LAC
 lac=LAC(mode='lac')
 

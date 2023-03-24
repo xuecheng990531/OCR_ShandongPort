@@ -347,8 +347,9 @@ def match_xiahuozhi(pos,value,save_path):
     huoming=id13.match_huoming(pos,value,save_path)
     chicun=id13.match_chicun(pos,value,save_path)
     jianshu,leixing=id13.jianshu_xiangxing(pos,value,save_path)
+    xiangxing=id13.match_xiangxing(pos, value, save_path)
     return {
-        "航名":hangming,"航次":hangci,"提单号":tidanhao,"箱型":leixing,"重量":zhongliang,
+        "航名":hangming,"航次":hangci,"提单号/订舱号":tidanhao,"箱型":xiangxing,"重量":zhongliang,
         "目的港":mudigang,"货名":huoming,"件数":jianshu,"尺寸":chicun
     }
 
