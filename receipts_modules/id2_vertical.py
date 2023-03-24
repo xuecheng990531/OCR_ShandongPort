@@ -123,7 +123,7 @@ def match_jizhuangxiang(pos,value,save_path):
 
 def match_shengchanriqi(pos,value,save_path):
     for i in range(len(pos)):
-        if '生产日期' in value[i]:
+        if '生产日期' in value[i] or '生产口' in value[i]:
             print('yes')
             shr_pos=pos[i]
             height=pos[i][3][1]-pos[i][0][1]
@@ -134,13 +134,6 @@ def match_shengchanriqi(pos,value,save_path):
                         return value[i].split('千克')[-1]
                     else:
                         return value[i]
-        # else:
-        #     if '-' in value[i] and value[i].split('-')[0][-1].isdigit() and value[i].split('-')[-1][0].isdigit():
-        #         if '克' in value[i]:
-        #             return value[i].split('克')[-1]
-        #         else:
-        #             return value[i]
-          
 
 def match_shengchanchangjia(pos,value,save_path):
     for i in range(len(pos)):
