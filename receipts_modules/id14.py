@@ -17,6 +17,7 @@ def match_fahuodanwei(pos,value,save_path):
                     return value[i]
     else:
         return '日照中联港口水泥有限公司'     
+    
 def match_shouhuodanwei(pos,value,save_path):
     for i in range(len(pos)):
         if '客户' in value[i]:
@@ -24,7 +25,7 @@ def match_shouhuodanwei(pos,value,save_path):
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+width*4 and shr_pos[1][1]-height<pos[i][0][1]<shr_pos[2][1]:
+                if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+width*3 and shr_pos[1][1]-height<pos[i][0][1]<shr_pos[2][1]:
                     return value[i]
 
 

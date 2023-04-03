@@ -21,7 +21,7 @@ logger.addHandler(handler)
 
 
 imgType_list = {'.jpg', '.bmp', '.png', '.jpeg', '.jfif', '.webp'}
-ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=1,use_gpu=True ,det_limit_side_len=1216,use_multiprocess=False)
+ocr = PaddleOCR(use_angle_cls=False, lang="ch",workers=10,use_gpu=True ,det_limit_side_len=1216,use_multiprocess=True)
 
 #-------------------------------------------------图片上传和删除-----------------------------------
 async def save_img(File, filename):
@@ -35,7 +35,7 @@ def del_upload_file():
     dir='save_files'
     for root, dirs, files in os.walk(dir):
         for name in files:
-            if name.endswith(".png") or name.endswith(".jpg") or name.endswith(".pdf") or name.endswith(".jpeg"):
+            if name.endswith(".png") or name.endswith(".jpg") or name.endswith(".pdf") or name.endswith(".jpeg") or name.endswith(".JPEG"):
                 os.remove(os.path.join(root, name))
                 logger.info("文件：----> " + os.path.join(root, name)+" 删除成功!\n")
                 print("文件：----> " + os.path.join(root, name)+" 删除成功!")
@@ -83,17 +83,24 @@ def gama_transfer(img,power1=1.1):
     
     return out_img
 
-def process_ID12(img_path):
+def process_ID12(img_path,ID):
     img=cv2.imread(img_path)
     if img.shape[2]=='3':
         b,g,r=cv2.split(img)
         zengqiang=gama_transfer(r)
         kernel = np.ones((2, 2),np.uint8)
         img_process = cv2.erode(zengqiang, kernel)
+        if ID == 14:
+            width,height=img_process.shape[:2]
+            img_process = cv2.resize(img_process, (2*height, 2*width), interpolation=cv2.INTER_LINEAR)
+        
     else:
         zengqiang=gama_transfer(img)
         kernel = np.ones((2, 2),np.uint8)
         img_process = cv2.erode(zengqiang, kernel)
+        if ID == 14:
+            width,height=img_process.shape[:2]
+            img_process = cv2.resize(img_process, (2*height, 2*width), interpolation=cv2.INTER_LINEAR)
     return img_process
 
 def process_ID5(img_path):
@@ -191,8 +198,8 @@ def remove(dict):
         else:
             if '：' in dict[i]:
                 dict[i]=dict[i].replace('：','')
-            # elif '*' in dict[i]:
-            #     dict[i]=dict[i].replace('*','')
+            elif '*' in dict[i]:
+                dict[i]=dict[i].replace('*','')
             elif ':' in dict[i]:
                 dict[i]=dict[i].replace(':','')
             elif '，' in dict[i]:

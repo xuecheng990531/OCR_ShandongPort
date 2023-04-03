@@ -27,6 +27,19 @@ def match_name(pos,value,save_path):
                 for i in range(len(pos)):
                     if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0]+int(2*width) and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1] and '姓名' not in value[i] and '档案编号' not in value[i]:
                         return value[i]
+        elif '名' in value[i] and len(value[i].split('名')[0])==1:
+            if len(value[i].split('名')[-1])>1:
+                if '档案' in value[i]:
+                    return value[i].split('名')[-1].split('档')[0]
+                else:
+                    return value[i].split('名')[-1]
+            else:
+                shr_pos=pos[i]
+                height=pos[i][3][1]-pos[i][0][1]
+                width=pos[i][1][0]-pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0]+int(2*width) and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1] and '姓名' not in value[i] and '档案编号' not in value[i]:
+                        return value[i]
 
         else:
             user_name_lis = []
@@ -98,12 +111,12 @@ def match_address(pos,value,save_path):
             if len(value[i].split('址')[-1])>3:
                 return value[i].split('址')[-1]
             else:
-                
+                print('here')
                 shr_pos=pos[i]
                 height=pos[i][3][1]-pos[i][0][1]
                 width=pos[i][1][0]-pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(2*width) and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[0][1]+height*2.2 and '址' not in value[i]:
+                    if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(2*width) and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[0][1]+height*2 and '址' not in value[i] and '出生' not in value[i]:
                         address.append(value[i])
                 if len(address)>0:
                     result = ''.join(address)
@@ -115,7 +128,7 @@ def match_address(pos,value,save_path):
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width*9<pos[i][0][0]<shr_pos[0][0] and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height*2:
+                if shr_pos[0][0]-width*9<pos[i][0][0]<shr_pos[0][0] and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height*2 and '出生' not in value[i]:
                     address2.append(value[i])
             if len(address2)>0:
                 result=''.join(address2)
@@ -135,7 +148,7 @@ def match_address(pos,value,save_path):
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width<pos[i][0][0]<shr_pos[0][0]+width/4 and shr_pos[3][1]+height*2<pos[i][0][1]<shr_pos[3][1]+height*5:
+                if shr_pos[0][0]-width<pos[i][0][0]<shr_pos[0][0]+width/4 and shr_pos[3][1]+height*2<pos[i][0][1]<shr_pos[3][1]+height*4.5 and '出生' not in value[i]:
                     address2.append(value[i])
             if len(address2)>0:
                 result=''.join(address2)

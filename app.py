@@ -7,9 +7,8 @@ from typing import Optional
 from component_modules.autils import *
 
 logger = logging.getLogger(__name__)
-logger.setLevel(level=logging.INFO)
 handler = logging.FileHandler("log.txt")
-handler.setLevel(logging.INFO)
+handler.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
@@ -29,7 +28,7 @@ app = FastAPI(title='光学字符识别项目', description='根据每个单据�
 
 
 @app.post('/ocr', tags=["识别接口（POST方法）"])
-async def ocr(ID: int, Type: Optional[str] = None, Envir: Optional[str] = 'main', File: UploadFile = File(...)):
+async def ocr(ID: int, Type: Optional[str] = None, Envir: Optional[str] = 'dev', File: UploadFile = File(...)):
     '''
     OCR单据识别识别
     - 参数 ID: 上传哪类单据
@@ -97,7 +96,7 @@ async def ocr(ID: int, Type: Optional[str] = None, Envir: Optional[str] = 'main'
             if ID == 7 or ID == 3 or ID == 11:
                 check(img_path=save_path)
             elif ID == 12 or ID == 11 or ID==14:
-                save_path = process_ID12(save_path)
+                save_path = process_ID12(save_path,ID)
             elif ID==5:
                 save_path=process_ID5(save_path)
             pos, value = detect_img(save_path)

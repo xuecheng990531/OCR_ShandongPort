@@ -108,21 +108,31 @@ def match_xiangxing(pos,value,save_path):
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0]+int(width*2) and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height:
-                    return value[i] 
+                if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+int(width*2) and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height:
+                    if 'DRY' in value[i]:
+                        return value[i].split('DRY')[0]+'DRY'
+                    elif 'TANK' in value[i]:
+                        return value[i].split('TANK')[0]+'TANK'
+                    else:
+                        return value[i]
         elif '尺寸' in value[i] and '高度' in value[i]:
             shr_pos=pos[i]
             height=pos[i][3][1]-pos[i][0][1]
             width=pos[i][1][0]-pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]<pos[i][0][0]<shr_pos[1][0]+int(width*2) and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height:
-                    return value[i] 
+                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0]+int(width*2) and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height:
+                    if 'DRY' in value[i]:
+                        return value[i].split('DRY')[0]+'DRY'
+                    elif 'TANK' in value[i]:
+                        return value[i].split('TANK')[0]+'TANK'
+                    else:
+                        return value[i]
         elif 'DRY' in value[i]:
             if value[i].split('DRY')[0][-1].isdigit():
-                return value[i]
+                return value[i].split('DRY')[0]+'DRY'
         elif 'TANK' in value[i]:
              if value[i].split('TANK')[0][-1].isdigit():
-                return value[i]
+                return value[i].split('TANK')[0]+'TANK'
     else:
         return 'no type'
 
@@ -181,33 +191,40 @@ def match_jianshu(pos,value,save_path):
                     return value[i] 
 
 def match_chicun(pos,value,save_path):
-    xiangxings=match_xiangxing(pos, value, save_path)
-    if xiangxings:
-        for i in range(len(pos)):
-            if str(xiangxings) in value[i]:
-                if value[i+1][0].isdigit():
-                    return value[i+1]
-            else:
-                if '(ft.in)' in value[i] or 'Collapsible' in value[i]:
-                    shr_pos=pos[i]
-                    height=pos[i][3][1]-pos[i][0][1]
-                    width=pos[i][1][0]-pos[i][0][0]
-                    for i in range(len(pos)):
-                        if shr_pos[0][0]-width/4<pos[i][0][0]<shr_pos[0][0]+width/2 and shr_pos[2][1]-height<pos[i][0][1]<shr_pos[2][1]+height:
-                            print(value[i])
-                            num = re.findall("\d+\.?\d*", value[i])
-                            return num[0]
-    else:
+    # xiangxings=match_xiangxing(pos, value, save_path)
+    # if xiangxings:
+    #     for i in range(len(pos)):
+    #         if str(xiangxings) in value[i]:
+    #             if value[i+1][0].isdigit():
+    #                 return value[i+1]
+    #         else:
+    #             if '(ft.in)' in value[i] or 'Collapsible' in value[i]:
+    #                 shr_pos=pos[i]
+    #                 height=pos[i][3][1]-pos[i][0][1]
+    #                 width=pos[i][1][0]-pos[i][0][0]
+    #                 for i in range(len(pos)):
+    #                     if shr_pos[0][0]-width/4<pos[i][0][0]<shr_pos[0][0]+width/2 and shr_pos[2][1]-height<pos[i][0][1]<shr_pos[2][1]+height:
+    #                         print(value[i])
+    #                         num = re.findall("\d+\.?\d*", value[i])
+    #                         return num[0]
+    # else:
         for i in range(len(pos)):
             if '(ft.in)' in value[i] or 'Collapsible' in value[i]:
                     shr_pos=pos[i]
                     height=pos[i][3][1]-pos[i][0][1]
                     width=pos[i][1][0]-pos[i][0][0]
                     for i in range(len(pos)):
-                        if shr_pos[0][0]-width/4<pos[i][0][0]<shr_pos[0][0]+width/2 and shr_pos[2][1]-height<pos[i][0][1]<shr_pos[2][1]+height:
-                            print(value[i])
-                            num = re.findall("\d+\.?\d*", value[i])
-                            return num[0]
+                        if shr_pos[0][0]<pos[i][1][0]<shr_pos[1][0] and shr_pos[2][1]-height<pos[i][0][1]<shr_pos[2][1]+height:
+                            str=value[i].replace(' ','')
+                            print(str)
+                            index=1000
+                            for i in range(len(str) - 1, -1, -1):
+                                if not str[i].isnumeric():
+                                    index=i
+                                    break
+
+                            if str[index+1:] is not None:
+                                return str[index+1:]
 
 
 

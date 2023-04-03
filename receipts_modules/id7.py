@@ -79,7 +79,7 @@ def match_shouhuoren(pos, value, save_path):
             width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
                 if shr_pos[0][0] - int(4 * width) < pos[i][1][0] < shr_pos[1][0] and shr_pos[0][1] - height/2 < pos[i][1][
-                    1] < shr_pos[0][1] + height/2:
+                    1] < shr_pos[0][1] + height/2 and '经办人' not in value[i]:
                     return value[i]
 
 def match_daozhanren(pos, value, save_path):
@@ -153,7 +153,7 @@ def match_shouhuomingcheng(pos, value, save_path):
             width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
                 if shr_pos[0][0] - int(width / 3) < pos[i][0][0] < shr_pos[0][0] + width and shr_pos[0][
-                    1] - height * 3.1 < pos[i][3][1] < shr_pos[0][1] + height / 2:
+                    1] - height * 2.5 < pos[i][3][1] < shr_pos[0][1] + height / 2:
                     return value[i]
 
 
@@ -167,6 +167,15 @@ def match_daozhan(pos, value, save_path):
                 if shr_pos[1][0] < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[1][1] - int(height / 2) < pos[i][0][
                     1] < shr_pos[1][1] + int(height / 2) and '发站' not in value[i] and '取货地址' not in value[i]:
                     return value[i]
+        elif '站' in value[i] and '公司' in value[i] and '发' not in value[i]:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[1][0] < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[1][1] - int(height / 2) < pos[i][0][
+                    1] < shr_pos[1][1] + int(height / 2) and '发站' not in value[i] and '取货地址' not in value[i]:
+                    return value[i]
+
 
 
 def match_phone_tuoyun(pos, value, save_path):
