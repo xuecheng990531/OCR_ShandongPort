@@ -7,6 +7,39 @@ from component_modules import autils
 jizhuangxiang_match=r'\b[A-Z\']{4}[0-9\']{7}\b'
 date="\d{4}[-]?\d{2}"
 
+# -------------------------------------------------实现对规格的提取-------------------------------------------------
+def get_star_before(s):
+    s_nospace=s.replace(' ','')
+
+    pattern = r'\*(\d+)' # 正则表达式
+    match = re.search(pattern, s) # 进行匹配
+    if match:
+        pos = match.start(1) # 获取数字开始位置
+        if pos is not None:
+            return s[:pos]
+        else:
+            return s
+    else:
+        return s
+def reverse_traversal(s):
+    for i, c in reversed(list(enumerate(s))):
+        if c.isdigit() and (i == 0 or not s[i-1].isdigit()) and (c != '.' and c != '-' or i == len(s)-1 or not s[i+1].isdigit()):
+            return i
+        elif not c.isdigit() and (i == 0 or s[i-1].isdigit())and (c != '.' and c != '-' or i == len(s)-1 or not s[i+1].isdigit()):
+            return i
+    # 如果字符串为空或全是数字或全是非数字，则返回-1
+    return -1
+
+def get_result(chars:str):
+    chars=chars.replace(' ','')
+    star_before=get_star_before(chars)
+    # 定位到数字和非数字的索引位置
+    s=reverse_traversal(star_before)
+    if s!=-1:
+        number=reverse_traversal(star_before[:s])
+
+    return star_before[number:]
+# -------------------------------------------------实现对规格的提取-------------------------------------------------
 
 def ReRec2(path,ymin,ymax,xmin,xmax,value):
     image = cv2.imread(path)
@@ -186,26 +219,30 @@ def match_guige(pos,value,save_path):
     else:
         result=[]
         for i in range(len(pos)):
+            
             if '证明' in value[i] and len(value[i])==2:
-                print(';alskdajd')
+                print('here')
                 shr_pos=pos[i]
                 height=pos[i][3][1]-pos[i][0][1]
                 width=pos[i][1][0]-pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0]*100 and shr_pos[3][1]+2*height<pos[i][0][1]<shr_pos[3][1]+height*3:
+                    if shr_pos[0][0]-width*4<pos[i][0][0]<shr_pos[1][0]*100 and shr_pos[3][1]+1.5*height<pos[i][0][1]<shr_pos[3][1]+height*3:
                         result.append(value[i])
+
+            elif '集装箱号' in value[i]:
+                print('jizhuangxiang')
+                shr_pos=pos[i]
+                height=pos[i][3][1]-pos[i][0][1]
+                width=pos[i][1][0]-pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[0][0]-width*4<pos[i][0][0]<shr_pos[1][0]*100 and shr_pos[0][1]-2*height<pos[i][3][1]<shr_pos[0][1]:
+                        result.append(value[i])
+
+        result=''.join(result)
+        print('规格的结果是：',result)
         if len(result)!=0:
-            all=''.join(result)
-            if str(gj) in all:
-                new=all.split(str(gj))[-1]
-                if '*' in new:
-                    return new.split('*')[0]
-                else:
-                    return new
-            else:
-                if '**/' in all:
-                    all= all.split('**/')[0]
-                    return all
+            return get_result(result)
+
 
                 
 

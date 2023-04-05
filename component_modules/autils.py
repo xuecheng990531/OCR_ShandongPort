@@ -199,7 +199,10 @@ def remove(dict):
             if '：' in dict[i]:
                 dict[i]=dict[i].replace('：','')
             elif '*' in dict[i]:
-                dict[i]=dict[i].replace('*','')
+                if '**/**' in dict[i]:
+                    dict[i]=dict[i].replace('**/**','')
+                else:
+                    dict[i]=dict[i].replace('*','')
             elif ':' in dict[i]:
                 dict[i]=dict[i].replace(':','')
             elif '，' in dict[i]:

@@ -28,3 +28,84 @@
 2023-04-03 15:05:04,788 - component_modules.autils - INFO - 文件：----> 截屏2023-04-03 14.51.22.png 上传成功!
 2023-04-03 15:05:07,496 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-03 14.51.22.png 删除成功!
 
+2023-04-03 20:11:16,302 - component_modules.autils - INFO - 文件：----> sfz-地址没有识别出来，没标上的副本.png 上传成功!
+2023-04-03 20:11:45,758 - component_modules.autils - INFO - 文件：----> save_files/sfz-地址没有识别出来，没标上的副本.png 删除成功!
+
+2023-04-03 20:12:25,631 - component_modules.autils - INFO - 文件：----> sfz-地址没有识别出来，没标上.png 上传成功!
+2023-04-03 20:12:36,424 - component_modules.autils - INFO - 文件：----> save_files/sfz-地址没有识别出来，没标上.png 删除成功!
+
+2023-04-04 21:19:13,795 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 2.pdf 上传成功!
+2023-04-04 21:19:26,850 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 2_0.png 删除成功!
+
+2023-04-04 21:21:06,929 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 2.pdf 上传成功!
+2023-04-04 21:21:35,859 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 2_0.png 删除成功!
+
+2023-04-04 21:21:59,888 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 2.pdf 上传成功!
+2023-04-04 21:22:09,583 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 2_0.png 删除成功!
+
+2023-04-04 21:48:41,525 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 2.pdf 上传成功!
+2023-04-04 21:49:39,255 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 2_0.png 删除成功!
+
+2023-04-04 21:52:19,785 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 2.pdf 上传成功!
+2023-04-04 21:53:05,071 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 2_0.png 删除成功!
+
+2023-04-04 21:54:33,038 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 2.pdf 上传成功!
+2023-04-04 21:54:59,193 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 2_0.png 删除成功!
+
+2023-04-04 21:55:18,959 - component_modules.autils - INFO - 文件：----> 38份（拖移项目） 2.pdf 上传成功!
+2023-04-04 21:55:48,670 - component_modules.autils - INFO - 文件：----> save_files/38份（拖移项目） 2_0.png 删除成功!
+
+2023-04-04 22:03:43,110 - component_modules.autils - INFO - 文件：----> 38份（拖移项目） 2.pdf 上传成功!
+2023-04-04 22:04:19,893 - component_modules.autils - INFO - 文件：----> save_files/38份（拖移项目） 2_0.png 删除成功!
+
+2023-04-04 22:08:39,165 - component_modules.autils - INFO - 文件：----> 38份（拖移项目） 2.pdf 上传成功!
+2023-04-04 22:08:58,050 - component_modules.autils - INFO - 文件：----> save_files/38份（拖移项目） 2_0.png 删除成功!
+
+2023-04-04 22:14:30,006 - component_modules.autils - INFO - 文件：----> 38份（拖移项目） 2.pdf 上传成功!
+2023-04-04 22:15:00,427 - component_modules.autils - INFO - 文件：----> save_files/38份（拖移项目） 2_0.png 删除成功!
+
+2023-04-04 22:15:43,830 - component_modules.autils - INFO - 文件：----> 38份（拖移项目） 2.pdf 上传成功!
+2023-04-04 22:16:21,589 - component_modules.autils - INFO - 文件：----> save_files/38份（拖移项目） 2_0.png 删除成功!
+
+2023-04-04 22:20:13,432 - component_modules.autils - INFO - 文件：----> 38份（拖移项目） 2.pdf 上传成功!
+2023-04-04 22:20:36,783 - component_modules.autils - INFO - 文件：----> save_files/38份（拖移项目） 2_0.png 删除成功!
+
+2023-04-04 22:21:59,043 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 3.pdf 上传成功!
+2023-04-04 22:22:17,720 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 3_0.png 删除成功!
+
+2023-04-05 20:03:04,100 - component_modules.autils - INFO - 文件：----> 38份（拖移项目） 3.pdf 上传成功!
+2023-04-05 20:03:08,304 - component_modules.autils - INFO - 文件：----> save_files/38份（拖移项目） 3_0.png 删除成功!
+
+2023-04-05 20:42:55,854 - component_modules.autils - INFO - 文件：----> 38份（拖移项目） 3.pdf 上传成功!
+2023-04-05 20:43:00,116 - component_modules.autils - INFO - 文件：----> save_files/38份（拖移项目） 3_0.png 删除成功!
+
+2023-04-05 20:43:28,132 - component_modules.autils - INFO - 文件：----> 38份（拖移项目） 3.pdf 上传成功!
+2023-04-05 20:43:32,412 - component_modules.autils - INFO - 文件：----> save_files/38份（拖移项目） 3_0.png 删除成功!
+
+2023-04-05 20:44:16,607 - component_modules.autils - INFO - 文件：----> 38份（拖移项目） 3.pdf 上传成功!
+2023-04-05 20:44:20,917 - component_modules.autils - INFO - 文件：----> save_files/38份（拖移项目） 3_0.png 删除成功!
+
+2023-04-05 21:32:32,448 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 2.pdf 上传成功!
+2023-04-05 21:32:36,784 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 2_0.png 删除成功!
+
+2023-04-05 21:33:01,059 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 3.pdf 上传成功!
+2023-04-05 21:33:03,156 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 3_0.png 删除成功!
+
+2023-04-05 21:33:18,824 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 4.pdf 上传成功!
+2023-04-05 21:33:21,044 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 4_0.png 删除成功!
+
+2023-04-05 21:35:09,381 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 4.pdf 上传成功!
+2023-04-05 21:35:13,800 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 4_0.png 删除成功!
+
+2023-04-05 21:35:33,248 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 4.pdf 上传成功!
+2023-04-05 21:35:37,718 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 4_0.png 删除成功!
+
+2023-04-05 21:36:22,725 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 4.pdf 上传成功!
+2023-04-05 21:36:27,154 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 4_0.png 删除成功!
+
+2023-04-05 21:36:44,138 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 4.pdf 上传成功!
+2023-04-05 21:36:48,481 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 4_0.png 删除成功!
+
+2023-04-05 21:39:38,275 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 4.pdf 上传成功!
+2023-04-05 21:39:42,734 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 4_0.png 删除成功!
+
