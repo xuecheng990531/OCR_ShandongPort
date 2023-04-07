@@ -1,9 +1,10 @@
 import re
 
-def match_hangming(pos, value,save_path):
+
+def match_hangming(pos, value, save_path):
     for i in range(len(pos)):
         if '船名' in value[i] or '航次(Vessel)' in value[i]:
-            if len(value[i].split('l')[-1])>5:
+            if len(value[i].split('l')[-1]) > 5:
                 if '：' in value[i].split('l')[-1]:
                     return value[i].split('：')[-1].split('/')[0]
                 elif ':' in value[i].split('l')[-1]:
@@ -11,58 +12,72 @@ def match_hangming(pos, value,save_path):
                 else:
                     return value[i].split('l')[-1].split('/')[0]
             else:
-                shr_pos=pos[i]
-                height=pos[i][3][1]-pos[i][0][1]
-                width=pos[i][1][0]-pos[i][0][0]
+                shr_pos = pos[i]
+                height = pos[i][3][1] - pos[i][0][1]
+                width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+width and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[0][1]+int(height/2):
-                        return value[i] 
+                    if shr_pos[1][0] - int(width / 2) < pos[i][0][
+                            0] < shr_pos[1][0] + width and shr_pos[0][1] - int(
+                                height / 2
+                            ) < pos[i][0][1] < shr_pos[0][1] + int(height / 2):
+                        return value[i]
         elif 'Voy No' in value[i]:
-            vessel=[]
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            vessel = []
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width*4<pos[i][1][0]<shr_pos[0][0] and shr_pos[0][1]-height/2<pos[i][0][1]<shr_pos[0][1]+height/2 and 'Vessel' in value[i]:
-                    ves_pos=pos[i]
-                    height=pos[i][3][1]-pos[i][0][1]
-                    width=pos[i][1][0]-pos[i][0][0]
+                if shr_pos[0][0] - width * 4 < pos[i][1][0] < shr_pos[0][
+                        0] and shr_pos[0][1] - height / 2 < pos[i][0][
+                            1] < shr_pos[0][
+                                1] + height / 2 and 'Vessel' in value[i]:
+                    ves_pos = pos[i]
+                    height = pos[i][3][1] - pos[i][0][1]
+                    width = pos[i][1][0] - pos[i][0][0]
                     for i in range(len(pos)):
-                        if ves_pos[0][0]-int(width/2)<pos[i][0][0]<ves_pos[0][0]+width/2 and ves_pos[3][1]-height/2<pos[i][0][1]<ves_pos[3][1]+height*3:
+                        if ves_pos[0][0] - int(width / 2) < pos[i][0][
+                                0] < ves_pos[0][0] + width / 2 and ves_pos[3][
+                                    1] - height / 2 < pos[i][0][
+                                        1] < ves_pos[3][1] + height * 3:
                             vessel.append(value[i])
             return vessel
 
-        
-def match_hangci(pos, value,save_path):
+
+def match_hangci(pos, value, save_path):
     for i in range(len(pos)):
         if '船名' in value[i] or '航次(Vessel)' in value[i]:
-            if len(value[i].split('l')[-1])>5:
+            if len(value[i].split('l')[-1]) > 5:
                 if '：' in value[i].split('l')[-1]:
                     return value[i].split('l')[-1].split('/')[-1]
                 else:
                     return value[i].split('l')[-1].split('/')[-1]
             else:
-                hm_pos=pos[i]
+                hm_pos = pos[i]
                 for i in range(len(pos)):
-                    if hm_pos[1][0]<pos[i][0][0]<hm_pos[1][0]+100 and hm_pos[1][1]-10<pos[i][0][1]<hm_pos[2][1]+10:
+                    if hm_pos[1][0] < pos[i][0][0] < hm_pos[1][
+                            0] + 100 and hm_pos[1][1] - 10 < pos[i][0][
+                                1] < hm_pos[2][1] + 10:
                         if '：' in value[i]:
                             return value[i].split('：')[-1].split('/')[-1]
                         else:
                             return value[i].split('/')[-1]
         elif 'Voy No' in value[i]:
-            hangci=[]
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            hangci = []
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-int(width/2)<pos[i][0][0]<shr_pos[0][0]+width/2 and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height*3:
+                if shr_pos[0][0] - int(width / 2) < pos[i][0][0] < shr_pos[0][
+                        0] + width / 2 and shr_pos[3][1] - height / 2 < pos[i][
+                            0][1] < shr_pos[3][1] + height * 3:
                     hangci.append(value[i])
             return ''.join(hangci)
 
-def match_tidanhao(pos,value,save_path):
+
+def match_tidanhao(pos, value, save_path):
     for i in range(len(pos)):
         if 'Booking' in value[i] and 'No' in value[i]:
-            if len(value[i].split('o')[-1])>6:
+            if len(value[i].split('o')[-1]) > 6:
                 if '：' in value[i]:
                     return value[i].split('：')[-1]
                 elif ':' in value[i]:
@@ -70,127 +85,158 @@ def match_tidanhao(pos,value,save_path):
                 else:
                     return value[i].split('o')[-1]
             else:
-                shr_pos=pos[i]
-                height=pos[i][3][1]-pos[i][0][1]
-                width=pos[i][1][0]-pos[i][0][0]
+                shr_pos = pos[i]
+                height = pos[i][3][1] - pos[i][0][1]
+                width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(width*2) and shr_pos[0][1]-int(height/2)<pos[i][0][1]<shr_pos[0][1]+int(height/2):
-                        return value[i] 
+                    if shr_pos[1][0] - int(
+                            width / 2) < pos[i][0][0] < shr_pos[1][0] + int(
+                                width * 2) and shr_pos[0][1] - int(
+                                    height / 2) < pos[i][0][
+                                        1] < shr_pos[0][1] + int(height / 2):
+                        return value[i]
         elif '订舱号' in value[i]:
-            if len(value[i].split('号')[-1])>3 and value[i].split('号')[-1][2:3].isdigit():
+            if len(value[i].split('号')[-1]) > 3 and value[i].split(
+                    '号')[-1][2:3].isdigit():
                 return value[i].split('号')[-1]
             else:
-                shr_pos=pos[i]
-                height=pos[i][3][1]-pos[i][0][1]
-                width=pos[i][1][0]-pos[i][0][0]
+                shr_pos = pos[i]
+                height = pos[i][3][1] - pos[i][0][1]
+                width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0]-int(width/2)<pos[i][0][0]<shr_pos[1][0]+int(width*4) and shr_pos[0][1]-height<pos[i][0][1]<shr_pos[3][1]+int(height/2) and value[i].isdigit():
-                        return value[i] 
+                    if shr_pos[1][0] - int(
+                            width / 2) < pos[i][0][0] < shr_pos[1][0] + int(
+                                width * 4) and shr_pos[0][1] - height < pos[i][
+                                    0][1] < shr_pos[3][1] + int(
+                                        height / 2) and value[i].isdigit():
+                        return value[i]
 
 
-def jianshu_xiangxing(pos,value,save_path):
+def jianshu_xiangxing(pos, value, save_path):
     for i in range(len(pos)):
         if 'Pack. Qty/Kind' in value[i] or '包装数量/种类' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-int(width/2)<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height and 'Pack' not in value[i]:
+                if shr_pos[0][0] - int(width / 2) < pos[i][0][0] < shr_pos[0][
+                        0] + width and shr_pos[3][1] - height / 2 < pos[i][0][
+                            1] < shr_pos[3][
+                                1] + height and 'Pack' not in value[i]:
                     num = re.findall("\d+\.?\d*", value[i])
-                    return num[0],value[i].split(str(int(num[0])))[-1]
+                    return num[0], value[i].split(str(int(num[0])))[-1]
     else:
-        return '0','0'
+        return '0', '0'
 
-def match_xiangxing(pos,value,save_path):
+
+def match_xiangxing(pos, value, save_path):
     for i in range(len(pos)):
         if 'Size/Type/Height' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+int(width*2) and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height:
+                if shr_pos[1][0] - width / 2 < pos[i][0][
+                        0] < shr_pos[1][0] + int(
+                            width * 2) and shr_pos[3][1] - height / 2 < pos[i][
+                                0][1] < shr_pos[3][1] + height:
                     if 'DRY' in value[i]:
-                        return value[i].split('DRY')[0]+'DRY'
+                        return value[i].split('DRY')[0] + 'DRY'
                     elif 'TANK' in value[i]:
-                        return value[i].split('TANK')[0]+'TANK'
+                        return value[i].split('TANK')[0] + 'TANK'
                     else:
                         return value[i]
         elif '尺寸' in value[i] and '高度' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-width/2<pos[i][0][0]<shr_pos[1][0]+int(width*2) and shr_pos[3][1]-height/2<pos[i][0][1]<shr_pos[3][1]+height:
+                if shr_pos[0][0] - width / 2 < pos[i][0][
+                        0] < shr_pos[1][0] + int(
+                            width * 2) and shr_pos[3][1] - height / 2 < pos[i][
+                                0][1] < shr_pos[3][1] + height:
                     if 'DRY' in value[i]:
-                        return value[i].split('DRY')[0]+'DRY'
+                        return value[i].split('DRY')[0] + 'DRY'
                     elif 'TANK' in value[i]:
-                        return value[i].split('TANK')[0]+'TANK'
+                        return value[i].split('TANK')[0] + 'TANK'
                     else:
                         return value[i]
         elif 'DRY' in value[i]:
             if value[i].split('DRY')[0][-1].isdigit():
-                return value[i].split('DRY')[0]+'DRY'
+                return value[i].split('DRY')[0] + 'DRY'
         elif 'TANK' in value[i]:
-             if value[i].split('TANK')[0][-1].isdigit():
-                return value[i].split('TANK')[0]+'TANK'
+            if value[i].split('TANK')[0][-1].isdigit():
+                return value[i].split('TANK')[0] + 'TANK'
     else:
         return 'no type'
 
 
-
-def match_zhongliang(pos,value,save_path):
+def match_zhongliang(pos, value, save_path):
     for i in range(len(pos)):
         if 'KGS' in value[i]:
             return value[i]
 
-def match_mudigang(pos,value,save_path):
+
+def match_mudigang(pos, value, save_path):
     for i in range(len(pos)):
-        if 'Service Mode' in value[i]: 
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+        if 'Service Mode' in value[i]:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[3][1]+height<pos[i][0][1]<shr_pos[3][1]+height*2:
+                if shr_pos[1][0] < pos[i][0][0] < shr_pos[1][
+                        0] + width * 2 and shr_pos[3][1] + height < pos[i][0][
+                            1] < shr_pos[3][1] + height * 2:
                     return value[i]
         elif '交货地' in value[i]:
-            if len(value[i].split('交货地')[-1])>3:
+            if len(value[i].split('交货地')[-1]) > 3:
                 return value[i].split('交货地')[-1]
             else:
-                shr_pos=pos[i]
-                height=pos[i][3][1]-pos[i][0][1]
-                width=pos[i][1][0]-pos[i][0][0]
+                shr_pos = pos[i]
+                height = pos[i][3][1] - pos[i][0][1]
+                width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[1][1]-height/1.2<pos[i][0][1]<shr_pos[3][1]+height/1.2:
+                    if shr_pos[1][0] - width / 2 < pos[i][0][
+                            0] < shr_pos[1][0] + width * 2 and shr_pos[1][
+                                1] - height / 1.2 < pos[i][0][
+                                    1] < shr_pos[3][1] + height / 1.2:
                         return value[i]
 
 
-def match_huoming(pos,value,save_path):
+def match_huoming(pos, value, save_path):
     for i in range(len(pos)):
         if 'Customer Cargo' in value[i]:
-            if len(value[i].split('Cargo')[-1])>3:
+            if len(value[i].split('Cargo')[-1]) > 3:
                 return value[i].split('Cargo')[-1]
             else:
-                shr_pos=pos[i]
-                height=pos[i][3][1]-pos[i][0][1]
-                width=pos[i][1][0]-pos[i][0][0]
+                shr_pos = pos[i]
+                height = pos[i][3][1] - pos[i][0][1]
+                width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0]-width/2<pos[i][0][0]<shr_pos[1][0]+width*2 and shr_pos[1][1]-height/1.2<pos[i][0][1]<shr_pos[3][1]+height/1.2:
+                    if shr_pos[1][0] - width / 2 < pos[i][0][
+                            0] < shr_pos[1][0] + width * 2 and shr_pos[1][
+                                1] - height / 1.2 < pos[i][0][
+                                    1] < shr_pos[3][1] + height / 1.2:
                         return value[i]
 
 
-def match_jianshu(pos,value,save_path):
+def match_jianshu(pos, value, save_path):
     for i in range(len(pos)):
         if 'Piece(s)' in value[i]:
             return value[i]
         elif 'Pack' in value[i] or 'Qty' in value[i]:
-            shr_pos=pos[i]
-            height=pos[i][3][1]-pos[i][0][1]
-            width=pos[i][1][0]-pos[i][0][0]
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0]-int(width/4)<pos[i][0][0]<shr_pos[0][0]+width and shr_pos[3][1]-int(height/2)<pos[i][0][1]<shr_pos[3][1]+height:
-                    return value[i] 
+                if shr_pos[0][0] - int(width / 4) < pos[i][0][
+                        0] < shr_pos[0][0] + width and shr_pos[3][1] - int(
+                            height /
+                            2) < pos[i][0][1] < shr_pos[3][1] + height:
+                    return value[i]
 
-def match_chicun(pos,value,save_path):
+
+def match_chicun(pos, value, save_path):
     # xiangxings=match_xiangxing(pos, value, save_path)
     # if xiangxings:
     #     for i in range(len(pos)):
@@ -208,29 +254,27 @@ def match_chicun(pos,value,save_path):
     #                         num = re.findall("\d+\.?\d*", value[i])
     #                         return num[0]
     # else:
-        for i in range(len(pos)):
-            if '(ft.in)' in value[i] or 'Collapsible' in value[i]:
-                    shr_pos=pos[i]
-                    height=pos[i][3][1]-pos[i][0][1]
-                    width=pos[i][1][0]-pos[i][0][0]
-                    for i in range(len(pos)):
-                        if shr_pos[0][0]<pos[i][1][0]<shr_pos[1][0] and shr_pos[2][1]-height<pos[i][0][1]<shr_pos[2][1]+height:
-                            str=value[i].replace(' ','')
-                            print(str)
-                            index=1000
-                            for i in range(len(str) - 1, -1, -1):
-                                if not str[i].isnumeric():
-                                    index=i
-                                    break
+    for i in range(len(pos)):
+        if '(ft.in)' in value[i] or 'Collapsible' in value[i]:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[0][0] < pos[i][1][0] < shr_pos[1][0] and shr_pos[2][
+                        1] - height < pos[i][0][1] < shr_pos[2][1] + height:
+                    str = value[i].replace(' ', '')
+                    print(str)
+                    index = 1000
+                    for i in range(len(str) - 1, -1, -1):
+                        if not str[i].isnumeric():
+                            index = i
+                            break
 
-                            if str[index+1:] is not None:
-                                return str[index+1:]
+                    if str[index + 1:] is not None:
+                        return str[index + 1:]
 
 
-
-
-def match_weixiandengji(pos,value,save_path):
+def match_weixiandengji(pos, value, save_path):
     for i in range(len(pos)):
         if 'IMO Class' in value[i]:
             return value[i]
-

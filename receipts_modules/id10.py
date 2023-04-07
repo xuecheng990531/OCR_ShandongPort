@@ -7,7 +7,7 @@ from LAC import LAC
 
 lac = LAC(mode='lac')
 
-jiagedanwei = ["仟", "佰", "拾", "万", "仟", "佰", "拾","人民币","壹"]
+jiagedanwei = ["仟", "佰", "拾", "万", "仟", "佰", "拾", "人民币", "壹"]
 
 
 def ReRec2(path, ymin, ymax, xmin, xmax, value):
@@ -22,7 +22,7 @@ def match_mingcheng(pos, value, save_path):
         if '称' in value[i]:
             if len(value[i]) > 5:
                 if '公' in value[i] and len(value[i].split('公')[-1]) == 0:
-                    return value[i].split('称')[-1]+'司'
+                    return value[i].split('称')[-1] + '司'
                 else:
                     return value[i].split('称')[-1]
             else:
@@ -30,9 +30,12 @@ def match_mingcheng(pos, value, save_path):
                 height = pos[i][3][1] - pos[i][0][1]
                 width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0] - int(width / 2) < pos[i][0][0] < shr_pos[1][0] + int(2 * width) and shr_pos[1][
-                        1] - height < pos[i][0][1] < shr_pos[1][1] + height:
-                        if '公' in value[i] and len(value[i].split('公')[-1]) == 0:
+                    if shr_pos[1][0] - int(
+                            width / 2) < pos[i][0][0] < shr_pos[1][0] + int(
+                                2 * width) and shr_pos[1][1] - height < pos[i][
+                                    0][1] < shr_pos[1][1] + height:
+                        if '公' in value[i] and len(
+                                value[i].split('公')[-1]) == 0:
                             return value[i] + '司'
                         else:
                             return value[i]
@@ -43,8 +46,8 @@ def match_mingcheng(pos, value, save_path):
             for i in range(len(pos)):
                 if shr_pos[0][0] - width * 2.5 < pos[i][1][0] < shr_pos[0][0] - width and shr_pos[0][1] - height < \
                         pos[i][0][1] < shr_pos[3][1] + height / 2:
-                    if '公' in value[i] and len(value[i].split('公')[-1])==0:
-                        return value[i]+'司'
+                    if '公' in value[i] and len(value[i].split('公')[-1]) == 0:
+                        return value[i] + '司'
                     else:
                         return value[i]
 
@@ -61,8 +64,9 @@ def match_daima(pos, value, save_path):
                 height = pos[i][3][1] - pos[i][0][1]
                 width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[0][0] - int(width / 2) < pos[i][0][0] < shr_pos[0][0] + width and shr_pos[3][
-                        1] - height / 2 < pos[i][0][1] < shr_pos[3][1] + height * 2:
+                    if shr_pos[0][0] - int(width / 2) < pos[i][0][0] < shr_pos[
+                            0][0] + width and shr_pos[3][1] - height / 2 < pos[
+                                i][0][1] < shr_pos[3][1] + height * 2:
                         return value[i]
 
 
@@ -75,8 +79,9 @@ def match_daima2(pos, value, save_path):
                 height = pos[i][3][1] - pos[i][0][1]
                 width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[0][0] - int(width / 4) < pos[i][0][0] < shr_pos[1][0] and shr_pos[0][1] < shr_pos[1][
-                        1] + int(2 * height) and '一' not in value[i]:
+                    if shr_pos[0][0] - int(width / 4) < pos[i][0][0] < shr_pos[
+                            1][0] and shr_pos[0][1] < shr_pos[1][1] + int(
+                                2 * height) and '一' not in value[i]:
                         return value[i]
     else:
         return result
@@ -110,8 +115,11 @@ def match_leixing(pos, value, save_path):
                 height = pos[i][3][1] - pos[i][0][1]
                 width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0] - int(width / 2) < pos[i][0][0] < shr_pos[1][0] + int(2 * width) and shr_pos[1][
-                        1] - height / 2 < pos[i][0][1] < shr_pos[1][1] + height:
+                    if shr_pos[1][0] - int(
+                            width / 2) < pos[i][0][0] < shr_pos[1][0] + int(
+                                2 *
+                                width) and shr_pos[1][1] - height / 2 < pos[i][
+                                    0][1] < shr_pos[1][1] + height:
                         return value[i]
         else:
             result = search(pos, value, save_path)
@@ -139,8 +147,9 @@ def match_daibiaoren(pos, value, save_path):
                 height = pos[i][3][1] - pos[i][0][1]
                 width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0] - int(width / 2) < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[1][
-                        1] - height < pos[i][0][1] < shr_pos[1][1] + height:
+                    if shr_pos[1][0] - int(width / 2) < pos[i][0][0] < shr_pos[
+                            1][0] + width and shr_pos[1][1] - height < pos[i][
+                                0][1] < shr_pos[1][1] + height:
                         return value[i]
 
 
@@ -148,7 +157,8 @@ def match_zhucechengben(pos, value, save_path):
     for i in range(len(pos)):
         for j in range(len(jiagedanwei)):
             if jiagedanwei[j] in value[i]:
-                if '本' in value[i] and '元' in value[i] and len(value[i].split('本')[-1])>2:
+                if '本' in value[i] and '元' in value[i] and len(
+                        value[i].split('本')[-1]) > 2:
                     return value[i].split('本')[-1]
                 else:
                     return value[i]
@@ -165,12 +175,14 @@ def match_chengliriqi(pos, value, save_path):
                 height = pos[i][3][1] - pos[i][0][1]
                 width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0] - int(width / 2) < pos[i][0][0] < shr_pos[1][0] + width * 10 and shr_pos[1][
-                        1] - height < pos[i][0][1] < shr_pos[1][1] + height:
+                    if shr_pos[1][0] - int(width / 2) < pos[i][0][0] < shr_pos[
+                            1][0] + width * 10 and shr_pos[1][1] - height < pos[
+                                i][0][1] < shr_pos[1][1] + height:
                         data.append(value[i])
                 if len(data) > 0:
                     return ''.join(data)
-        if '年' in value[i] and '月' in value[i] and '日' in value[i] and '至' not in value[i]:
+        if '年' in value[i] and '月' in value[i] and '日' in value[
+                i] and '至' not in value[i]:
             if '期' in value[i]:
                 return value[i].split('期')[-1]
             else:
@@ -179,7 +191,8 @@ def match_chengliriqi(pos, value, save_path):
 
 def match_yingyeqixian(pos, value, save_path):
     for i in range(len(pos)):
-        if '月' in value[i] and '日' in value[i] and '至' in value[i] and '主体' not in value[i]:
+        if '月' in value[i] and '日' in value[i] and '至' in value[
+                i] and '主体' not in value[i]:
             if len(value[i].split('至')[-1]) > 4:
                 return value[i].split('至')[-1]
             else:
@@ -200,11 +213,12 @@ def match_jingyingfanwei(pos, value, save_path):
             height = pos[i][3][1] - pos[i][0][1]
             width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[1][0] < pos[i][0][0] < shr_pos[1][0] + 20 * width and shr_pos[0][
-                    1] - height / 2 < pos[i][2][1] < shr_pos[3][1] + 8 * height:
-                    result.append(value[i])
-            result=''.join(result)
-            if '围' in result and len(result.split('围')[0])==0:
+                if shr_pos[1][0] < pos[i][0][0] < shr_pos[1][
+                        0] + 20 * width and shr_pos[0][1] - height / 2 < pos[
+                            i][2][1] < shr_pos[3][1] + 8 * height:
+                    result.extend(value[i])
+            result = ''.join(result)
+            if '围' in result and len(result.split('围')[0]) == 0:
                 return result.replace('围', '')
             else:
                 return result
@@ -213,10 +227,11 @@ def match_jingyingfanwei(pos, value, save_path):
             height = pos[i][3][1] - pos[i][0][1]
             width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0] - int(width / 2) < pos[i][0][0] < shr_pos[1][0] + 10 * width and shr_pos[0][
-                    1] - height / 2 < pos[i][2][1] < shr_pos[3][1] + 8 * height:
+                if shr_pos[0][0] - int(width / 2) < pos[i][0][0] < shr_pos[1][
+                        0] + 10 * width and shr_pos[0][1] - height / 2 < pos[
+                            i][2][1] < shr_pos[3][1] + 8 * height:
                     result.append(value[i])
-                result=''.join(result)
+            result = ''.join(result)
             if '围' in result and len(result.split('围')[0]) == 0:
                 return result.replace('围', '')
             else:

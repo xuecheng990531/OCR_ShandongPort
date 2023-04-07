@@ -9,17 +9,20 @@ from component_modules.autils import *
 logger = logging.getLogger(__name__)
 handler = logging.FileHandler("log.txt")
 handler.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 
 def swagger_monkey_patch(*args, **kwargs):
     return get_swagger_ui_html(
-        *args, **kwargs,
-        swagger_js_url='https://cdn.bootcdn.net/ajax/libs/swagger-ui/4.10.3/swagger-ui-bundle.js',
-        swagger_css_url='https://cdn.bootcdn.net/ajax/libs/swagger-ui/4.10.3/swagger-ui.css'
-    )
+        *args,
+        **kwargs,
+        swagger_js_url=
+        'https://cdn.bootcdn.net/ajax/libs/swagger-ui/4.10.3/swagger-ui-bundle.js',
+        swagger_css_url=
+        'https://cdn.bootcdn.net/ajax/libs/swagger-ui/4.10.3/swagger-ui.css')
 
 
 applications.get_swagger_ui_html = swagger_monkey_patch
@@ -28,7 +31,10 @@ app = FastAPI(title='光学字符识别项目', description='根据每个单据�
 
 
 @app.post('/ocr', tags=["识别接口（POST方法）"])
-async def ocr(ID: int, Type: Optional[str] = None, Envir: Optional[str] = 'dev', File: UploadFile = File(...)):
+async def ocr(ID: int,
+              Type: Optional[str] = None,
+              Envir: Optional[str] = 'dev',
+              File: UploadFile = File(...)):
     '''
     OCR单据识别识别
     - 参数 ID: 上传哪类单据
@@ -95,19 +101,18 @@ async def ocr(ID: int, Type: Optional[str] = None, Envir: Optional[str] = 'dev',
         if extension in imgType_list:
             if ID == 7 or ID == 3 or ID == 11:
                 check(img_path=save_path)
-            elif ID == 12 or ID == 11 or ID==14:
-                save_path = process_ID12(save_path,ID)
-            elif ID==5:
-                save_path=process_ID5(save_path)
+            elif ID == 12 or ID == 11 or ID == 14:
+                save_path = process_ID12(save_path, ID)
+            elif ID == 5:
+                save_path = process_ID5(save_path)
             pos, value = detect_img(save_path)
             return detect_value(pos, ID, value, Type, save_path, Envir)
 
         else:
             count, img_list = pdf_img(save_path, name)
 
-            if ID == 7 or ID == 3 or ID == 11 :
+            if ID == 7 or ID == 3 or ID == 11:
                 check(img_path=img_list[0])
-
 
             pos, value = detect_pdf(img_list, count)
 

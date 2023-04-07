@@ -109,3 +109,124 @@
 2023-04-05 21:39:38,275 - component_modules.autils - INFO - 文件：----> 43份（拖移项目） 4.pdf 上传成功!
 2023-04-05 21:39:42,734 - component_modules.autils - INFO - 文件：----> save_files/43份（拖移项目） 4_0.png 删除成功!
 
+2023-04-07 09:39:18,087 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.39.12.png 上传成功!
+2023-04-07 09:39:20,641 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.39.12.png 删除成功!
+
+2023-04-07 09:39:49,284 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.39.12.png 上传成功!
+2023-04-07 09:39:51,806 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.39.12.png 删除成功!
+
+2023-04-07 09:40:33,485 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.39.12.png 上传成功!
+2023-04-07 09:40:35,913 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.39.12.png 删除成功!
+
+2023-04-07 09:41:04,592 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.39.12.png 上传成功!
+2023-04-07 09:41:06,975 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.39.12.png 删除成功!
+
+2023-04-07 09:45:36,887 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.39.12.png 上传成功!
+2023-04-07 09:45:39,236 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.39.12.png 删除成功!
+
+2023-04-07 09:46:28,116 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 09:47:03,300 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 09:47:47,107 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 09:47:49,792 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.46.19.png 删除成功!
+
+2023-04-07 09:47:49,792 - component_modules.autils - INFO - 文件：----> save_files/crop/new.png 删除成功!
+
+2023-04-07 09:49:15,103 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 09:49:17,732 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.46.19.png 删除成功!
+
+2023-04-07 09:49:17,732 - component_modules.autils - INFO - 文件：----> save_files/crop/new.png 删除成功!
+
+2023-04-07 09:53:33,759 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 09:54:09,694 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 09:54:31,047 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 09:54:33,783 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.46.19.png 删除成功!
+
+2023-04-07 09:54:33,784 - component_modules.autils - INFO - 文件：----> save_files/crop/new.png 删除成功!
+
+2023-04-07 09:59:08,917 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 09:59:11,628 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.46.19.png 删除成功!
+
+2023-04-07 09:59:11,628 - component_modules.autils - INFO - 文件：----> save_files/crop/new.png 删除成功!
+
+2023-04-07 10:00:26,941 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 10:00:29,568 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.46.19.png 删除成功!
+
+2023-04-07 10:00:29,568 - component_modules.autils - INFO - 文件：----> save_files/crop/new.png 删除成功!
+
+2023-04-07 10:01:05,145 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 10:01:07,858 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.46.19.png 删除成功!
+
+2023-04-07 10:01:07,859 - component_modules.autils - INFO - 文件：----> save_files/crop/new.png 删除成功!
+
+2023-04-07 10:03:02,007 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 10:03:04,703 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.46.19.png 删除成功!
+
+2023-04-07 10:03:04,704 - component_modules.autils - INFO - 文件：----> save_files/crop/new.png 删除成功!
+
+2023-04-07 10:06:19,698 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 10:07:59,986 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 10:08:02,614 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.46.19.png 删除成功!
+
+2023-04-07 10:08:02,614 - component_modules.autils - INFO - 文件：----> save_files/crop/new.png 删除成功!
+
+2023-04-07 10:09:06,846 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 10:09:09,493 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.46.19.png 删除成功!
+
+2023-04-07 10:09:09,494 - component_modules.autils - INFO - 文件：----> save_files/crop/new.png 删除成功!
+
+2023-04-07 10:14:06,560 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 10:14:09,367 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.46.19.png 删除成功!
+
+2023-04-07 10:14:09,367 - component_modules.autils - INFO - 文件：----> save_files/crop/new.png 删除成功!
+
+2023-04-07 10:14:44,591 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 10:14:47,198 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.46.19.png 删除成功!
+
+2023-04-07 10:14:47,199 - component_modules.autils - INFO - 文件：----> save_files/crop/new.png 删除成功!
+
+2023-04-07 10:23:46,577 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 09.46.19.png 上传成功!
+2023-04-07 10:23:49,212 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 09.46.19.png 删除成功!
+
+2023-04-07 10:23:49,212 - component_modules.autils - INFO - 文件：----> save_files/crop/new.png 删除成功!
+
+2023-04-07 10:27:40,537 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 10.27.32.png 上传成功!
+2023-04-07 10:27:40,946 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 10.27.32.png 删除成功!
+
+2023-04-07 10:27:40,946 - component_modules.autils - INFO - 文件：----> save_files/crop/new.png 删除成功!
+
+2023-04-07 10:29:46,295 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 10.29.41.png 上传成功!
+2023-04-07 10:29:49,272 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 10.29.41.png 删除成功!
+
+2023-04-07 10:30:35,009 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 10.30.25.png 上传成功!
+2023-04-07 10:30:35,206 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 10.30.25.png 删除成功!
+
+2023-04-07 10:33:21,497 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 10.33.12.png 上传成功!
+2023-04-07 10:33:21,677 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 10.33.12.png 删除成功!
+
+2023-04-07 10:35:12,930 - component_modules.autils - INFO - 文件：----> Cof8E1__tBSAABDZAAEhyqmUq8Y143.jpg 上传成功!
+2023-04-07 10:35:57,381 - component_modules.autils - INFO - 文件：----> Cof8E1__tBSAABDZAAEhyqmUq8Y143.jpg 上传成功!
+2023-04-07 10:36:43,702 - component_modules.autils - INFO - 文件：----> Cof8E1__tBSAABDZAAEhyqmUq8Y143.jpg 上传成功!
+2023-04-07 10:36:46,581 - component_modules.autils - INFO - 文件：----> save_files/Cof8E1__tBSAABDZAAEhyqmUq8Y143.jpg 删除成功!
+
+2023-04-07 10:37:11,542 - component_modules.autils - INFO - 文件：----> Cof8E2DaXO-AA7AIABJ7fXi0g1w903.png 上传成功!
+2023-04-07 10:37:14,175 - component_modules.autils - INFO - 文件：----> save_files/Cof8E2DaXO-AA7AIABJ7fXi0g1w903.png 删除成功!
+
+2023-04-07 10:37:23,296 - component_modules.autils - INFO - 文件：----> Cof8El_4GkmAHZ1RACVcVUwGgao490.jpg 上传成功!
+2023-04-07 10:37:23,670 - component_modules.autils - INFO - 文件：----> save_files/Cof8El_4GkmAHZ1RACVcVUwGgao490.jpg 删除成功!
+
+2023-04-07 10:38:46,465 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 10.38.38.png 上传成功!
+2023-04-07 10:38:47,553 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 10.38.38.png 删除成功!
+
+2023-04-07 10:39:23,723 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 10.39.18.png 上传成功!
+2023-04-07 10:39:24,026 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 10.39.18.png 删除成功!
+
+2023-04-07 10:44:01,154 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 10.39.18.png 上传成功!
+2023-04-07 10:44:04,028 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 10.39.18.png 删除成功!
+
+2023-04-07 10:45:24,134 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 10.39.18.png 上传成功!
+2023-04-07 10:45:56,385 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 10.39.18.png 上传成功!
+2023-04-07 10:45:59,377 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 10.39.18.png 删除成功!
+
+2023-04-07 10:46:23,369 - component_modules.autils - INFO - 文件：----> 截屏2023-04-07 10.46.17.png 上传成功!
+2023-04-07 10:46:23,587 - component_modules.autils - INFO - 文件：----> save_files/截屏2023-04-07 10.46.17.png 删除成功!
+
