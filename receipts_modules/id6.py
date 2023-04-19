@@ -147,6 +147,7 @@ def match_address(pos, value, save_path):
                         address.append(value[i])
                 if len(address) > 0:
                     result = ''.join(address)
+                    print(result)
                     return result
 
         elif '性别' in value[i]:
@@ -175,12 +176,13 @@ def match_address(pos, value, save_path):
                                 str(provinces[i]))[-1]
 
         elif '中华人民共和国机动车驾驶证' in value[i] and '副页' not in value[i]:
+            print('aslkdjlkasjdalskjd')
             shr_pos = pos[i]
             height = pos[i][3][1] - pos[i][0][1]
             width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
                 if shr_pos[0][0] - width < pos[i][0][0] < shr_pos[0][
-                        0] + width / 4 and shr_pos[3][1] + height * 2 < pos[i][
+                        0] + width / 4 and shr_pos[3][1] + height * 2.5 < pos[i][
                             0][1] < shr_pos[3][
                                 1] + height * 4.5 and '出生' not in value[i]:
                     address2.append(value[i])

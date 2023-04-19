@@ -152,7 +152,7 @@ def match_id_card(pos, value, save_path):
     sex = id4.match_sex(pos, value, save_path)
     name = id4.match_name(pos, value, save_path)
     address = id4.match_address(pos, value, save_path)
-    id_number, date = id4.match_idnumber(pos, value, save_path)
+    date, id_number = id4.match_idnumber(pos, value, save_path)
     validate_date = id4.match_validdate(pos, value, save_path)
     qianfa = id4.match_qianfa(pos, value, save_path)
 
@@ -410,7 +410,7 @@ def match_congyezigezheng(pos, value, save_path):
     return {
         "姓名": xingming,
         "身份证号": shenfenzhenghao,
-        "档案号": danganhao,
+        "档案号/从业资格证件号": danganhao,
         "从业类别": congyeleibie,
         "有效期": youxiaoqi
     }

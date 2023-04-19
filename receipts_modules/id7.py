@@ -154,7 +154,7 @@ def match_tuoyunmingcheng(pos, value, save_path):
             height = pos[i][3][1] - pos[i][0][1]
             width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if shr_pos[0][0] - int(width / 2) < pos[i][0][0] < shr_pos[1][0] and shr_pos[0][1] - height * 3.1 < \
+                if shr_pos[0][0] - int(width / 2) < pos[i][0][0] < shr_pos[1][0] and shr_pos[0][1] - height * 2.1 < \
                         pos[i][3][1] < shr_pos[0][1] - height / 2:
                     return value[i]
 

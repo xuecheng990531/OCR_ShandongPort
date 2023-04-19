@@ -342,9 +342,9 @@ def match_baozhuangzhonglei(pos, value, save_path):
 
 def match_beizhu(pos, value, save_path):
     for i in range(len(pos)):
-        if '备' in value[i] or '备注' in value[i]:
-            if len(value[i].split('备')[-1]) > 2:
-                return value[i]
+        if '备注' in value[i]:
+            if len(value[i].split('备注')[-1]) > 2:
+                return value[i].split('备注')[-1]
             else:
                 shr_pos = pos[i]
                 height = pos[i][3][1] - pos[i][0][1]
@@ -358,3 +358,4 @@ def match_beizhu(pos, value, save_path):
                             return "None"
                         else:
                             return value[i]
+    return 'None'

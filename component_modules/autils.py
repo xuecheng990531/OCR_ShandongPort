@@ -8,25 +8,15 @@ import aiofiles
 import numpy as np
 import cv2
 import paddleocr
-import logging
 import re
-
-logger = logging.getLogger(__name__)
-logger.setLevel(level=logging.INFO)
-handler = logging.FileHandler("log.txt")
-handler.setLevel(logging.INFO)
-formatter = logging.Formatter(
-    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
 
 imgType_list = {'.jpg', '.bmp', '.png', '.jpeg', '.jfif', '.webp'}
 ocr = PaddleOCR(use_angle_cls=False,
                 lang="ch",
-                workers=10,
+                workers=4,
                 use_gpu=True,
                 det_limit_side_len=1216,
-                use_multiprocess=True)
+                use_multiprocess=False)
 
 
 #-------------------------------------------------图片上传和删除-----------------------------------
@@ -35,7 +25,6 @@ async def save_img(File, filename):
                              'wb') as out_file:
         content = await File.read()
         await out_file.write(content)
-    logger.info("文件：----> " + filename + " 上传成功!")
     print("文件：----> " + filename + " 上传成功!")
 
 
@@ -47,8 +36,6 @@ def del_upload_file():
                     ".pdf") or name.endswith(".jpeg") or name.endswith(
                         ".JPEG"):
                 os.remove(os.path.join(root, name))
-                logger.info("文件：----> " + os.path.join(root, name) +
-                            " 删除成功!\n")
                 print("文件：----> " + os.path.join(root, name) + " 删除成功!")
 
 
@@ -59,8 +46,6 @@ def del_upload_file():
 def detect_value(pos, ID, value, Type, save_path, Envir):
     result = detect_paper(ID, pos, value, Type, save_path)
     removed_result = remove(result)
-    # removed_result=result
-
     del_upload_file()
 
     if Envir == 'main':
@@ -115,7 +100,6 @@ def process_ID12(img_path, ID):
             width, height = img_process.shape[:2]
             img_process = cv2.resize(img_process, (2 * height, 2 * width),
                                      interpolation=cv2.INTER_LINEAR)
-
     else:
         zengqiang = gama_transfer(img)
         kernel = np.ones((2, 2), np.uint8)
@@ -124,10 +108,11 @@ def process_ID12(img_path, ID):
             width, height = img_process.shape[:2]
             img_process = cv2.resize(img_process, (2 * height, 2 * width),
                                      interpolation=cv2.INTER_LINEAR)
-    return img_process
+    cv2.imwrite(img_path,img_process)
 
 
-def process_ID5(img_path):
+def process_ID45(img_path):
+    print(img_path)
     img = cv2.imread(img_path)
     if img.shape[2] == '3':
         b, g, r = cv2.split(img)
@@ -138,8 +123,7 @@ def process_ID5(img_path):
         zengqiang = gama_transfer(img)
         kernel = np.ones((2, 2), np.uint8)
         img_process = cv2.erode(zengqiang, kernel)
-    return img_process
-
+    cv2.imwrite(img_path,img_process)
 
 #-------------------------------------------------对ID12的图像进行处理-----------------------------------
 
@@ -236,8 +220,8 @@ def remove(dict):
         if dict[i] is None:
             dict[i] = "None"
         else:
-            # if '：' in dict[i]:
-            #     dict[i]=dict[i].replace('：','')
+            if '：' in dict[i]:
+                dict[i]=dict[i].replace('：','')
             if '*' in dict[i]:
                 if '**/**' in dict[i]:
                     dict[i] = dict[i].replace('**/**', '')
@@ -249,6 +233,10 @@ def remove(dict):
                 dict[i] = dict[i].replace('，', '')
             elif '\\"' in dict[i]:
                 dict[i] = dict[i].replace('\\"', '  ')
+            elif '冰冰冰' in dict[i]:
+                dict[i] = dict[i].replace('冰冰冰', 'None')
+            elif '备注' in dict[i]:
+                dict[i] = dict[i].split('备注')[-1]
     return dict
 
 

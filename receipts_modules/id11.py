@@ -28,15 +28,16 @@ def match_name(pos, value, save_path):
                             return value[i].split('性别')[0]
                         else:
                             return value[i]
-        else:
-            user_name_lis = []
-            for i in range(len(pos)):
-                _result = lac.run(value[i])
-                for _index, _label in enumerate(_result[1]):
-                    if _label == "PER":
-                        user_name_lis.append(_result[0][_index])
-            if len(user_name_lis) != 0:
-                return user_name_lis[0]
+        # else:
+        #     print('aklsdowowowo')
+        #     user_name_lis = []
+        #     for i in range(len(pos)):
+        #         _result = lac.run(value[i])
+        #         for _index, _label in enumerate(_result[1]):
+        #             if _label == "PER":
+        #                 user_name_lis.append(_result[0][_index])
+        #     if len(user_name_lis) != 0:
+        #         return user_name_lis[0]
 
 
 def match_shenfenzhenghao(pos, value, save_path):
@@ -222,3 +223,11 @@ def match_dangan(pos, value, save_path):
                     result = "".join(list(filter(str.isdigit, value[i])))
                     if len(result) > 4:
                         return result
+        
+        if '证件号' in value[i] and len(value[i])==3:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[0][0] - width/2 < pos[i][0][0] < shr_pos[1][0] + width*2 and shr_pos[0][1] -height < pos[i][0][1] < shr_pos[2][1] + height/2 and value[i][0].isdigit():
+                        return value[i]

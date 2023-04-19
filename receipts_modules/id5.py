@@ -8,10 +8,10 @@ sys.path.append('../')
 from component_modules import autils
 
 
-def ReRec2(path, ymin, ymax, xmin, xmax, value):
-    cv2.imwrite('save_files/crop/new.png', path)
-    image = cv2.imread('save_files/crop/new.png')
+def ReRec2(path, ymin, ymax, xmin, xmax):
+    image = cv2.imread(path)
     cropImg = image[int(ymin):int(ymax), int(xmin):int(xmax)]
+    cv2.imwrite('new.png', cropImg)
     pos, value = autils.detect_img(cropImg)
     return pos, value
 
@@ -50,18 +50,18 @@ def match_haoma(pos, value, save_path):
 
 def match_cheliangleixing(pos, value, save_path):
     for i in range(len(pos)):
-        if '车辆类型' in value[i] or '车钢类型' in value[i] or '车辆奥型' in value[i]:
-            if len(value[i].split('型')[-1]) > 3:
-                return value[i].split('型')[-1][1:]
+        if '车辆类型' in value[i] or '车钢类型' in value[i] and '车辆奥型' in value[i] and len(value[i])>4:
+            if len(value[i])>4:
+                if '类型' in value[i]:
+                    return value[i].split('类型')[-1]
+                elif '奥型' in value[i]:
+                    return value[i].split('奥型')[-1]
             else:
                 shr_pos = pos[i]
                 height = pos[i][3][1] - pos[i][0][1]
                 width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0] - width / 2 < pos[i][0][
-                            0] < shr_pos[1][0] + width and shr_pos[1][1] - int(
-                                height /
-                                2) < pos[i][0][1] < shr_pos[1][1] + height:
+                    if shr_pos[1][0] - width / 2 < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[1][1] - int(height /2) < pos[i][0][1] < shr_pos[1][1] + height:
                         if '重型' in value[i]:
                             return '重型半挂牵引车'
                         else:
@@ -172,8 +172,7 @@ def match_shiyongxingzhi(pos, value, save_path):
                                  ymin - img_height,
                                  ymax + img_height * 2,
                                  xmin - img_width * 2,
-                                 xmax,
-                                 value='id5_xingzhi')
+                                 xmax)
             result = ''.join(result)
             if '非' in result:
                 return '非' + result.split('非')[-1][:2]
@@ -208,32 +207,50 @@ def VIN(pos, value):
         pattern = re.compile(r'\b([A-HJ-NPR-Z\d]{17})\b')
         result = pattern.search(text)
         if result:
-            vin = result.group()
-            return vin
+            vin1 = result.group()
+            return vin1
 
 
 def match_cheliangshibiedaihao(pos, value, save_path):
-    for i in range(len(pos)):
-        if '识别' in value[i] or '代号' in value[i]:
-            if '类' not in value[i]:
-                if len(value[i].split('号')[-1]) > 5:
-                    return value[i].split('号')[-1]
+    vinnumber = VIN(pos, value)
+    if vinnumber is not None:
+        return vinnumber
+    else:
+        for i in range(len(pos)):
+            if '识别' in value[i] and '代号' in value[i]:
+                if '类' not in value[i]:
+                    if len(value[i].split('号')[-1]) > 5:
+                        return value[i].split('号')[-1]
+                    else:
+                        shr_pos = pos[i]
+                        height = pos[i][3][1] - pos[i][0][1]
+                        width = pos[i][1][0] - pos[i][0][0]
+                        for i in range(len(pos)):
+                            if shr_pos[1][0] - int(width / 2) < pos[i][0][0] < shr_pos[1][0] + width * 2 and shr_pos[0][1] - int(height / 2) < pos[i][0][1] < shr_pos[1][1] + int(height +height / 2) and len(value[i]) > 10:
+                                return value[i]
+            if '车辆' in value[i] and '代号' in value[i]:
+                if len(value[i].split('代号')[-1])>5:
+                    return value[i].split('代号')[-1]
                 else:
                     shr_pos = pos[i]
                     height = pos[i][3][1] - pos[i][0][1]
                     width = pos[i][1][0] - pos[i][0][0]
                     for i in range(len(pos)):
-                        if shr_pos[1][0] - int(
-                                width / 2) < pos[i][0][0] < shr_pos[1][
-                                    0] + width * 2 and shr_pos[0][1] - int(
-                                        height / 2) < pos[i][0][1] < shr_pos[
-                                            1][1] + int(height +
-                                                        height / 2) and len(
-                                                            value[i]) > 10:
+                        if shr_pos[1][0] - int(width / 2) < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[0][1] - int(height / 2) < pos[i][0][1] < shr_pos[1][1] +height/2 and len(value[i]) > 5:
                             return value[i]
-        else:
-            vinnumber = VIN(pos, value)
-            return vinnumber
+            
+            if '辆' in value[i] and '代号' in value[i]:
+                if len(value[i].split('代号')[-1])>5:
+                    return value[i].split('代号')[-1]
+                else:
+                    shr_pos = pos[i]
+                    height = pos[i][3][1] - pos[i][0][1]
+                    width = pos[i][1][0] - pos[i][0][0]
+                    for i in range(len(pos)):
+                        if shr_pos[1][0] - int(width / 2) < pos[i][0][0] < shr_pos[1][0] + width and shr_pos[0][1] - int(height / 2) < pos[i][0][1] < shr_pos[1][1] +height/2 and len(value[i]) > 5:
+                            return value[i]
+            else:
+                return 'None'
 
 
 def EN(pos, value):
@@ -249,6 +266,20 @@ def EN(pos, value):
 def match_fadongjihaoma(pos, value, save_path):
     for i in range(len(value)):
         if '发动机' in value[i]:
+            if len(value[i].split('码')[-1]) > 5:
+                return value[i].split('码')[-1]
+            else:
+                shr_pos = pos[i]
+                height = pos[i][3][1] - pos[i][0][1]
+                width = pos[i][1][0] - pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[1][0] - int(width / 2) < pos[i][0][
+                            0] < shr_pos[1][0] + width and shr_pos[1][1] - int(
+                                height /
+                                2) < pos[i][0][1] < shr_pos[2][1] + height:
+                        return value[i]
+                    
+        elif '发' in value[i] and '号码' in value[i]:
             if len(value[i].split('码')[-1]) > 5:
                 return value[i].split('码')[-1]
             else:
@@ -338,7 +369,9 @@ def match_zhucedate(pos, value, save_path):
 
 def match_zairenshu(pos, value, save_path):
     for i in range(len(value)):
-        if '核定' in value[i] and '质量' not in value[i] and '人' in value[i]:
+        if '人数' in value[i] and '人' in value[i].split('人数')[-1] and value[i].split('人数')[-1][0].isdigit():
+            return value[i].split('人数')[-1]
+        elif '核定' in value[i] and '质量' not in value[i] and '人' in value[i]:
             if '人' in value[i]:
                 a = re.findall("\d+\.?\d*", value[i])
                 a = list(map(int, a))
@@ -441,7 +474,7 @@ def match_weight_heding(pos, value, save_path):
                                     2 * height) < pos[i][0][1] < shr_pos[2][1]:
                         result = "".join(list(filter(str.isdigit, value[i])))
                         return result + 'kg'
-        elif '核定载质量' in value[i]:
+        elif '核定载质量' in value[i] or '核定线质量' in value[i]:
             if len(value[i].split('量')[-1]) != 0:
                 return value[i].split('量')[-1]
             else:
@@ -557,6 +590,15 @@ def match_chicun(pos, value, save_path):
 def match_valid_date(pos, value, save_path):
     for i in range(len(value)):
         if '有效期' in value[i]:
-            return value[i].split('至')[1].split('月')[0] + '月'
+            if '至' in value[i]:
+                if '月' in value[i]:
+                    return value[i].split('至')[1].split('月')[0] + '月'
+                else:
+                    return value[i].split('至')[1]
+            elif '室' in value[i] and value[i].split('室')[-1][0].isdigit():
+                if '月' in value[i]:
+                    return value[i].split('室')[1].split('月')[0] + '月'
+                else:
+                    return value[i].split('室')[-1]
     else:
         return '0'

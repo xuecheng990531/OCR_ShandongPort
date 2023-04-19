@@ -1,18 +1,9 @@
 import os
-import logging
 import uvicorn
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi import FastAPI, UploadFile, File, applications
-from typing import Optional
+from typing import Optional, Union
 from component_modules.autils import *
-
-logger = logging.getLogger(__name__)
-handler = logging.FileHandler("log.txt")
-handler.setLevel(logging.DEBUG)
-formatter = logging.Formatter(
-    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
 
 
 def swagger_monkey_patch(*args, **kwargs):
@@ -27,30 +18,14 @@ def swagger_monkey_patch(*args, **kwargs):
 
 applications.get_swagger_ui_html = swagger_monkey_patch
 
-app = FastAPI(title='光学字符识别项目', description='根据每个单据要求的关键字进行返回')
+app = FastAPI(title='光学字符识别项目', description='根据每个单据要求的关键字进行返回。\n- 上传文件要求:\n- jpg、png、jpeg、pdf\n- 1.上传的图片需要摆正，不能存在未经过旋转的图片。\n- 2.上传的PDF尽量不要超过一页,上传的身份证等证件正反面都需要放在一个照片之内。')
 
 
 @app.post('/ocr', tags=["识别接口（POST方法）"])
-async def ocr(ID: int,
-              Type: Optional[str] = None,
-              Envir: Optional[str] = 'dev',
-              File: UploadFile = File(...)):
+async def ocr(ID: int,Type: Optional[str] = None,File: UploadFile = File(...)):
     '''
     OCR单据识别识别
     - 参数 ID: 上传哪类单据
-
-    - 参数 Type: 某一单据下对应的其他单据 (不用管)
-
-    - 参数 Envir: 是否展示全部结果(dev 显示全部结果, main 只显示需要检测的结果）
-
-    上传文件要求:
-    - jpg、png、jpeg、pdf
-
-    - 1.上传的图片需要摆正，不能存在未经过旋转的图片。
-
-    - 2.上传的PDF尽量不要超过一页,上传的身份证等证件正反面都需要放在一个照片之内。
-
-
     ID类别:
     - ID=1------------>危险货物安全适运说明书
 
@@ -90,7 +65,6 @@ async def ocr(ID: int,
     save_path = os.path.join('save_files', filename)
 
     if extension not in imgType_list and extension != '.pdf':
-        logger.error("上传错误,上传的文件不在可上传范围内")
         return {"上传错误": '上传的文件不在可上传范围内'}
     else:
 
@@ -102,11 +76,11 @@ async def ocr(ID: int,
             if ID == 7 or ID == 3 or ID == 11:
                 check(img_path=save_path)
             elif ID == 12 or ID == 11 or ID == 14:
-                save_path = process_ID12(save_path, ID)
-            elif ID == 5:
-                save_path = process_ID5(save_path)
+                process_ID12(save_path, ID)
+            elif ID == 5 or ID==4:
+                process_ID45(save_path)
             pos, value = detect_img(save_path)
-            return detect_value(pos, ID, value, Type, save_path, Envir)
+            return detect_value(pos, ID, value, Type, save_path, Envir='dev')
 
         else:
             count, img_list = pdf_img(save_path, name)
@@ -116,8 +90,10 @@ async def ocr(ID: int,
 
             pos, value = detect_pdf(img_list, count)
 
-            return detect_value(pos, ID, value, Type, img_list[0], Envir)
+            return detect_value(pos, ID, value, Type, img_list[0], Envir='dev')
 
 
 if __name__ == '__main__':
+    import paddle
+    paddle.device.set_device("gpu:0")
     uvicorn.run(app='app:app', host='0.0.0.0', port=8008, reload=True)

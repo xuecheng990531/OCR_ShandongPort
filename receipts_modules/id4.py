@@ -199,11 +199,13 @@ def match_sex(pos, value, save_path):
 
         else:
             id = match_idnumber(pos, value, save_path)
-            if len(id[0]) == 18:
-                if int(id[0][-2]) % 2 == 0:
-                    return '女'
-                elif int(id[0][-2]) % 2 != 0:
-                    return '男'
+            if id[1] is not None:
+                if len(id[0]) == 18:
+                    if int(id[0][-2]) % 2 == 0:
+                        return '女'
+                    elif int(id[0][-2]) % 2 != 0:
+                        return '男'
+                    
 
 
 def match_id(pos, value, save_path):
@@ -232,12 +234,11 @@ def match_idnumber(pos, value, save_path):
                     month = value[i].split('码')[-1][10:12]
                     date = value[i].split('码')[-1][12:14]
                     date = "%s年%s月%s日" % (year, month, date)
-                return id, date
+                return date, id
 
         elif re.match(shenfenzheng, value[i]):
             id = value[i]
             if len(id) < 18:
-                print('yes')
                 date = match_born(pos, value, save_path)
             else:
                 year = value[i][6:10]

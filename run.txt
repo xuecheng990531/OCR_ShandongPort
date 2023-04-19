@@ -1,0 +1,4 @@
+python -m pip install paddlepaddle-gpu==2.2.2.post112 -f https://www.paddlepaddle.org.cn/whl/linux/mkl/avx/stable.html
+
+终端执行
+python -u -m paddle.distributed.launch --gpus 0 app.py 

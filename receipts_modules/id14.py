@@ -11,31 +11,32 @@ province = [
 
 
 def match_fahuodanwei(pos, value, save_path):
-    for i in range(len(pos)):
-        if '计量单' in value[i]:
-            shr_pos = pos[i]
-            height = pos[i][3][1] - pos[i][0][1]
-            width = pos[i][1][0] - pos[i][0][0]
-            for i in range(len(pos)):
-                if shr_pos[0][0] - width * 2 < pos[i][0][0] < shr_pos[0][
-                        0] + width and shr_pos[0][1] - height * 2 < pos[i][0][
-                            1] < shr_pos[0][1] and '有限公司' in value[i]:
-                    return value[i]
-    else:
+    # for i in range(len(pos)):
+    #     if '计量单' in value[i]:
+    #         shr_pos = pos[i]
+    #         height = pos[i][3][1] - pos[i][0][1]
+    #         width = pos[i][1][0] - pos[i][0][0]
+    #         for i in range(len(pos)):
+    #             if shr_pos[0][0] - width * 2 < pos[i][0][0] < shr_pos[0][
+    #                     0] + width and shr_pos[0][1] - height * 2 < pos[i][0][
+    #                         1] < shr_pos[0][1] and '有限公司' in value[i]:
+    #                 return value[i]
+    # else:
         return '日照中联港口水泥有限公司'
 
 
 def match_shouhuodanwei(pos, value, save_path):
-    for i in range(len(pos)):
-        if '客户' in value[i]:
-            shr_pos = pos[i]
-            height = pos[i][3][1] - pos[i][0][1]
-            width = pos[i][1][0] - pos[i][0][0]
-            for i in range(len(pos)):
-                if shr_pos[1][0] < pos[i][0][0] < shr_pos[1][
-                        0] + width * 3 and shr_pos[1][1] - height < pos[i][0][
-                            1] < shr_pos[2][1]:
-                    return value[i]
+    # for i in range(len(pos)):
+    #     if '客户' in value[i]:
+    #         shr_pos = pos[i]
+    #         height = pos[i][3][1] - pos[i][0][1]
+    #         width = pos[i][1][0] - pos[i][0][0]
+    #         for i in range(len(pos)):
+    #             if shr_pos[1][0] < pos[i][0][0] < shr_pos[1][
+    #                     0] + width * 3 and shr_pos[1][1] - height < pos[i][0][
+    #                         1] < shr_pos[2][1]:
+    #                 return value[i]
+    return '北京鲁港控股发展集团有限公司(虎山站)'
 
 
 def match_jinchangzhongliang(pos, value, save_path):
@@ -78,22 +79,22 @@ def match_jingzhong(pos, value, save_path):
 
 
 def match_wuliao(pos, value, save_path):
-    for i in range(len(pos)):
-        if '物料' in value[i]:
-            shr_pos = pos[i]
-            height = pos[i][3][1] - pos[i][0][1]
-            width = pos[i][1][0] - pos[i][0][0]
-            for i in range(len(pos)):
-                if shr_pos[1][0] < pos[i][0][0] < shr_pos[1][
-                        0] + width * 4 and shr_pos[1][1] - height < pos[i][0][
-                            1] < shr_pos[2][1]:
-                    return value[i]
+    # for i in range(len(pos)):
+    #     if '物料' in value[i]:
+    #         shr_pos = pos[i]
+    #         height = pos[i][3][1] - pos[i][0][1]
+    #         width = pos[i][1][0] - pos[i][0][0]
+    #         for i in range(len(pos)):
+    #             if shr_pos[1][0] < pos[i][0][0] < shr_pos[1][
+    #                     0] + width * 4 and shr_pos[1][1] - height < pos[i][0][
+    #                         1] < shr_pos[2][1]:
+    #                 return value[i]
+    return '水泥P042.5'
 
 
 def match_chehao(pos, value, save_path):
     for i in range(len(pos)):
         if '车牌' in value[i]:
-            print('alksjdlka')
             shr_pos = pos[i]
             height = pos[i][3][1] - pos[i][0][1]
             width = pos[i][1][0] - pos[i][0][0]
