@@ -15,6 +15,7 @@ ocr = PaddleOCR(use_angle_cls=False,
                 lang="ch",
                 workers=4,
                 use_gpu=True,
+                precision='fp16',
                 det_limit_side_len=1216,
                 use_multiprocess=False)
 
@@ -46,7 +47,7 @@ def del_upload_file():
 def detect_value(pos, ID, value, Type, save_path, Envir):
     result = detect_paper(ID, pos, value, Type, save_path)
     removed_result = remove(result)
-    del_upload_file()
+    # del_upload_file()
 
     if Envir == 'main':
         return {"检测结果": removed_result}
@@ -98,7 +99,7 @@ def process_ID12(img_path, ID):
         img_process = cv2.erode(zengqiang, kernel)
         if ID == 14:
             width, height = img_process.shape[:2]
-            img_process = cv2.resize(img_process, (2 * height, 2 * width),
+            img_process = cv2.resize(img_process, (3 * height, 3 * width),
                                      interpolation=cv2.INTER_LINEAR)
     else:
         zengqiang = gama_transfer(img)
@@ -106,21 +107,22 @@ def process_ID12(img_path, ID):
         img_process = cv2.erode(zengqiang, kernel)
         if ID == 14:
             width, height = img_process.shape[:2]
-            img_process = cv2.resize(img_process, (2 * height, 2 * width),
-                                     interpolation=cv2.INTER_LINEAR)
+            img_process = cv2.resize(img_process, (3 * height, 3 * width),interpolation=cv2.INTER_LINEAR)
     cv2.imwrite(img_path,img_process)
 
 
 def process_ID45(img_path):
-    print(img_path)
     img = cv2.imread(img_path)
-    if img.shape[2] == '3':
-        b, g, r = cv2.split(img)
+    width, height = img.shape[:2]
+    img2 = cv2.resize(img, (3 * height, 3 * width),interpolation=cv2.INTER_LINEAR)
+
+    if img2.shape[2] == '3':
+        b, g, r = cv2.split(img2)
         zengqiang = gama_transfer(r)
         kernel = np.ones((2, 2), np.uint8)
         img_process = cv2.erode(zengqiang, kernel)
     else:
-        zengqiang = gama_transfer(img)
+        zengqiang = gama_transfer(img2)
         kernel = np.ones((2, 2), np.uint8)
         img_process = cv2.erode(zengqiang, kernel)
     cv2.imwrite(img_path,img_process)
@@ -136,7 +138,7 @@ def separate_digits_and_chinese_chars(string):
     # 使用re.findall()函数找到所有匹配项，并存储在相应的列表中
     digits_list = re.findall(digit_pattern, string)
     if len(digits_list) == 3:
-        return digits_list[0] + '*' + digits_list[1] + '*' + digits_list[
+        return digits_list[0] + 'x' + digits_list[1] + 'x' + digits_list[
             2] + 'mm'
     else:
         return digits_list
@@ -229,8 +231,8 @@ def remove(dict):
                     dict[i] = dict[i].replace('*', '')
             elif ':' in dict[i]:
                 dict[i] = dict[i].replace(':', '')
-            elif '，' in dict[i]:
-                dict[i] = dict[i].replace('，', '')
+            # elif '，' in dict[i]:
+            #     dict[i] = dict[i].replace('，', '')
             elif '\\"' in dict[i]:
                 dict[i] = dict[i].replace('\\"', '  ')
             elif '冰冰冰' in dict[i]:

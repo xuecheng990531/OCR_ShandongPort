@@ -120,85 +120,128 @@ def match_suoyouren(pos, value, save_path):
 
 
 def match_address(pos, value, save_path):
-    for i in range(len(pos)):
-        if '住址' in value[i]:
-            shr_pos = pos[i]
-            height = pos[i][3][1] - pos[i][0][1]
-            width = pos[i][1][0] - pos[i][0][0]
-            for i in range(len(pos)):
-                if shr_pos[1][0] - width / 2 < pos[i][0][0] < shr_pos[1][
-                        0] + width and shr_pos[0][1] < pos[i][0][1] < shr_pos[
-                            2][1] + int(height / 2) and '类型' not in value[i]:
-                    result = re.sub(r'[住址]*', '', value[i])
-                    return result
-        else:
-            for i in range(len(pos)):
-                if '公司' not in value[i]:
-                    if '省' in value[i] or '县' in value[i] or '市' in value[
-                            i] or '区' in value[i] and '局' not in value[i]:
-                        if '庄' in value[i + 1] or '村' in value[
-                                i + 1] or '室' in value[i + 1]:
-                            value_all = value[i] + value[i + 1]
-                            result = re.sub(r'[住址]*', '', value_all)
-                            return result
-                        else:
-                            result = re.sub(r'[住址]*', '', value[i])
-                            return result
-
-
-def match_shiyongxingzhi(pos, value, save_path):
-    for i in range(len(pos)):
-        if '性质' in value[i]:
-            if len(value[i].split('质')[-1]) > 1:
-                return value[i].split('质')[-1]
-            else:
+    address=[]
+    syxz=match_shiyongxingzhi(pos,value,save_path)
+    if syxz in value:
+        for i in range(len(pos)):
+            if str(syxz) in value[i]:
                 shr_pos = pos[i]
                 height = pos[i][3][1] - pos[i][0][1]
                 width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0] - int(width / 2) < pos[i][0][
-                            0] < shr_pos[1][0] + width and shr_pos[1][1] - int(
-                                height / 2
-                            ) < pos[i][0][1] < shr_pos[1][1] + int(height / 2):
-                        return value[i]
-        elif '品牌型号' in value[i]:
-            ymin = pos[i][0][1]
-            ymax = pos[i][2][1]
-            xmin = pos[i][0][0]
-            xmax = pos[i][2][0]
-            img_height = pos[i][3][1] - pos[i][0][1]
-            img_width = pos[i][1][0] - pos[i][0][0]
-            pos, result = ReRec2(save_path,
-                                 ymin - img_height,
-                                 ymax + img_height * 2,
-                                 xmin - img_width * 2,
-                                 xmax)
-            result = ''.join(result)
-            if '非' in result:
-                return '非' + result.split('非')[-1][:2]
-            elif '韭' in result:
-                return '非' + result.split('韭')[-1][:2]
-            elif '生' in result:
-                return '非' + result.split('生')[-1][:2]
-            elif '营运' in result:
-                return '营运'
-            elif '货运' in result:
-                return '货运'
-            else:
-                return '货运'
-        elif '货运' in value[i]:
-            return '货运'
+                    if shr_pos[0][0]-width/2 < pos[i][0][0] < shr_pos[1][
+                            0] and shr_pos[0][1]-height*2 < pos[i][2][1] < shr_pos[
+                                0][1] +height/2:
+                        address.append(value[i])
+                result=''.join(address)
+                result = re.sub(r'[住佳址牌]*', '', result)
+                return result
     else:
-        return '货运'
+        for i in range(len(pos)):
+            if '公司' not in value[i]:
+                if '省' in value[i] or '县' in value[i] or '市' in value[i] or '区' in value[i] and '局' not in value[i]:
+                    address.append(value[i])
+                    shr_pos = pos[i]
+                    height = pos[i][3][1] - pos[i][0][1]
+                    width = pos[i][1][0] - pos[i][0][0]
+                    for i in range(len(pos)):
+                        if shr_pos[0][0] < pos[i][1][0] < shr_pos[1][
+                                0] and shr_pos[2][1]-height/2 < pos[i][0][1] < shr_pos[
+                                    2][1] + height/2 and '类型' not in value[i] and '牌' not in value[i] and '使用' not in value[i]:
+                            address.append(value[i])
+                    
+                    result=''.join(address)
+                    result = re.sub(r'[住佳址牌]*', '', result)
+                    xingzhi=match_shiyongxingzhi(pos,value,save_path)
+                    if str(xingzhi) in result:
+                        return result.replace(str(xingzhi),'')
+                    else:
+                        return result
+
+
+def match_shiyongxingzhi(pos, value, save_path):
+    for i in range(len(pos)):
+        if '危化品' in value[i]:
+            return '危化品运输'
+        else:
+            for i in range(len(pos)):
+                if '性质' in value[i]:
+                    if len(value[i].split('质')[-1]) > 1:
+                        return value[i].split('质')[-1]
+                    else:
+                        shr_pos = pos[i]
+                        height = pos[i][3][1] - pos[i][0][1]
+                        width = pos[i][1][0] - pos[i][0][0]
+                        for i in range(len(pos)):
+                            if shr_pos[1][0] - int(width / 2) < pos[i][0][
+                                    0] < shr_pos[1][0] + width and shr_pos[1][1] - int(
+                                        height / 2
+                                    ) < pos[i][0][1] < shr_pos[1][1] + int(height / 2):
+                                if '危化' in value[i]:
+                                    return '危化品运输'
+                                elif '营运' in value[i]:
+                                    return '营运'
+                                elif '货运' in value[i]:
+                                    return '货运'
+                                else:
+                                    return '货运'
+                                            
+                if '品牌型号' in value[i]:
+                    ymin = pos[i][0][1]
+                    ymax = pos[i][2][1]
+                    xmin = pos[i][0][0]
+                    xmax = pos[i][2][0]
+                    img_height = pos[i][3][1] - pos[i][0][1]
+                    img_width = pos[i][1][0] - pos[i][0][0]
+                    pos, result = ReRec2(save_path,
+                                        ymin - img_height,
+                                        ymax + img_height * 2,
+                                        xmin - img_width * 2,
+                                        xmax)
+                    result = ''.join(result)
+                    if '非' in result:
+                        return '非' + result.split('非')[-1][:2]
+                    elif '韭' in result:
+                        return '非' + result.split('韭')[-1][:2]
+                    elif '生' in result:
+                        return '非' + result.split('生')[-1][:2]
+                    elif '营运' in result:
+                        return '营运'
+                    elif '货运' in result:
+                        return '货运'
+                    elif '危化' in result:
+                        return '危化品运输'
+                    else:
+                        return '货运'
+                if '货运' in value[i]:
+                    return '货运'
 
 
 def match_pinpaixinghao(pos, value, save_path):
+
     for i in range(len(pos)):
         if '品牌' in value[i] and '号' in value[i]:
             if len(value[i].split('号')[-1]) > 5:
                 return value[i].split('号')[-1]
-        elif '牌' in value[i] and re.match('[0-9A-Z]', value[i].split('牌')[-1]):
+        elif '牌' in value[i] and re.match('[0-9A-Z]', value[i].split('牌')
+        [-1]) and len(value[i].split('牌')[-1])>5:
             return value[i]
+        else:
+            VIN=match_cheliangshibiedaihao(pos,value,save_path)
+            if VIN and str(VIN)!='None':
+                for i in range(len(pos)):
+                    if str(VIN) in value[i]:
+                        shr_pos = pos[i]
+                        height = pos[i][3][1] - pos[i][0][1]
+                        width = pos[i][1][0] - pos[i][0][0]
+                        for i in range(len(pos)):
+                            if shr_pos[1][0] - int(width / 2) < pos[i][1][
+                                    0] < shr_pos[1][0] + width/4 and shr_pos[1][1]-height-height/2< pos[i][2][1] < shr_pos[1][1] + height/2 and '牌' in value[i]:
+                                if '号' in value[i]:
+                                    return value[i].split('号')[-1]
+                                else:
+                                    return value[i]
+
 
 
 def VIN(pos, value):
@@ -264,8 +307,8 @@ def EN(pos, value):
 
 
 def match_fadongjihaoma(pos, value, save_path):
-    for i in range(len(value)):
-        if '发动机' in value[i]:
+    for i in range(len(pos)):
+        if '发动机' in value[i] and '码' in value[i]:  
             if len(value[i].split('码')[-1]) > 5:
                 return value[i].split('码')[-1]
             else:
@@ -279,7 +322,21 @@ def match_fadongjihaoma(pos, value, save_path):
                                 2) < pos[i][0][1] < shr_pos[2][1] + height:
                         return value[i]
                     
-        elif '发' in value[i] and '号码' in value[i]:
+        if '发' in value[i] and '号码' in value[i]:
+            if len(value[i].split('码')[-1]) > 5:
+                return value[i].split('码')[-1]
+            else:
+                shr_pos = pos[i]
+                height = pos[i][3][1] - pos[i][0][1]
+                width = pos[i][1][0] - pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[1][0] - int(width / 2) < pos[i][0][
+                            0] < shr_pos[1][0] + width and shr_pos[1][1] - int(
+                                height /
+                                2) < pos[i][0][1] < shr_pos[2][1] + height:
+                        return value[i]
+        
+        if '机号码' in value[i]:
             if len(value[i].split('码')[-1]) > 5:
                 return value[i].split('码')[-1]
             else:
@@ -293,7 +350,7 @@ def match_fadongjihaoma(pos, value, save_path):
                                 2) < pos[i][0][1] < shr_pos[2][1] + height:
                         return value[i]
 
-        elif '发证日期' in value[i]:
+        if '发证日期' in value[i]:
             shr_pos = pos[i]
             height = pos[i][3][1] - pos[i][0][1]
             width = pos[i][1][0] - pos[i][0][0]
@@ -305,9 +362,20 @@ def match_fadongjihaoma(pos, value, save_path):
                     result = pattern.match(value[i])
                     if result:
                         return result.group()
+        
         else:
-            EN_number = EN(pos, value)
-            return EN_number
+            VIN=match_cheliangshibiedaihao(pos, value,save_path)
+            for i in range(len(pos)):
+                if str(VIN) in value[i] and str(VIN) is not None:
+                    shr_pos = pos[i]
+                    height = pos[i][3][1] - pos[i][0][1]
+                    width = pos[i][1][0] - pos[i][0][0]
+                    for i in range(len(pos)):
+                        if shr_pos[0][0] < pos[i][1][0] < shr_pos[1][
+                                0] and shr_pos[2][1]-height/2 < pos[i][
+                                    1][1] < shr_pos[2][1]+height+height/2 and value[i][0].isdigit():
+                            return value[i]
+
 
 
 def match_zhucedate(pos, value, save_path):
@@ -584,15 +652,21 @@ def match_chicun(pos, value, save_path):
             else:
                 return value[i].split('m')[0] + 'mm'
     else:
-        return '0'
+        return 'None'
 
 
 def match_valid_date(pos, value, save_path):
     for i in range(len(value)):
         if '有效期' in value[i]:
             if '至' in value[i]:
-                if '月' in value[i]:
-                    return value[i].split('至')[1].split('月')[0] + '月'
+                if '月' in value[i] and '年' in value[i]:
+                    if int(value[i].split('年')[-1][0])>1:
+                        print(value[i])
+                        s=value[i].split('至')[-1].replace(value[i].split('年')[-1][0],'0')
+                        s=s.split('月')[0]+'月'
+                        return s
+                    else:
+                        return value[i].split('至')[1].split('月')[0] + '月'
                 else:
                     return value[i].split('至')[1]
             elif '室' in value[i] and value[i].split('室')[-1][0].isdigit():
@@ -601,4 +675,4 @@ def match_valid_date(pos, value, save_path):
                 else:
                     return value[i].split('室')[-1]
     else:
-        return '0'
+        return 'None'

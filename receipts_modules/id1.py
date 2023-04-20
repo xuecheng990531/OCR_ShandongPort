@@ -249,7 +249,12 @@ def match_yingjicuoshi(pos, value, save_path):
                             0] < shr_pos[1][0] + width and shr_pos[1][1] - int(
                                 height / 2) < pos[i][0][1] < shr_pos[3][
                                     1] + height / 2 and '-' in value[i]:
-                        return value[i]
+                        
+                        if re.search(r'[A-Z],[A-Z]', value[i]) or re.search(r'[A-Z]，[A-Z]', value[i]):
+                            return value[i]
+                        else:
+                            result_str = re.sub(r'([A-Z])(?=[A-Z])', r'\1,', value[i])
+                            return result_str
 
 
 def match_baojianzhonglei(pos, value, save_path):
