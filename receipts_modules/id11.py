@@ -28,16 +28,6 @@ def match_name(pos, value, save_path):
                             return value[i].split('性别')[0]
                         else:
                             return value[i]
-        # else:
-        #     print('aklsdowowowo')
-        #     user_name_lis = []
-        #     for i in range(len(pos)):
-        #         _result = lac.run(value[i])
-        #         for _index, _label in enumerate(_result[1]):
-        #             if _label == "PER":
-        #                 user_name_lis.append(_result[0][_index])
-        #     if len(user_name_lis) != 0:
-        #         return user_name_lis[0]
 
 
 def match_shenfenzhenghao(pos, value, save_path):
@@ -85,14 +75,18 @@ def match_congyezigeleibie(pos, value, save_path):
                     type.append(value[i])
             all = ''.join(type)
             if '道路' in all or '驾驶' in all:
-                if '经营性' in all:
+                if '经营性' in all or '营' in all:
                     return '经营性道路货物运输驾驶员'
+                elif '危险' in all:
+                    return '道路危险货物运输驾驶员'
                 elif '旅客' in all or '普货' in all:
                     return '道路旅客普货运输驾驶员'
                 else:
                     return '道路货物运输驾驶员'
             elif '经营性' in all:
                 return '经营性道路货物运输驾驶员'
+            elif '危险' in all:
+                return '道路危险货物运输驾驶员'
             elif 'J-货运' in all:
                 return 'J-货运'
 
@@ -101,6 +95,8 @@ def match_congyezigeleibie(pos, value, save_path):
                 return '经营性道路货物运输驾驶员'
             elif '旅客' in value[i] or '普货' in value[i]:
                 return '道路旅客普货运输驾驶员'
+            elif '危险' in value[i]:
+                return '道路危险货物运输驾驶员'
             else:
                 return '道路货物运输驾驶员'
 
@@ -115,7 +111,7 @@ def match_congyezigeleibie(pos, value, save_path):
             for i in range(len(pos)):
                 if shr_pos[0][0] - width / 2 < pos[i][0][0] < shr_pos[1][
                         0] + width * 6 and shr_pos[0][1] - height / 2 < pos[i][
-                            0][1] < shr_pos[2][1] + height * 2:
+                            0][1] < shr_pos[2][1] + height * 1.5:
                     result.append(value[i])
             if len(result) != 0:
                 result = ''.join(result)
@@ -130,6 +126,8 @@ def match_congyezigeleibie(pos, value, save_path):
             return '道路货物运输驾驶员'
         elif '旅客' in value[i] or '普货' in value[i]:
             return '道路旅客普货运输驾驶员'
+        elif '危险' in value[i]:
+                return '道路危险货物运输驾驶员'
     else:
         return '经营性道路货物运输驾驶员'
 
@@ -167,8 +165,7 @@ def match_validate_date(pos, value, save_path):
                 if '考核' in value[i]:
                     value[i] = value[i].split('考核')[0]
                 if '年' in value[i]:
-                    return value[i].split(
-                        '年')[0][-4:-1] + '年' + value[i].split('年')[-1]
+                    return value[i].split('年')[0][-4:] + '年' + value[i].split('年')[-1]
                 elif '限' in value[i]:
                     return value[i].split('限')[-1]
                 else:
@@ -185,8 +182,7 @@ def match_validate_date(pos, value, save_path):
                         if '考核' in value[i]:
                             value[i] = value[i].split('考核')[0]
                         if '年' in value[i]:
-                            return value[i].split(
-                                '年')[0][-4:-1] + '年' + value[i].split('年')[-1]
+                            return value[i].split('年')[0][-4:] + '年' + value[i].split('年')[-1]
                         else:
                             return value[i]
 

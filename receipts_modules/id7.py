@@ -593,8 +593,8 @@ def match_feimu(pos, value, save_path):
             width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
                 if shr_pos[0][0] - width * 2 < pos[i][0][0] < shr_pos[0][
-                        0] and shr_pos[3][1] < pos[i][0][
-                            1] < shr_pos[3][1] + int(height * 5):
+                        0] and shr_pos[3][1]-height/2 < pos[i][0][
+                            1] < shr_pos[3][1] + int(height * 6):
                     if len(value[i]) != 0:
                         feimu.append(value[i])
                     origin_feimu.append(value[i])
@@ -661,7 +661,6 @@ def match_shuie(pos, value, save_path, jine_list):
 
 
 def match_feimu_detail(feimu, jine, shuie):
-    print('费目是', feimu)
     print('金额是', jine)
     print('税额是', shuie)
 
@@ -670,7 +669,7 @@ def match_feimu_detail(feimu, jine, shuie):
     for each in feimu:
         if each not in feimu_new:
             feimu_new.append(each)
-    print('新费目是', feimu_new)
+    print('费目是', feimu_new)
 
     feimu_detail = []
     if len(feimu_new) == len(jine) == len(shuie):
@@ -699,7 +698,7 @@ def match_jine(pos, value, save_path):
                     height = pos[i][3][1] - pos[i][0][1]
                     width = pos[i][1][0] - pos[i][0][0]
                     for i in range(len(pos)):
-                        if shr_pos[0][0] - width < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] + height * 5 < \
+                        if shr_pos[0][0] - width < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] + height * 5.2 < \
                                 pos[i][0][
                                     1] < shr_pos[3][1] + int(height * 12):
                             if len(value[i]) != 0 and value[i][0].isdigit():

@@ -73,11 +73,11 @@ async def ocr(ID: int,Type: Optional[str] = None,File: UploadFile = File(...)):
 
         # 检查上传的文件扩展名
         if extension in imgType_list:
-            if ID == 7 or ID == 3 or ID == 11:
-                check(img_path=save_path)
-            elif ID == 12 or ID == 11 or ID == 14:
+            # if ID == 7 or ID == 3 or ID == 11:
+            #     check(img_path=save_path)
+            if ID == 12 or ID == 11 or ID == 14:
                 process_ID12(save_path, ID)
-            elif ID == 5 or ID==4:
+            elif ID == 5 or ID==4 or ID==6:
                 process_ID45(save_path)
             pos, value = detect_img(save_path)
             return detect_value(pos, ID, value, Type, save_path, Envir='dev')
@@ -85,8 +85,8 @@ async def ocr(ID: int,Type: Optional[str] = None,File: UploadFile = File(...)):
         else:
             count, img_list = pdf_img(save_path, name)
 
-            if ID == 7 or ID == 3 or ID == 11:
-                check(img_path=img_list[0])
+            # if ID == 7 or ID == 3 or ID == 11:
+            #     check(img_path=img_list[0])
 
             pos, value = detect_pdf(img_list, count)
 
@@ -95,5 +95,5 @@ async def ocr(ID: int,Type: Optional[str] = None,File: UploadFile = File(...)):
 
 if __name__ == '__main__':
     import paddle
-    paddle.device.set_device("gpu:0")
+    paddle.device.set_device("gpu:2")
     uvicorn.run(app='app:app', host='0.0.0.0', port=8008, reload=True)

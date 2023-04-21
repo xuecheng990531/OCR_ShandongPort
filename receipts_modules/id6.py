@@ -18,11 +18,13 @@ provinces = [
 def match_name(pos, value, save_path):
     for i in range(len(pos)):
         if '姓名' in value[i]:
-            if len(value[i].split('名')[-1]) > 2:
+            if len(value[i].split('名')[-1]) > 1:
                 if '档案' in value[i]:
                     return value[i].split('名')[-1].split('档')[0]
+                    break
                 else:
                     return value[i].split('名')[-1]
+                    break
             else:
                 shr_pos = pos[i]
                 height = pos[i][3][1] - pos[i][0][1]
@@ -51,17 +53,35 @@ def match_name(pos, value, save_path):
                                     1] and '姓名' not in value[
                                         i] and '档案编号' not in value[i]:
                         return value[i]
-
-        else:
-            user_name_lis = []
+        elif '姓' in value[i] and len(value[i].split('姓')[0])==0:
+            if len(value[i].split('姓')[-1]) > 1:
+                if '档案' in value[i]:
+                    return value[i].split('姓')[-1].split('档')[0]
+                else:
+                    return value[i].split('姓')[-1]
+            else:
+                shr_pos = pos[i]
+                height = pos[i][3][1] - pos[i][0][1]
+                width = pos[i][1][0] - pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[0][0] - width / 2 < pos[i][0][0] < shr_pos[1][
+                            0] + int(2 * width) and shr_pos[0][1] - int(
+                                height / 2) < pos[i][0][1] < shr_pos[3][
+                                    1] and '姓名' not in value[
+                                        i] and '档案编号' not in value[i]:
+                        return value[i]
+    for i in range(len(pos)):
+        if '中华人民共和国' in value[i] and '页' not in value[i]:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
-                if re.findall('[\u4e00-\u9fa5]', value[i]):
-                    _result = lac.run(value[i])
-                    for _index, _label in enumerate(_result[1]):
-                        if _label == "PER":
-                            user_name_lis.append(_result[0][_index])
-            if len(user_name_lis) != 0:
-                return user_name_lis[0]
+                if shr_pos[0][0] < pos[i][1][0] < shr_pos[1][
+                        0] and shr_pos[3][1]+height*2 < pos[i][0][1] < shr_pos[3][
+                                1]+height*2.5:
+                                result = re.sub(r'[准住佳址牌Addressi]*', '', value[i])
+                                print(result)
+                                return result
 
 
 def match_sex(pos, value, save_path):
@@ -124,84 +144,24 @@ def match_jiashizhenghao(pos, value, save_path):
                 else:
                     return value[i]
 
-
 def match_address(pos, value, save_path):
-    address = []
-    address2 = []
+    address=[]
     for i in range(len(pos)):
-        if '住址' in value[i] or '址' in value[i] or '佳址' in value[i]:
-            if len(value[i].split('址')[-1]) > 3:
-                return value[i].split('址')[-1]
-            else:
-                print('here')
+        if '公司' not in value[i]:
+            if '省' in value[i] or '县' in value[i] or '市' in value[i] or '区' in value[i] and '局' not in value[i]:
+                address.append(value[i])
                 shr_pos = pos[i]
                 height = pos[i][3][1] - pos[i][0][1]
                 width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0] - int(
-                            width / 2) < pos[i][0][0] < shr_pos[1][0] + int(
-                                2 * width) and shr_pos[0][1] - int(
-                                    height / 2) < pos[i][0][1] < shr_pos[0][
-                                        1] + height * 2 and '址' not in value[
-                                            i] and '出生' not in value[i]:
+                    if shr_pos[0][0]-width/4 < pos[i][0][0] < shr_pos[1][
+                            0] and shr_pos[2][1]-height/2 < pos[i][0][1] < shr_pos[
+                                2][1] + height and '类型' not in value[i] and '牌' not in value[i] and '使用' not in value[i]:
                         address.append(value[i])
-                if len(address) > 0:
-                    result = ''.join(address)
-                    print(result)
-                    return result
-
-        elif '性别' in value[i]:
-            shr_pos = pos[i]
-            height = pos[i][3][1] - pos[i][0][1]
-            width = pos[i][1][0] - pos[i][0][0]
-            for i in range(len(pos)):
-                if shr_pos[0][0] - width * 9 < pos[i][0][0] < shr_pos[0][
-                        0] and shr_pos[3][1] - height / 2 < pos[i][0][
-                            1] < shr_pos[3][
-                                1] + height * 2 and '出生' not in value[i]:
-                    address2.append(value[i])
-            if len(address2) > 0:
-                result = ''.join(address2)
-                results = autils.split_address(result)
-                if '住址' in results:
-                    a = results.replace('住址', '')
-                    for i in range(len(provinces)):
-                        if provinces[i] in a:
-                            return str(provinces[i]) + a.split(
-                                str(provinces[i]))[-1]
-                else:
-                    for i in range(len(provinces)):
-                        if provinces[i] in results:
-                            return str(provinces[i]) + a.split(
-                                str(provinces[i]))[-1]
-
-        elif '中华人民共和国机动车驾驶证' in value[i] and '副页' not in value[i]:
-            print('aslkdjlkasjdalskjd')
-            shr_pos = pos[i]
-            height = pos[i][3][1] - pos[i][0][1]
-            width = pos[i][1][0] - pos[i][0][0]
-            for i in range(len(pos)):
-                if shr_pos[0][0] - width < pos[i][0][0] < shr_pos[0][
-                        0] + width / 4 and shr_pos[3][1] + height * 2.5 < pos[i][
-                            0][1] < shr_pos[3][
-                                1] + height * 4.5 and '出生' not in value[i]:
-                    address2.append(value[i])
-            if len(address2) > 0:
-                result = ''.join(address2)
-                results = autils.split_address(result)
-                if '住址' in results:
-                    a = results.replace('住址', '')
-                    for i in range(len(provinces)):
-                        if provinces[i] in a:
-                            return str(provinces[i]) + a.split(
-                                str(provinces[i]))[-1]
-
-                else:
-                    a = results.replace('住址', '')
-                    for i in range(len(provinces)):
-                        if provinces[i] in results:
-                            return str(provinces[i]) + a.split(
-                                str(provinces[i]))[-1]
+                
+                result=''.join(address)
+                result = re.sub(r'[准住佳址牌Addressi]*', '', result)
+                return result
 
 
 def match_chexing(pos, value, save_path):
@@ -225,16 +185,40 @@ def match_chexing(pos, value, save_path):
 
 def match_valid_date(pos, value, save_path):
     for i in range(len(pos)):
-        if '至' in value[i]:
+
+        if '年' in value[i] and len(value[i].split('年')[-1])==0 and value[i].split('年')[0][-1].isdigit() and len(value[i])==3:
+            return value[i]
+
+        elif '至' in value[i]:
             if '长期' not in value[i]:
                 if '实习' not in value[i]:
                     if value[i].split('至')[-1][1:2].isdigit():
-                        return value[i].split('至')[-1]
+                        # return value[i].split('至')[-1]
+                        if '限' in value[i]:
+                            result= value[i].split('限')[-1]
+                        else:
+                            result= value[i]
+                        return result
             else:
                 return '长期'
-        elif '有效' in value[i] and len(value[i]) > 5:
-            if '限' in value[i]:
-                return value[i].split('限')[-1]
-            elif '年' in value[i] and value[i].split('年')[0][-1].isdigit():
-                all = re.findall(r'\d+', value[i])
-                return str(all[-1]) + '年'
+
+        elif '有效期' in value[i]:
+            if len(value[i].split('有效期')[-1])>2:
+                numbers = re.findall(r'\d+', value[i])
+                if numbers:
+                    return str(numbers[0])+'年'
+                else:
+                    return value[i]
+            else:
+                shr_pos = pos[i]
+                height = pos[i][3][1] - pos[i][0][1]
+                width = pos[i][1][0] - pos[i][0][0]
+                for i in range(len(pos)):
+                    if shr_pos[1][0]-width/2 < pos[i][0][0] < shr_pos[1][
+                            0]+width*2 and shr_pos[0][1]-height/2 < pos[i][0][1] < shr_pos[
+                                3][1]:
+                                numbers = re.findall(r'\d+', value[i])
+                                if numbers:
+                                    return str(numbers[0])+'年'
+                                else:
+                                    return value[i]

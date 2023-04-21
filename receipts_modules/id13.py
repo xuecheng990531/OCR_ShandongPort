@@ -260,28 +260,15 @@ def match_jianshu(pos, value, save_path):
 
 
 def match_chicun(pos, value, save_path):
-    # xiangxings=match_xiangxing(pos, value, save_path)
-    # if xiangxings:
-    #     for i in range(len(pos)):
-    #         if str(xiangxings) in value[i]:
-    #             if value[i+1][0].isdigit():
-    #                 return value[i+1]
-    #         else:
-    #             if '(ft.in)' in value[i] or 'Collapsible' in value[i]:
-    #                 shr_pos=pos[i]
-    #                 height=pos[i][3][1]-pos[i][0][1]
-    #                 width=pos[i][1][0]-pos[i][0][0]
-    #                 for i in range(len(pos)):
-    #                     if shr_pos[0][0]-width/4<pos[i][0][0]<shr_pos[0][0]+width/2 and shr_pos[2][1]-height<pos[i][0][1]<shr_pos[2][1]+height:
-    #                         #print(value[i])
-    #                         num = re.findall("\d+\.?\d*", value[i])
-    #                         return num[0]
-    # else:
     xx=match_xiangxing(pos,value,save_path)
     if xx is not None:
         for i in range(len(pos)):
             if xx in value[i]:
-                return value[i].split(xx)[-1]
+                if len(value[i].split(xx)[-1])!=0:
+                    return value[i].split(xx)[-1]
+                else:
+                    if value[i+1][0].isdigit():
+                        return value[i+1]
     else:
         for i in range(len(pos)):
             str=''
