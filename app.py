@@ -79,6 +79,8 @@ async def ocr(ID: int,Type: Optional[str] = None,File: UploadFile = File(...)):
                 process_ID12(save_path, ID)
             elif ID == 5 or ID==4 or ID==6:
                 process_ID45(save_path)
+            elif ID==15:
+                process_ID15(save_path)
             pos, value = detect_img(save_path)
             return detect_value(pos, ID, value, Type, save_path, Envir='dev')
 

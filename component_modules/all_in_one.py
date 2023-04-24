@@ -497,8 +497,9 @@ def match_guobangdan(pos, value, save_path):
 
 def match_jizhuangxiang(pos, value, save_path):
     xianghao = id15.match_xianghao(pos, value, save_path)
-    max = id15.match_MAXGROSS(pos, value, save_path)
-    tare = id15.match_TARE(pos, value, save_path)
-    net = id15.match_NET(pos, value, save_path)
+    # max = id15.match_MAXGROSS(pos, value, save_path)
+    # tare = id15.match_TARE(pos, value, save_path)
+    # net = id15.match_NET(pos, value, save_path)
 
-    return {"箱号": xianghao, "MAX GROSS": max, "TARE": tare, "NET": net}
+    # return {"箱号": xianghao, "MAX GROSS": max, "TARE": tare, "NET": net}
+    return {"箱号": xianghao}

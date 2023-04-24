@@ -11,7 +11,7 @@ import paddleocr
 import re
 
 imgType_list = {'.jpg', '.bmp', '.png', '.jpeg', '.jfif', '.webp'}
-ocr = PaddleOCR(use_angle_cls=False,
+ocr = PaddleOCR(cls=True,
                 lang="ch",
                 workers=4,
                 use_gpu=True,
@@ -47,7 +47,7 @@ def del_upload_file():
 def detect_value(pos, ID, value, Type, save_path, Envir):
     result = detect_paper(ID, pos, value, Type, save_path)
     removed_result = remove(result)
-    # del_upload_file()
+    del_upload_file()
 
     if Envir == 'main':
         return {"检测结果": removed_result}
@@ -126,6 +126,16 @@ def process_ID45(img_path):
         kernel = np.ones((2, 2), np.uint8)
         img_process = cv2.erode(zengqiang, kernel)
     cv2.imwrite(img_path,img_process)
+
+
+def process_ID15(img_path):
+    img = cv2.imread(img_path)
+    width, height = img.shape[:2]
+    img2 = cv2.resize(img, (3 * height, 3 * width),interpolation=cv2.INTER_LINEAR)
+    gray_img = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+    denoised_img = cv2.morphologyEx(gray_img, cv2.MORPH_CLOSE, kernel)
+    cv2.imwrite(img_path,denoised_img)
 
 #-------------------------------------------------对ID12的图像进行处理-----------------------------------
 
@@ -218,29 +228,31 @@ def pdf_img(pdfPath, img_name):
 
 #-------------------------------------------------detect :-------------------------------------
 def remove(dict):
-    for i in dict:
-        if dict[i] is None:
-            dict[i] = "None"
-        else:
-            if '：' in dict[i]:
-                dict[i]=dict[i].replace('：','')
-            if '*' in dict[i]:
-                if '**/**' in dict[i]:
-                    dict[i] = dict[i].replace('**/**', '')
-                else:
-                    dict[i] = dict[i].replace('*', '')
-            elif ':' in dict[i]:
-                dict[i] = dict[i].replace(':', '')
-            # elif '，' in dict[i]:
-            #     dict[i] = dict[i].replace('，', '')
-            elif '\\"' in dict[i]:
-                dict[i] = dict[i].replace('\\"', '  ')
-            elif '冰冰冰' in dict[i]:
-                dict[i] = dict[i].replace('冰冰冰', 'None')
-            elif '备注' in dict[i]:
-                dict[i] = dict[i].split('备注')[-1]
-    return dict
-
+    if type(dict)==dict:
+        for i in dict:
+            if dict[i] is None:
+                dict[i] = "None"
+            else:
+                if '：' in dict[i]:
+                    dict[i]=dict[i].replace('：','')
+                if '*' in dict[i]:
+                    if '**/**' in dict[i]:
+                        dict[i] = dict[i].replace('**/**', '')
+                    else:
+                        dict[i] = dict[i].replace('*', '')
+                elif ':' in dict[i]:
+                    dict[i] = dict[i].replace(':', '')
+                # elif '，' in dict[i]:
+                #     dict[i] = dict[i].replace('，', '')
+                elif '\\"' in dict[i]:
+                    dict[i] = dict[i].replace('\\"', '  ')
+                elif '冰冰冰' in dict[i]:
+                    dict[i] = dict[i].replace('冰冰冰', 'None')
+                elif '备注' in dict[i]:
+                    dict[i] = dict[i].split('备注')[-1]
+        return dict
+    else:
+        return dict
 
 #-------------------------------------------------detect :-------------------------------------
 
@@ -295,3 +307,5 @@ def detect_paper(ID, pos, value, Type, save_path):
     elif ID == 16:
         result = match_jianyi_shuban(pos, value, save_path)
         return result
+    else:
+        return value
