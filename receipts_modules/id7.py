@@ -46,6 +46,8 @@ def chezhong_chehao(pos, value, save_path):
                 if shr_pos[1][0] < pos[i][0][0] < shr_pos[1][0] + width * 7 and shr_pos[2][1] < pos[i][0][1] < \
                         shr_pos[2][1] + height:
                     return value[i]
+    else:
+        return 'None'
 
 
 def match_tiaoxingmabianhao(pos, value, save_path):

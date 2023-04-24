@@ -97,5 +97,5 @@ async def ocr(ID: int,Type: Optional[str] = None,File: UploadFile = File(...)):
 
 if __name__ == '__main__':
     import paddle
-    paddle.device.set_device("gpu:2")
+    paddle.device.set_device("gpu:0")
     uvicorn.run(app='app:app', host='0.0.0.0', port=8008, reload=True)
