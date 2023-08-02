@@ -17,7 +17,7 @@ ocr = PaddleOCR(cls=True,
                 use_gpu=True,
                 precision='fp16',
                 det_limit_side_len=1216,
-                use_multiprocess=False)
+                use_multiprocess=True)
 
 
 #-------------------------------------------------图片上传和删除-----------------------------------
