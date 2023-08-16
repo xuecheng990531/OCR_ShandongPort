@@ -8,7 +8,7 @@
 </ol>
 </li>
 <li>安装其他依赖 <code>pip install -r requirements.txt (里面有些可能是错的，安装不上的百度一搜就行)</code></li>
-<li>启动程序 <code>python app.py</code>,在app.py的最后，可以选择端口号，默认8008。</li>
+<li>启动程序 <code>python app.py</code>（注意：在app.py的最后，可以选择端口号，默认8008）</li>
 <li>打开网页，输入<code>http://localhost:8008/docs</code>即可进行交互式API测试。</li>
 
 ## 组织架构 :wrench:
