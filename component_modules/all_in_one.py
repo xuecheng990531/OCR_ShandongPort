@@ -1,3 +1,6 @@
+# 该部分把每个单据检测的结果使用list进行返回
+
+
 from receipts_modules import id1, id10, id11, id12, id13, id14, id15, id2, id3, id4, id5, id6, id7, id8, id9, id2_vertical
 
 

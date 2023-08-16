@@ -1,6 +1,5 @@
 import re
 import sys
-import cv2
 
 sys.path.append('../')
 from component_modules import autils

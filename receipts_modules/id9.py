@@ -1,6 +1,5 @@
 from queue import Empty
 import re
-import cv2
 import sys
 
 sys.path.append('../')
