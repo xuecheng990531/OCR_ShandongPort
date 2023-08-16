@@ -15,7 +15,13 @@
 <li>Model:用来存放每一次训练的模型</li>
 <li>component_modules
 <ol>
-<li>all_in_one.py </li>
-<li>PaddleOCR 安装: https://github.com/PaddlePaddle/PaddleOCR</li>
+<li><code>all_in_one.py</code> 该文件是所有单据返回结果的地方，使用list对每个单据的结果进行返回。</li>
+<li><code>autils.py</code> 该文件包含各种工具，比如图像增强，裁剪，PDF保存为图片等。</li>
+<li><code>paper_id_2_nam.py</code> 单据名称对应的ID号。</li>
 </ol>
 </li>
+<li>receipts_modules 包含各个单据对应的的检测方法。</li>
+<li>save_files 通过API上传的图片会保存在这里。</li>
+
+
+
