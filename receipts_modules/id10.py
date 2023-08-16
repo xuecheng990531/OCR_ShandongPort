@@ -9,14 +9,6 @@ lac = LAC(mode='lac')
 
 jiagedanwei = ["仟", "佰", "拾", "万", "仟", "佰", "拾", "人民币", "壹"]
 
-
-def ReRec2(path, ymin, ymax, xmin, xmax, value):
-    image = cv2.imread(path)
-    cropImg = image[int(ymin):int(ymax), int(xmin):int(xmax)]
-    pos, value = autils.detect_img(cropImg)
-    return pos, value
-
-
 def match_mingcheng(pos, value, save_path):
     for i in range(len(pos)):
         if '称' in value[i]:

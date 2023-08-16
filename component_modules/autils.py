@@ -177,16 +177,12 @@ def detect_img(img_path):
     result = ocr.ocr(img_path, cls=False)
     pos = []
     value = []
-    version = paddleocr.VERSION
-    if '2.6' in version:
-        result = result[0]
-        for i in range(len(result)):
-            pos.append(result[i][0])
-            value.append(result[i][1][0])
-    else:
-        for i in range(len(result)):
-            pos.append(result[i][0])
-            value.append(result[i][1][0])
+    result = result[0]
+    for i in range(len(result)):
+        pos.append(result[i][0])
+        value.append(result[i][1][0])
+    # print('all pos',pos)
+    # print('all value',value)
     return pos, value
 
 
@@ -256,6 +252,25 @@ def remove(dict):
 
 #-------------------------------------------------detect :-------------------------------------
 
+#-------------------------------------------------crop image-------------------------------------
+def ReRec2(path, ymin, ymax, xmin, xmax):
+    # 判断要裁切的坐标是不是大于0
+    if ymin<0:
+        ymin=0
+    elif ymax<0:
+        ymax=0
+    elif xmin<0:
+        xmin=0
+    elif xmax<0:
+        xmax=0
+    
+    # print(ymin,ymax,xmin,xmax)
+    image = cv2.imread(path)
+    cropImg = image[int(ymin):int(ymax), int(xmin):int(xmax)]
+    cv2.imwrite('cropimg.png', cropImg)
+    pos, value = detect_img(cropImg)
+    return pos, value
+#-------------------------------------------------crop image-------------------------------------
 
 #-------------------------------------------------which paper-------------------------------------
 def detect_paper(ID, pos, value, Type, save_path):

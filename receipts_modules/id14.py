@@ -1,7 +1,4 @@
 import re
-from tkinter import E
-from cv2 import RNG_NORMAL
-from paddleocr import PaddleOCR
 
 province = [
     '京', '沪', '津', '渝', '鲁', '冀', '晋', '蒙', '辽', '吉', '黑', '苏', '浙', '皖', '闽',

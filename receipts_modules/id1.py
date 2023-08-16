@@ -7,15 +7,6 @@ from component_modules import autils
 
 number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 
-
-def ReRec2(path, ymin, ymax, xmin, xmax, value):
-    image = cv2.imread(path)
-    cropImg = image[int(ymin):int(ymax), int(xmin):int(xmax)]
-    cv2.imwrite('save_files/crop/' + str(value) + '.png', cropImg)
-    pos, value = autils.detect_img('save_files/crop/' + str(value) + '.png')
-    return pos, value
-
-
 def match_fahuoren(pos, value, save_path):
     for i in range(len(pos)):
         if '发货人' in value[i]:

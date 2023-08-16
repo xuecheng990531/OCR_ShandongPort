@@ -6,15 +6,6 @@ import sys
 sys.path.append('../')
 from component_modules import autils
 
-
-def ReRec2(path, ymin, ymax, xmin, xmax, value):
-    image = cv2.imread(path)
-    cropImg = image[int(ymin):int(ymax), int(xmin):int(xmax)]
-    cv2.imwrite('save_files/crop/' + str(value) + '.png', cropImg)
-    pos, value = autils.detect_img('save_files/crop/' + str(value) + '.png')
-    return pos, value
-
-
 def match_yunshuzhenghao(pos, value, save_path):
     for i in range(len(pos)):
         if len(value[i]) > 6:
@@ -31,7 +22,7 @@ def match_yunshuzhenghao(pos, value, save_path):
             xmax = pos[i][2][0]
             img_height = pos[i][3][1] - pos[i][0][1]
             img_width = pos[i][1][0] - pos[i][0][0]
-            pos, result = ReRec2(save_path,
+            pos, result = autils.ReRec2(save_path,
                                  ymin - img_height,
                                  ymax + img_height,
                                  xmin,
@@ -57,7 +48,7 @@ def match_youxiaoqi(pos, value, save_path):
             height = img_height * 0.5  #默认不加高度
             width = img_width * 7  #默认不加宽度
             # pos,result=ReRec(save_path,ymin,ymax,xmin,xmax,height,width,value='youxiaoqi')
-            pos, result = ReRec2(save_path,
+            pos, result = autils.ReRec2(save_path,
                                  ymin - img_height,
                                  ymax + height,
                                  xmin,
@@ -79,7 +70,7 @@ def match_youxiaoqi(pos, value, save_path):
             height = img_height * 0.5  #默认不加高度
             width = img_width * 5  #默认不加宽度
             # pos,result=ReRec(save_path,ymin,ymax,xmin,xmax,height,width,value='youxiaoqi')
-            pos, result = ReRec2(save_path,
+            pos, result = autils.ReRec2(save_path,
                                  ymin - img_height,
                                  ymax + height,
                                  xmin,
@@ -121,7 +112,7 @@ def match_yehumingcheng(pos, value, save_path):
                 ymax = pos[i][2][1]
                 xmin = pos[i][0][0]
                 xmax = pos[i][2][0]
-                pos, result = ReRec2(save_path,
+                pos, result = autils.ReRec2(save_path,
                                      ymin,
                                      ymax,
                                      xmin,
@@ -164,7 +155,7 @@ def match_address(pos, value, save_path):
                 img_width = pos[i][1][0] - pos[i][0][0]
                 height = img_height * 2  #默认不加高度
                 width = img_width * 20  #默认不加宽度
-                pos, result = ReRec2(save_path,
+                pos, result = autils.ReRec2(save_path,
                                      ymin - height / 3,
                                      ymax + height + img_height * 2,
                                      xmin,
@@ -199,7 +190,7 @@ def match_address(pos, value, save_path):
                 img_width = pos[i][1][0] - pos[i][0][0]
                 height = img_height * 2  #默认不加高度
                 width = img_width * 20  #默认不加宽度
-                pos, result = ReRec2(save_path,
+                pos, result = autils.ReRec2(save_path,
                                      ymin - height,
                                      ymax + height + img_height * 3,
                                      xmin,
@@ -256,7 +247,7 @@ def match_jingyingfanwei(pos, value, save_path):
             xmax = pos[i][2][0]
             img_height = pos[i][3][1] - pos[i][0][1]
             img_width = pos[i][1][0] - pos[i][0][0]
-            pos, result = ReRec2(save_path,
+            pos, result = autils.ReRec2(save_path,
                                  ymin - img_height,
                                  ymax + img_height,
                                  xmin,

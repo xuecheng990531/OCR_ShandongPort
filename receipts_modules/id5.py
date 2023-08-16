@@ -4,16 +4,7 @@ from LAC import LAC
 import cv2
 import sys
 
-sys.path.append('../')
 from component_modules import autils
-
-
-def ReRec2(path, ymin, ymax, xmin, xmax):
-    image = cv2.imread(path)
-    cropImg = image[int(ymin):int(ymax), int(xmin):int(xmax)]
-    cv2.imwrite('new.png', cropImg)
-    pos, value = autils.detect_img(cropImg)
-    return pos, value
 
 
 lac = LAC(mode='lac')
@@ -193,7 +184,7 @@ def match_shiyongxingzhi(pos, value, save_path):
                     xmax = pos[i][2][0]
                     img_height = pos[i][3][1] - pos[i][0][1]
                     img_width = pos[i][1][0] - pos[i][0][0]
-                    pos, result = ReRec2(save_path,
+                    pos, result = autils.ReRec2(save_path,
                                         ymin - img_height,
                                         ymax + img_height * 2,
                                         xmin - img_width * 2,
