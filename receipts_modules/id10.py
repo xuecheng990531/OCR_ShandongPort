@@ -1,7 +1,3 @@
-import sys
-
-sys.path.append('../')
-from component_modules import autils
 from LAC import LAC
 
 lac = LAC(mode='lac')

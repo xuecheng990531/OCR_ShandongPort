@@ -1,8 +1,19 @@
 import re
 from LAC import LAC
+import cv2
 import sys
+
 sys.path.append('../')
 from component_modules import autils
+
+
+# def ReRec2(path, ymin, ymax, xmin, xmax):
+#     image = cv2.imread(path)
+#     cropImg = image[int(ymin):int(ymax), int(xmin):int(xmax)]
+#     cv2.imwrite('new.png', cropImg)
+#     pos, value = autils.detect_img(cropImg)
+#     return pos, value
+
 
 lac = LAC(mode="lac")
 shenfenzheng = r'^([1-9]\d{5}[12]\d{3}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])\d{3}[0-9xX])$'
@@ -73,11 +84,11 @@ def match_address(pos, value, save_path):
             img_width = pos[i][1][0] - pos[i][0][0]
             pos, result = autils.ReRec2(save_path, ymin - img_height,
                                  ymax + img_height * 3, xmin,
-                                 xmax + img_width * 7)
+                                 xmax + img_width * 20)
             result = ''.join(result)
 
             if '住址' in result or '住' in result or '址' or '佳' in result:
-                return re.sub(r'[住址佳]*', '', str(result))
+                return re.sub(r'[住址佳]*', '', result)
             else:
                 return result
         elif '公民身份号码' in value[i] or '公民身份' in value[i]:
@@ -93,9 +104,9 @@ def match_address(pos, value, save_path):
             if len(address) > 0:
                 a = ''.join(address)
                 if '住址' in a or '住' in a or '址' or '佳' in a:
-                    return re.sub(r'[住址佳]*', '', str(a))
+                    return re.sub(r'[住址佳]*', '', a)
                 else:
-                    return a
+                    return 'a'
             else:
                 return '无'
     else:
@@ -127,7 +138,7 @@ def match_name_single(pos, value, save_path):
                                  ymax + img_height, xmin,
                                  xmax + img_width * 10)
             result = ''.join(result)
-            return re.sub(r'[姓名]*', '', str(result))
+            return re.sub(r'[姓名]*', '', result)
 
 
 def match_name(pos, value, save_path):
@@ -225,7 +236,7 @@ def match_idnumber(pos, value, save_path):
                     date = "%s年%s月%s日" % (year, month, date)
                 return date, id
 
-        elif re.match(shenfenzheng, str(value[i])):
+        elif re.match(shenfenzheng, value[i]):
             id = value[i]
             if len(id) < 18:
                 date = match_born(pos, value, save_path)

@@ -1,7 +1,9 @@
 import re
 import regex as reg
 from LAC import LAC
+import cv2
 import sys
+
 sys.path.append('../')
 from component_modules import autils
 

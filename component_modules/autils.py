@@ -17,7 +17,7 @@ ocr = PaddleOCR(cls=True,
                 use_gpu=True,
                 precision='fp16',
                 det_limit_side_len=1216,
-                use_multiprocess=True)
+                use_multiprocess=False)
 
 
 #-------------------------------------------------图片上传和删除-----------------------------------
@@ -52,7 +52,8 @@ def detect_value(pos, ID, value, Type, save_path, Envir):
     if Envir == 'main':
         return {"检测结果": removed_result}
     else:
-        return {"检测结果": removed_result, "算法检测的所有结果": value}
+        return {"检测结果": removed_result}
+        # return {"检测结果": removed_result, "算法检测的所有结果": value}
 
 
 #-------------------------------------------------倾斜检测并返回结果-----------------------------------
@@ -148,7 +149,8 @@ def separate_digits_and_chinese_chars(string):
     # 使用re.findall()函数找到所有匹配项，并存储在相应的列表中
     digits_list = re.findall(digit_pattern, string)
     if len(digits_list) == 3:
-        return digits_list[0] + 'x' + digits_list[1] + 'x' + digits_list[2] + 'mm'
+        return digits_list[0] + 'x' + digits_list[1] + 'x' + digits_list[
+            2] + 'mm'
     else:
         return digits_list
 
@@ -176,12 +178,16 @@ def detect_img(img_path):
     result = ocr.ocr(img_path, cls=False)
     pos = []
     value = []
-    result = result[0]
-    for i in range(len(result)):
-        pos.append(result[i][0])
-        value.append(result[i][1][0])
-    # print('all pos',pos)
-    # print('all value',value)
+    version = paddleocr.VERSION
+    if '2.6' in version:
+        result = result[0]
+        for i in range(len(result)):
+            pos.append(result[i][0])
+            value.append(result[i][1][0])
+    else:
+        for i in range(len(result)):
+            pos.append(result[i][0])
+            value.append(result[i][1][0])
     return pos, value
 
 
@@ -202,7 +208,7 @@ def detect_pdf(img_list, page_no):
 #-------------------------------------------------detect-----------------------------------
 
 
-#-------------------------------------------------PDF 转换为图片-----------------------------------
+#-------------------------------------------------PDF Compose-----------------------------------
 def pdf_img(pdfPath, img_name):
     img_list = []
     doc = fitz.open(pdfPath)
@@ -218,10 +224,10 @@ def pdf_img(pdfPath, img_name):
     return page_count, img_list
 
 
-#-------------------------------------------------PDF 转换为图片-------------------------------------
+#-------------------------------------------------PDF Compose-------------------------------------
 
 
-#-------------------------------------------------检查不必要的字符并删除 :-------------------------------------
+#-------------------------------------------------detect :-------------------------------------
 def remove(dict):
     if type(dict)==dict:
         for i in dict:
@@ -249,11 +255,16 @@ def remove(dict):
     else:
         return dict
 
-#-------------------------------------------------检查不必要的字符并删除 :-------------------------------------
+#-------------------------------------------------detect :-------------------------------------
 
-#-------------------------------------------------裁切图片-------------------------------------
+# def ReRec2(path, ymin, ymax, xmin, xmax):
+#     image = cv2.imread(path)
+#     cropImg = image[int(ymin):int(ymax), int(xmin):int(xmax)]
+#     cv2.imwrite('save_files/crop/new.png', cropImg)
+#     pos, value = detect_img(cropImg)
+#     return pos, value
+
 def ReRec2(path, ymin, ymax, xmin, xmax):
-    # 判断要裁切的坐标是不是大于0
     if ymin<0:
         ymin=0
     elif ymax<0:
@@ -262,16 +273,13 @@ def ReRec2(path, ymin, ymax, xmin, xmax):
         xmin=0
     elif xmax<0:
         xmax=0
-    
-    # print(ymin,ymax,xmin,xmax)
+        
     image = cv2.imread(path)
     cropImg = image[int(ymin):int(ymax), int(xmin):int(xmax)]
-    cv2.imwrite('cropimg.png', cropImg)
     pos, value = detect_img(cropImg)
     return pos, value
-#-------------------------------------------------裁切图片-------------------------------------
 
-#-------------------------------------------------根据ID定位单据进行检测-------------------------------------
+#-------------------------------------------------which paper-------------------------------------
 def detect_paper(ID, pos, value, Type, save_path):
     if ID == 1:
         result = match_weixian(pos, value, save_path)

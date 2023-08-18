@@ -1,4 +1,5 @@
 import re
+import cv2
 import sys
 
 sys.path.append('../')
@@ -6,6 +7,7 @@ from component_modules import autils
 
 jizhuangxiang_match = r'\b[0-0A-Z\']{4}[0-9\']{7}\b'
 date = "\d{4}[-]?\d{2}"
+
 
 def match_bianhao(pos, value, save_path):
     for i in range(len(pos)):
@@ -32,12 +34,10 @@ def match_bianhao(pos, value, save_path):
             xmax = pos[i][2][0]
             img_height = pos[i][3][1] - pos[i][0][1]
             img_width = pos[i][1][0] - pos[i][0][0]
-            pos, result = autils.ReRec2(save_path,
-                                 ymin - img_height * 1.5,
+            pos, result = autils.ReRec2(save_path,ymin - img_height * 1.5,
                                  ymax + img_height * 1.5,
                                  xmin,
-                                 xmax + img_width * 10,
-                                 value='id2_bianhao')
+                                 xmax + img_width * 10)
             result = ''.join(result)
             if '编号' in result:
                 return result.replace('编号', '')

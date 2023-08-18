@@ -2,7 +2,7 @@ import os
 import uvicorn
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi import FastAPI, UploadFile, File, applications
-from typing import Optional, Union
+from typing import Optional
 from component_modules.autils import *
 
 
@@ -10,16 +10,15 @@ def swagger_monkey_patch(*args, **kwargs):
     return get_swagger_ui_html(
         *args,
         **kwargs,
-        swagger_js_url='https://cdn.bootcdn.net/ajax/libs/swagger-ui/4.10.3/swagger-ui-bundle.js',
-        swagger_css_url='https://cdn.bootcdn.net/ajax/libs/swagger-ui/4.10.3/swagger-ui.css')
+        swagger_js_url=
+        'https://cdn.bootcdn.net/ajax/libs/swagger-ui/4.10.3/swagger-ui-bundle.js',
+        swagger_css_url=
+        'https://cdn.bootcdn.net/ajax/libs/swagger-ui/4.10.3/swagger-ui.css')
 
 
 applications.get_swagger_ui_html = swagger_monkey_patch
 
-app = FastAPI(
-    title='光学字符识别项目', 
-    description='根据每个单据要求的关键字进行返回。\n- 上传文件要求:\n- jpg、png、jpeg、pdf\n- 1.上传的图片需要摆正，不能存在未经过旋转的图片。\n- 2.上传的PDF尽量不要超过一页,上传的身份证等证件正反面都需要放在一个照片之内。'
-    )
+app = FastAPI(title='光学字符识别项目', description='根据每个单据要求的关键字进行返回。\n- 上传文件要求:\n- jpg、png、jpeg、pdf\n- 1.上传的图片需要摆正，不能存在未经过旋转的图片。\n- 2.上传的PDF尽量不要超过一页,上传的身份证等证件正反面都需要放在一个照片之内。')
 
 
 @app.post('/ocr', tags=["识别接口（POST方法）"])

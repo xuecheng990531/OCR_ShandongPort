@@ -1,9 +1,12 @@
 from queue import Empty
 import re
+import cv2
 import sys
 
 sys.path.append('../')
 from component_modules import autils
+
+
 
 def match_yunshuzhenghao(pos, value, save_path):
     for i in range(len(pos)):

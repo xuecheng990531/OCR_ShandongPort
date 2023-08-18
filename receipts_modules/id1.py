@@ -1,10 +1,6 @@
 import re
-import sys
-
-sys.path.append('../')
-from component_modules import autils
-
 number = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
 
 def match_fahuoren(pos, value, save_path):
     for i in range(len(pos)):
