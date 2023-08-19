@@ -1,0 +1,10 @@
+aiofiles==23.2.1
+fastapi==0.95.0
+LAC==2.1.2
+numpy==1.25.2
+opencv_contrib_python==4.8.0.74
+opencv_python==4.8.0.74
+paddleocr==2.7.0.0
+PyMuPDF==1.22.5
+regex==2023.8.8
+uvicorn==0.23.2
