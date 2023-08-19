@@ -149,41 +149,30 @@ def match_yehumingcheng(pos, value, save_path):
 def match_address(pos, value, save_path):
     address = []
     for i in range(len(pos)):
-
         if '副本' in value[i]:
             if '址' in value[i] and len(value[i].split('址')[-1]) > 3:
                 return value[i].replace('址', '')
             elif '址' in value[i] or '地' in value[i]:
+                print('aksjdh')
                 shr_pos = pos[i]
                 height = pos[i][3][1] - pos[i][0][1]
                 width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
                     if shr_pos[1][0] - width / 2 < pos[i][0][
                             0] < shr_pos[1][0] + int(
-                                5 * width) and shr_pos[1][1] - height < pos[i][
-                                    0][1] < shr_pos[2][1] + height:
+                                10 * width) and shr_pos[1][1] - height < pos[
+                                    i][0][1] < shr_pos[2][1] + height * 3:
                         address.append(value[i])
                 if len(address) > 0:
-                    return ''.join(address)
-            elif '址' in value[i]:
-                ymin = pos[i][0][1]
-                ymax = pos[i][2][1]
-                xmin = pos[i][0][0]
-                xmax = pos[i][2][0]
-                img_height = pos[i][3][1] - pos[i][0][1]
-                img_width = pos[i][1][0] - pos[i][0][0]
-                height = img_height * 2  #默认不加高度
-                width = img_width * 20  #默认不加宽度
-                pos, result = autils.ReRec2(save_path,
-                                     ymin - height / 3,
-                                     ymax + height + img_height * 2,
-                                     xmin,
-                                     xmax + width)
-                result = ''.join(result)
-                if '址' in result:
-                    return result.split('址')[-1]
+                    address= ''.join(address)
+                    if '地' in address:
+                        return address.replace('地','')
+                    elif '址' in address:
+                        return address.replace('址','')
+                    else:
+                        return address
                 else:
-                    return result
+                    return 'null'
         else:
             if '址' in value[i] and len(value[i].split('址')[-1]) > 3:
                 return value[i].replace('址', '')
@@ -198,26 +187,15 @@ def match_address(pos, value, save_path):
                                     i][0][1] < shr_pos[2][1] + height * 3:
                         address.append(value[i])
                 if len(address) > 0:
-                    return ''.join(address)
-            elif '址' in value[i]:
-                ymin = pos[i][0][1]
-                ymax = pos[i][2][1]
-                xmin = pos[i][0][0]
-                xmax = pos[i][2][0]
-                img_height = pos[i][3][1] - pos[i][0][1]
-                img_width = pos[i][1][0] - pos[i][0][0]
-                height = img_height * 2  #默认不加高度
-                width = img_width * 20  #默认不加宽度
-                pos, result = autils.ReRec2(save_path,
-                                     ymin - height,
-                                     ymax + height + img_height * 3,
-                                     xmin,
-                                     xmax + width)
-                result = ''.join(result)
-                if '址' in result:
-                    return result.split('址')[-1]
+                    address= ''.join(address)
+                    if '地' in address:
+                        return address.replace('地','')
+                    elif '址' in address:
+                        return address.replace('址','')
+                    else:
+                        return address
                 else:
-                    return result
+                    return 'null'
 
 
 def match_jingjixingzhi(pos, value, save_path):
@@ -244,8 +222,6 @@ def match_jingjixingzhi(pos, value, save_path):
                                             return value[i]
                                     else:
                                         return 'null'
-                    # else:
-                    #     return 'null'
 
 
 def match_jingyingfanwei(pos, value, save_path):
