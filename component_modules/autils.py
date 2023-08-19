@@ -17,7 +17,7 @@ ocr = PaddleOCR(cls=True,
                 use_gpu=True,
                 precision='fp16',
                 det_limit_side_len=1216,
-                use_multiprocess=False)
+                use_multiprocess=True)
 
 
 #-------------------------------------------------图片上传和删除-----------------------------------
@@ -52,8 +52,8 @@ def detect_value(pos, ID, value, Type, save_path, Envir):
     if Envir == 'main':
         return {"检测结果": removed_result}
     else:
-        return {"检测结果": removed_result}
-        # return {"检测结果": removed_result, "算法检测的所有结果": value}
+        # return {"检测结果": removed_result}
+        return {"检测结果": removed_result, "算法检测的所有结果": value}
 
 
 #-------------------------------------------------倾斜检测并返回结果-----------------------------------
@@ -228,41 +228,34 @@ def pdf_img(pdfPath, img_name):
 
 
 #-------------------------------------------------detect :-------------------------------------
-def remove(dict):
-    if type(dict)==dict:
-        for i in dict:
-            if dict[i] is None:
-                dict[i] = "None"
+def remove(result):
+    if isinstance(result, dict):
+        for i in result:
+            if result[i] is None:
+                result[i] = "None"
             else:
-                if '：' in dict[i]:
-                    dict[i]=dict[i].replace('：','')
-                if '*' in dict[i]:
-                    if '**/**' in dict[i]:
-                        dict[i] = dict[i].replace('**/**', '')
+                if '：' in result[i]:
+                    result[i]=result[i].replace('：','')
+                elif '*' in result[i]:
+                    if '**/**' in result[i]:
+                        result[i] = result[i].replace('**/**', '')
                     else:
-                        dict[i] = dict[i].replace('*', '')
-                elif ':' in dict[i]:
-                    dict[i] = dict[i].replace(':', '')
+                        result[i] = result[i].replace('*', '')
+                elif ':' in result[i]:
+                    result[i] = result[i].replace(':', '')
                 # elif '，' in dict[i]:
                 #     dict[i] = dict[i].replace('，', '')
-                elif '\\"' in dict[i]:
-                    dict[i] = dict[i].replace('\\"', '  ')
-                elif '冰冰冰' in dict[i]:
-                    dict[i] = dict[i].replace('冰冰冰', 'None')
-                elif '备注' in dict[i]:
-                    dict[i] = dict[i].split('备注')[-1]
-        return dict
+                elif '\\"' in result[i]:
+                    result[i] = result[i].replace('\\"', '  ')
+                elif '冰冰冰' in result[i]:
+                    result[i] = result[i].replace('冰冰冰', 'None')
+                elif '备注' in result[i]:
+                    result[i] = result[i].split('备注')[-1]
+        return result
     else:
-        return dict
+        return result
 
 #-------------------------------------------------detect :-------------------------------------
-
-# def ReRec2(path, ymin, ymax, xmin, xmax):
-#     image = cv2.imread(path)
-#     cropImg = image[int(ymin):int(ymax), int(xmin):int(xmax)]
-#     cv2.imwrite('save_files/crop/new.png', cropImg)
-#     pos, value = detect_img(cropImg)
-#     return pos, value
 
 def ReRec2(path, ymin, ymax, xmin, xmax):
     if ymin<0:

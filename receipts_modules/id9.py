@@ -6,11 +6,15 @@ import sys
 sys.path.append('../')
 from component_modules import autils
 
-
+def check_number_length(char):
+    # 匹配大于等于count个连在一起的数字
+    pattern = r'\d{' + str(5) + ',}'  
+    matches = re.findall(pattern, char)
+    return len(matches) > 0
 
 def match_yunshuzhenghao(pos, value, save_path):
     for i in range(len(pos)):
-        if len(value[i]) > 6:
+        if len(value[i]) > 6 and check_number_length(value[i]):
             a = re.findall("\d+\.?\d*", value[i])
             if len(a) > 0:
                 return a[0]
@@ -28,8 +32,7 @@ def match_yunshuzhenghao(pos, value, save_path):
                                  ymin - img_height,
                                  ymax + img_height,
                                  xmin,
-                                 xmax + img_width * 5,
-                                 value='id9_yunshuzhenghao')
+                                 xmax + img_width * 5)
             result = ''.join(result)
             a = re.findall("\d+\.?\d*", result)
             if a is Empty:
@@ -37,58 +40,73 @@ def match_yunshuzhenghao(pos, value, save_path):
     else:
         return 'null'
 
-
 def match_youxiaoqi(pos, value, save_path):
-    for i in range(len(pos)):
-        if '至' in value[i]:
-            ymin = pos[i][0][1]
-            ymax = pos[i][2][1]
-            xmin = pos[i][0][0]
-            xmax = pos[i][2][0]
-            img_height = pos[i][3][1] - pos[i][0][1]
-            img_width = pos[i][1][0] - pos[i][0][0]
-            height = img_height * 0.5  #默认不加高度
-            width = img_width * 7  #默认不加宽度
-            # pos,result=ReRec(save_path,ymin,ymax,xmin,xmax,height,width,value='youxiaoqi')
-            pos, result = autils.ReRec2(save_path,
-                                 ymin - img_height,
-                                 ymax + height,
-                                 xmin,
-                                 xmax + width,
-                                 value='id9_youxiaoqi')
-            result = ''.join(result)
-            if '至' in result:
-                return result.split('至')[-1]
-            else:
-                return result
-
-        elif '有效期' in value[i]:
-            ymin = pos[i][0][1]
-            ymax = pos[i][2][1]
-            xmin = pos[i][0][0]
-            xmax = pos[i][2][0]
-            img_height = pos[i][3][1] - pos[i][0][1]
-            img_width = pos[i][1][0] - pos[i][0][0]
-            height = img_height * 0.5  #默认不加高度
-            width = img_width * 5  #默认不加宽度
-            # pos,result=ReRec(save_path,ymin,ymax,xmin,xmax,height,width,value='youxiaoqi')
-            pos, result = autils.ReRec2(save_path,
-                                 ymin - img_height,
-                                 ymax + height,
-                                 xmin,
-                                 xmax + width,
-                                 value='id9_youxiaoqi')
-            # result=''.join(result)
-            year = []
-            for i in range(len(value)):
-                if value[i].isdigit():
-                    year.append(int(value[i]))
-            if len(year) > 0:
-                return str(max(year)) + '年'
-            else:
-                return '长期'
-    else:
+    if '长期' in value:
         return '长期'
+    else:
+        for i in range(len(pos)):
+            if '有效期至' in value[i]:
+                if len(value[i].split('有效期至')[-1])>5:
+                    if '月' in value[i]:
+                        return value[i].split('有效期至')[-1]
+                    else:
+                        date=[]
+                        shr_pos = pos[i]
+                        height = pos[i][3][1] - pos[i][0][1]
+                        width = pos[i][1][0] - pos[i][0][0]
+                        for i in range(len(pos)):
+                            if shr_pos[1][0] - width / 2 < pos[i][0][
+                                    0] < shr_pos[1][0] + int(4.5 * width) and shr_pos[1][1] - height < pos[i][
+                                            0][1] < shr_pos[2][1] + 2*height:
+                                date.append(value[i])
+                                print(value[i])
+
+                        return ''.join(date)
+                else:
+                    date=[]
+                    shr_pos = pos[i]
+                    height = pos[i][3][1] - pos[i][0][1]
+                    width = pos[i][1][0] - pos[i][0][0]
+                    for i in range(len(pos)):
+                        if shr_pos[1][0] - width / 2 < pos[i][0][
+                                0] < shr_pos[1][0] + int(4.5 * width) and shr_pos[1][1] - height < pos[i][
+                                        0][1] < shr_pos[1][1] + 3*height:
+                            date.append(value[i])
+
+                    return ''.join(date)
+
+            # case2 有效期开头，没有至
+            elif '有效期' in value[i] and value[i].split('有效期')[-1][0]!='至':
+                if len(value[i].split('有效期')[-1])>5:
+                    if '至' in value[i] and value[i].split('至')[-1]!='':
+                        return value[i].split('有效期')[-1]
+                    elif '至' in value[i] and len(value[i].split('至')[-1])==0:
+                        date=[]
+                        shr_pos = pos[i]
+                        height = pos[i][3][1] - pos[i][0][1]
+                        width = pos[i][1][0] - pos[i][0][0]
+                        for i in range(len(pos)):
+                            if shr_pos[1][0] - width / 2 < pos[i][0][
+                                    0] < shr_pos[1][0] + int(4.5 * width) and shr_pos[1][1] - height < pos[i][
+                                            0][1] < shr_pos[2][1] + height:
+                                date.append(value[i])
+
+                        return ''.join(date)
+                else:
+                    date=[]
+                    shr_pos = pos[i]
+                    height = pos[i][3][1] - pos[i][0][1]
+                    width = pos[i][1][0] - pos[i][0][0]
+                    for i in range(len(pos)):
+                        if shr_pos[1][0] - width / 2 < pos[i][0][
+                                0] < shr_pos[1][0] + int(4.5 * width) and shr_pos[1][1] - height < pos[i][
+                                        0][1] < shr_pos[1][1] + 3*height:
+                            date.append(value[i])
+
+                    return ''.join(date)
+
+            # else:
+            #     return 'null'
 
 
 def match_yehumingcheng(pos, value, save_path):
@@ -118,15 +136,14 @@ def match_yehumingcheng(pos, value, save_path):
                                      ymin,
                                      ymax,
                                      xmin,
-                                     xmax,
-                                     value='id9_yehumingcheng')
+                                     xmax)
                 result = ''.join(result)
                 if '名称' in value[i]:
                     return result.split('称')[-1]
                 else:
                     return value[i]
     else:
-        return '无'
+        return 'null'
 
 
 def match_address(pos, value, save_path):
@@ -161,8 +178,7 @@ def match_address(pos, value, save_path):
                                      ymin - height / 3,
                                      ymax + height + img_height * 2,
                                      xmin,
-                                     xmax + width,
-                                     value='id9_address')
+                                     xmax + width)
                 result = ''.join(result)
                 if '址' in result:
                     return result.split('址')[-1]
@@ -196,8 +212,7 @@ def match_address(pos, value, save_path):
                                      ymin - height,
                                      ymax + height + img_height * 3,
                                      xmin,
-                                     xmax + width,
-                                     value='id9_address')
+                                     xmax + width)
                 result = ''.join(result)
                 if '址' in result:
                     return result.split('址')[-1]
@@ -206,30 +221,59 @@ def match_address(pos, value, save_path):
 
 
 def match_jingjixingzhi(pos, value, save_path):
+    xingzhi=['国有','集体','股份','有限责任','联营','私营','个人独资','合伙企业','有限贵任']
     for i in range(len(pos)):
-        if '经济性质' in value[i]:
-            if len(value[i].split('质')[-1]) > 3:
-                return value[i].split('质')[-1]
+        for j in range(len(xingzhi)):
+            if xingzhi[j] in value[i]:
+                return value[i]
             else:
-                shr_pos = pos[i]
-                height = pos[i][3][1] - pos[i][0][1]
-                width = pos[i][1][0] - pos[i][0][0]
                 for i in range(len(pos)):
-                    if shr_pos[1][0] - width < pos[i][0][0] < shr_pos[1][
-                            0] + int(2 * width) and shr_pos[1][1] - (
-                                height + height /
-                                2) < pos[i][0][1] < shr_pos[2][1] + height / 2:
-                        return value[i]
-    else:
-        return '无'
+                    if '经济性质' in value[i]:
+                        if len(value[i].split('性质')[-1]) > 3:
+                            return value[i].split('性质')[-1]
+                        else:
+                            shr_pos = pos[i]
+                            height = pos[i][3][1] - pos[i][0][1]
+                            width = pos[i][1][0] - pos[i][0][0]
+                            for i in range(len(pos)):
+                                if shr_pos[1][0] - width < pos[i][0][0] < shr_pos[1][0] + int(2 * width) and shr_pos[0][1] -height/2 < pos[i][0][1] < shr_pos[2][1] + height*1.2:
+                                    if len(value[i])!=0:
+                                        if '贵任' in value[i]:
+                                            return value[i].replace('贵','责')
+                                        else:
+                                            return value[i]
+                                    else:
+                                        return 'null'
+                    # else:
+                    #     return 'null'
 
 
 def match_jingyingfanwei(pos, value, save_path):
     a = []
+    jingyingfanwei= ['经', '营', '范', '围']
     for i in range(len(pos)):
         if '范围' in value[i]:
             if len(value[i].split('围')[-1]) > 3:
-                return value[i].split('围')[-1]
+                ymin = pos[i][0][1]
+                ymax = pos[i][2][1]
+                xmin = pos[i][0][0]
+                xmax = pos[i][2][0]
+                img_height = pos[i][3][1] - pos[i][0][1]
+                img_width = pos[i][1][0] - pos[i][0][0]
+                pos, result = autils.ReRec2(save_path,
+                                    ymin - img_height,
+                                    ymax + img_height*4,
+                                    xmin,
+                                    xmax + img_width * 3)
+                result = ''.join(result)
+                pattern = "[" + "".join(jingyingfanwei) + "]"
+                result = re.sub(pattern, '', result)
+                if len(result)>0:
+                    return result
+                else:
+                    return 'null'
+
+
             else:
                 shr_pos = pos[i]
                 height = pos[i][3][1] - pos[i][0][1]
@@ -253,12 +297,11 @@ def match_jingyingfanwei(pos, value, save_path):
                                  ymin - img_height,
                                  ymax + img_height,
                                  xmin,
-                                 xmax + img_width * 3,
-                                 value='id9_jingyingfanwei')
+                                 xmax + img_width * 3)
             result = ''.join(result)
             if '围' in result:
                 return result.split('围')[-1]
             else:
                 return result
     else:
-        return '无'
+        return 'null'
