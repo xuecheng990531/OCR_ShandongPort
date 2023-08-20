@@ -58,7 +58,19 @@ def match_zhenghao(pos, value, save_path):
 
 def match_yehumingcheng(pos, value, save_path):
     for i in range(len(pos)):
-        if '户名称' in value[i] or '名称' in value[i] or '称' in value[
+        if '中华人民共和国道路运输证' in value[i]:
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[0][0] - width*2 < pos[i][0][0] < shr_pos[1][0] and shr_pos[3][1] + height * 2 < pos[i][3][1] < shr_pos[3][1] + height*3:
+                    if '业' in value[i]:
+                        if '：' in value[i]:
+                            return value[i].split('：')[-1]
+                        else:
+                            return value[i]
+
+        elif '户名称' in value[i] or '名称' in value[i] or '称' in value[
                 i] or ' 称' in value[i]:
             if len(value[i].split('称')[-1]) > 1:
                 return value[i].split('称')[-1]
@@ -90,52 +102,87 @@ def match_yehumingcheng(pos, value, save_path):
                     return ''.join(result).split('名称')[-1]
                 else:
                     return ''.join(result).split('名')[-1]
+        elif '业' in value[i] and '名' in value[i]:
+            result = []
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[0][0] - int(width / 2) < pos[i][0][0] < shr_pos[1][
+                        0] + 100 and shr_pos[1][1] - height * 0.6 < pos[i][0][
+                            1] < shr_pos[2][
+                                1] + height / 2 and '类' not in value[
+                                    i] and '车架' not in value[i]:
+                    result.append(value[i])
+            if len(result) != 0:
+                if '：' in result:
+                    return ''.join(result).split('：')[-1]
+                else:
+                    return ''.join(result).split('名')[-1][1:]
+        else:
+            return 'null'
 
 
 def match_dizhi(pos, value, save_path):
     address = []
     for i in range(len(pos)):
-        if '址' in value[i]:
-            if len(value[i].split('址')[-1]) > 3:
-                return value[i].split('址')[-1]
-            else:
-                shr_pos = pos[i]
-                height = pos[i][3][1] - pos[i][0][1]
-                width = pos[i][1][0] - pos[i][0][0]
-                for i in range(len(pos)):
-                    if shr_pos[1][0] - width / 2 < pos[i][0][
-                            0] < shr_pos[1][0] + width * 5 and shr_pos[1][
-                                1] - height * 2.4 < pos[i][0][
-                                    1] < shr_pos[2][1] + height:
-                        address.append(value[i])
-                if len(address) > 0:
-                    return ''.join(address)
-        elif '业户名称' in value[i]:
-            address = []
-            shr_pos = pos[i]
-            height = pos[i][3][1] - pos[i][0][1]
-            width = pos[i][1][0] - pos[i][0][0]
-            for i in range(len(pos)):
-                if shr_pos[1][0] - width / 2 < pos[i][0][0] < shr_pos[1][
-                        0] + width * 2 and shr_pos[2][1] + height < pos[i][0][
-                            1] < shr_pos[2][1] + height * 3.5:
-                    if '色' not in value[i] or '黄' not in value[i]:
-                        address.append(value[i])
-            if len(address) != 0:
-                return ''.join(address)
-        if '号牌' in value[i]:
+        # if '址' in value[i]:
+        #     if len(value[i].split('址')[-1]) > 3:
+        #         return value[i].split('址')[-1]
+        #     else:
+        #         shr_pos = pos[i]
+        #         height = pos[i][3][1] - pos[i][0][1]
+        #         width = pos[i][1][0] - pos[i][0][0]
+        #         for i in range(len(pos)):
+        #             if shr_pos[1][0] - width / 2 < pos[i][0][
+        #                     0] < shr_pos[1][0] + width * 4 and shr_pos[1][
+        #                         1] - height * 2.4 < pos[i][0][
+        #                             1] < shr_pos[2][1] + height:
+        #                 address.append(value[i])
+        #         if len(address) > 0:
+        #             return ''.join(address)
+        # elif '业户名称' in value[i]:
+        #     address = []
+        #     shr_pos = pos[i]
+        #     height = pos[i][3][1] - pos[i][0][1]
+        #     width = pos[i][1][0] - pos[i][0][0]
+        #     for i in range(len(pos)):
+        #         if shr_pos[1][0] - width / 2 < pos[i][0][0] < shr_pos[1][
+        #                 0] + width * 2 and shr_pos[2][1] + height < pos[i][0][
+        #                     1] < shr_pos[2][1] + height * 3.5:
+        #             if '色' not in value[i] or '黄' not in value[i]:
+        #                 address.append(value[i])
+        #     if len(address) != 0:
+        #         return ''.join(address)
+        if '号牌' in value[i] and len(value[i].split('号牌')[-1])<4:
             shr_pos = pos[i]
             height = pos[i][3][1] - pos[i][0][1]
             width = pos[i][1][0] - pos[i][0][0]
             for i in range(len(pos)):
                 if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][
-                        0] + width * 2 and shr_pos[1][1] - height * 5 < pos[i][
+                        0] + width * 2 and shr_pos[1][1] - height * 4 < pos[i][
                             1][1] < shr_pos[1][1] - height * 1.3 and len(
                                 value[i]) > 4:
                     if '黄' not in value[i] or '色' not in value[i]:
                         address.append(value[i])
             if len(address) != 0:
-                return ''.join(address)
+                return ''.join(address).replace('址','')
+        elif '号牌' in value[i] and len(value[i].split('号牌')[-1])>4:
+
+            shr_pos = pos[i]
+            height = pos[i][3][1] - pos[i][0][1]
+            width = pos[i][1][0] - pos[i][0][0]
+            for i in range(len(pos)):
+                if shr_pos[0][0] < pos[i][0][0] < shr_pos[1][
+                        0] and shr_pos[1][1] - height * 4 < pos[i][
+                            1][1] < shr_pos[1][1] - height * 1.3 and len(
+                                value[i]) > 4:
+                    if '黄' not in value[i] or '色' not in value[i]:
+                        address.append(value[i])
+            if len(address) != 0:
+                return ''.join(address).replace('址','')
+            else:
+                return 'null'
 
 
 def match_chepaihaoma(pos, value, save_path):
@@ -227,7 +274,7 @@ def match_jingyingleixing(pos, value, save_path):
                         if shr_pos[1][0] - width / 2 < pos[i][0][0] < shr_pos[
                                 1][0] + width and shr_pos[1][1] - height < pos[
                                     i][0][1] < shr_pos[2][1] + int(height / 2):
-                            return value[i]
+                            return value[i].replace('素','责')
             elif '经济费型' in value[i]:
                 if len(value[i]) > 5:
                     return value[i].split('类型')[-1]
@@ -239,9 +286,9 @@ def match_jingyingleixing(pos, value, save_path):
                         if shr_pos[1][0] - width / 2 < pos[i][0][0] < shr_pos[
                                 1][0] + width and shr_pos[1][1] - height < pos[
                                     i][0][1] < shr_pos[2][1] + int(height / 2):
-                            return value[i]
+                            return value[i].replace('素','责')
         else:
-            return result
+            return result.replace('素','责')
 
 
 def match_jingyingleixing_single(pos, value, save_path):
@@ -266,6 +313,8 @@ def match_jingyingleixing_single(pos, value, save_path):
             return '有限' + str(value[i].split('有限')[-1])
         elif '其他有限' in value[i]:
             return '其他' + str(value[i].split('其他')[-1])
+        elif '有限' in value[i] and '任' in value[i]:
+            return '有限'+value[i].split('有限')[-1]
 
 
 def match_cheliangleixing(pos, value, save_path):
@@ -312,38 +361,6 @@ def match_dunwei(pos, value, save_path):
         return '0吨'
 
 
-# def match_chicun(pos,value,save_path):
-#     chicun=[]
-#     a = []
-#     chicun2=[]
-#     for i in range(len(pos)):
-#         if '长' in value[i]:
-#             if len(value[i])>5:
-#                 a = re.findall("\d+\.?\d*", value[i])
-#                 chicun.append(a[0])
-#             else:
-#                 shr_pos=pos[i]
-#                 height=pos[i][3][1]-pos[i][0][1]
-#                 width=pos[i][1][0]-pos[i][0][0]
-#                 for i in range(len(pos)):
-#                     if shr_pos[1][0]<pos[i][0][0]<shr_pos[1][0]+int(width*30) and shr_pos[1][1]-height<pos[i][0][1]<shr_pos[2][1]:
-#                         if value[i].isdigit():
-#                             chicun.append(value[i])
-#                 if len(chicun)>0:
-#                     return chicun
-#         elif '宽' in value[i]:
-#             if len(value[i])>5:
-#                 a = re.findall("\d+\.?\d*", value[i])
-#                 chicun.append(a[0])
-#         elif '高' in value[i]:
-#             if len(value[i])>5:
-#                 a = re.findall("\d+\.?\d*", value[i])
-#                 chicun.append(a[0])
-
-#     if len(chicun2)>0:
-#         return chicun2
-#     else:
-#         return '0*0*0mm'
 
 
 def match_chicun(pos, value, save_path):
@@ -387,9 +404,11 @@ def match_chicun(pos, value, save_path):
 
         elif '*' in value[i] and value[i].split('*')[0][-1].isdigit():
             return value[i]
-        else:
-            result = match_chicun_buchong(pos, value, save_path)
-            return result
+        # else:
+        #     result = match_chicun_buchong(pos, value, save_path)
+        #     return result
+    else:
+        return 'null'
 
 
 def match_chicun_buchong(pos, value, save_path):

@@ -15,12 +15,16 @@ def remove_char(str, n):
 def match_xianghao_onerow(pos,value,save_path):
     pattern2 = r'^[A-Z]{2}[a-zA-Z0-9]{7,}$'
     for i in range(len(value)):
-        if re.match(pattern2,value[i].replace(' ','')):
+        if len(value[i])==11 and re.match(pattern2,value[i].replace(' ','')):
             return remove_non_alphanumeric(value[i])
     else:
         return 'None'
 
 def match_xianghao(pos,value,save_path):
+    for i in range(len(value)):
+        if len(value[i])==11:
+            return value[i]
+    
     result=match_xianghao_onerow(pos, value, save_path)
     if result !='None':
         return result

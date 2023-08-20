@@ -232,7 +232,7 @@ def remove(result):
     if isinstance(result, dict):
         for i in result:
             if result[i] is None:
-                result[i] = "None"
+                result[i] = "null"
             else:
                 if '：' in result[i]:
                     result[i]=result[i].replace('：','')
