@@ -5,7 +5,6 @@ from fastapi import FastAPI, UploadFile, File, applications
 from typing import Optional
 from component_modules.autils import *
 
-
 def swagger_monkey_patch(*args, **kwargs):
     return get_swagger_ui_html(
         *args,
